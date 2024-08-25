@@ -1,0 +1,28 @@
+# Virtual environment
+venv/
+
+# Python cache files
+__pycache__/
+*.pyc
+
+# Environment variables
+.env
+
+# Django static and media files (optional, if you don't want to track them)
+staticfiles/
+media/
+
+# Node.js modules
+node_modules/
+
+# PostgreSQL database files (only relevant if you're dumping or backing up locally)
+*.pgsql
+*.pg_dump
+*.sql
+
+# Django migrations (optional, only if you want to ignore migration files)
+#migrations/
+
+# IDE specific files (optional)
+.vscode/
+.idea/
