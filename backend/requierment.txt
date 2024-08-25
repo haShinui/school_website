@@ -1,0 +1,21 @@
+# Django and REST Framework
+Django>=3.2,<5.0
+djangorestframework>=3.12,<4.0
+
+# JWT Authentication
+djangorestframework-simplejwt>=4.8,<5.0
+
+# CORS Headers
+django-cors-headers>=3.7,<4.0
+
+# PostgreSQL Adapter
+psycopg2>=2.9,<3.0
+
+# Social Authentication (e.g., for Microsoft Login)
+social-auth-app-django>=5.0,<6.0
+
+# Optional: Gunicorn for production server (if deploying on a server)
+gunicorn>=20.0,<21.0
+
+# Optional: If you're using Whitenoise for serving static files in production
+whitenoise>=5.0,<6.0
