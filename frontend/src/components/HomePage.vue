@@ -1,6 +1,6 @@
 <!-- frontend/src/components/HomePage.vue -->
 <template>
-  <div>
+  <div class="container mt-5">
     <h1>{{ message }}</h1>
   </div>
 </template>
@@ -16,13 +16,13 @@ export default {
     };
   },
   created() {
-    axios.get('http://localhost:8000/api/')
+    axios.get('http://127.0.0.1:8000/api/home/')
       .then(response => {
         this.message = response.data.message;
       })
       .catch(error => {
-        console.error("There was an error fetching the data:", error);
-        this.message = "Error fetching data";
+        console.error("There was an error fetching the home page data:", error);
+        this.message = "Error loading data";
       });
   }
 };

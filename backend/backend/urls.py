@@ -16,18 +16,11 @@ Including another URLconf
 """
 # backend/urls.py
 from django.contrib import admin
-from django.urls import path, include
-from app.views import home  # Import the home view
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-)
+from django.urls import path
+from app.views import home_view, about_view  # Use the correct function names
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('app.urls')),
-    path('', home, name='home'),
-    #authentication #
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/home/', home_view, name='home'),  # Use the correct function name
+    path('api/about/', about_view, name='about'),
 ]

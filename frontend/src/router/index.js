@@ -1,11 +1,11 @@
 // frontend/src/router/index.js
 import { createRouter, createWebHistory } from 'vue-router';
 import HomePage from '../components/HomePage.vue';
-import StudentList from '../components/StudentList.vue';
+import AboutPage from '../components/AboutPage.vue';
 
 const routes = [
   { path: '/', component: HomePage },
-  { path: '/students', component: StudentList },
+  { path: '/about', component: AboutPage },
 ];
 
 const router = createRouter({

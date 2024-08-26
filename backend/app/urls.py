@@ -1,11 +1,10 @@
 # backend/app/urls.py
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from .views import StudentViewSet
 
-router = DefaultRouter()
-router.register(r'students', StudentViewSet)
+from django.urls import path
+from .views import home_view, about_view
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('home/', home_view, name='home'),
+    path('about/', about_view, name='about'),
 ]
+
