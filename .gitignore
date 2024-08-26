@@ -1,6 +1,6 @@
 # Virtual environment
 venv/
-
+backend/venv/
 # Python cache files
 __pycache__/
 *.pyc
