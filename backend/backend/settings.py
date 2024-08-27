@@ -12,6 +12,24 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 
+# Microsoft login
+import os
+#in production code, DONT store Cleint Secret Value in text !!
+MSAL_CLIENT_ID = '037186f9-0881-424a-beec-0aeca3952e72'
+MSAL_CLIENT_SECRET = 'OR78Q~uibKSh36GiNGEgFgMZi1.btYCB~QeFKaTm' #will expire in 6 motnh
+MSAL_AUTHORITY = 'https://login.microsoftonline.com/99f6c824-7f02-4c02-9f57-8e581af8d383'
+MSAL_REDIRECT_PATH = "http://localhost:8000/accounts/msal/callback/"
+MSAL_SCOPES = ['User.Read']
+MSAL_ENDPOINT = "https://graph.microsoft.com/v1.0/me"
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = '/api/home/'  # Redirect to the home page after login
+LOGOUT_REDIRECT_URL = '/api/home/'  # Redirect to the home page after logout
+
+
+
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -131,9 +149,10 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
-
-STATIC_URL = 'static/'
-
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'app', 'static'),
+]
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 

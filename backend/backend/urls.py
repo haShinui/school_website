@@ -16,18 +16,20 @@ Including another URLconf
 """
 # backend/urls.py
 from django.contrib import admin
-from django.urls import path, include
-from app.views import home  # Import the home view
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-)
+from django.urls import path
+from app.views import home_view, about_view  # Your app-specific views
+from .views import login, callback, logout  # MSAL views for authentication
 
 urlpatterns = [
+    # Admin site
     path('admin/', admin.site.urls),
-    path('api/', include('app.urls')),
-    path('', home, name='home'),
-    #authentication #
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    
+    # App-specific API endpoints
+    path('api/home/', home_view, name='home'),
+    path('api/about/', about_view, name='about'),
+    
+    # MSAL Authentication URLs
+    path('accounts/msal/login/', login, name='msal_login'),
+    path('accounts/msal/callback/', callback, name='msal_callback'),
+    path('accounts/msal/logout/', logout, name='msal_logout'),
 ]
