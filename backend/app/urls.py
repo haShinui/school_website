@@ -1,10 +1,11 @@
-# backend/app/urls.py
-
-from django.urls import path
+from django.urls import path, include
 from .views import home_view, about_view
+from . import views
 
 urlpatterns = [
-    path('home/', home_view, name='home'),
-    path('about/', about_view, name='about'),
-]
+    path('home/', home_view, name='home'),  # Home view
+    path('about/', about_view, name='about'),  # About view
+    path('', views.login_successful, name='login-view')
+    # Add the following line
 
+]

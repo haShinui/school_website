@@ -1,14 +1,14 @@
-# backend/app/views.py
-from django.http import JsonResponse
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 
+@login_required
 def home_view(request):
-    return JsonResponse({"message": "Welcome to the Home Page!"})
+    return render(request, 'home.html')  # Replace with the actual template
 
+@login_required
 def about_view(request):
-    return JsonResponse({"message": "This is the About Page!"})
-# backend/app/views.py
+    return render(request, 'about.html')  # Replace with the actual template
 
-from django.shortcuts import redirect
-
-def root_view(request):
-    return redirect('/api/home/')
+def login_successful(request):
+    return HttpResponse('Hey you did it.')

@@ -1,0 +1,27 @@
+Internal Server Error: /azure_auth/callback
+Traceback (most recent call last):
+  File "C:\Users\rafas\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rafas\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rafas\AppData\Local\Programs\Python\Python312\Lib\site-packages\azure_auth\views.py", line 31, in azure_auth_callback
+    token = AuthHandler(request).get_token_from_flow()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rafas\AppData\Local\Programs\Python\Python312\Lib\site-packages\azure_auth\handlers.py", line 63, in get_token_from_flow
+    token_result = self.msal_app.acquire_token_by_auth_code_flow(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rafas\AppData\Local\Programs\Python\Python312\Lib\site-packages\msal\application.py", line 1072, in acquire_token_by_auth_code_flow
+    response = _clean_up(self.client.obtain_token_by_auth_code_flow(
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rafas\AppData\Local\Programs\Python\Python312\Lib\site-packages\msal\application.py", line 182, in obtain_token_by_auth_code_flow
+    return super(_ClientWithCcsRoutingInfo, self).obtain_token_by_auth_code_flow(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rafas\AppData\Local\Programs\Python\Python312\Lib\site-packages\msal\oauth2cli\oidc.py", line 259, in obtain_token_by_auth_code_flow
+    result = super(Client, self).obtain_token_by_auth_code_flow(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rafas\AppData\Local\Programs\Python\Python312\Lib\site-packages\msal\oauth2cli\oauth2.py", line 542, in obtain_token_by_auth_code_flow
+    raise ValueError("state missing from auth_code_flow")
+ValueError: state missing from auth_code_flow
+"GET /azure_auth/callback?code=M.C523_BL2.2.U.ec7d1793-05b0-40a5-a0fc-63061c3324b2&client_info=eyJ2ZXIiOiIxLjAiLCJzdWIiOiJBQUFBQUFBQUFBQUFBQUFBQUFBQUFOODJMbFJvZVZPWVdaVTc5RGRaX0NNIiwibmFtZSI6InJhZmFlbCBzY2hsaWVwZXIiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJyYWZhc2NobGllcGVyQGdtYWlsLmNvbSIsIm9pZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC00Yzg5LWJhY2FkYzNiOTY1YSIsInRpZCI6IjkxODgwNDBkLTZjNjctNGM1Yi1iMTEyLTM2YTMwNGI2NmRhZCIsImhvbWVfb2lkIjoiMDAwMDAwMDAtMDAwMC0wMDAwLTRjODktYmFjYWRjM2I5NjVhIiwidWlkIjoiMDAwMDAwMDAtMDAwMC0wMDAwLTRjODktYmFjYWRjM2I5NjVhIiwidXRpZCI6IjkxODgwNDBkLTZjNjctNGM1Yi1iMTEyLTM2YTMwNGI2NmRhZCJ9&state=%7b%22next%22:%20%22/%22%7d HTTP/1.1" 500 100517

@@ -1,21 +1,6 @@
-# Django and REST Framework
-Django>=3.2,<5.0
-djangorestframework>=3.12,<4.0
-
-# MSAL for Microsoft Authentication
-msal>=1.20,<2.0
-
-# CORS Headers (for handling Cross-Origin Resource Sharing)
-django-cors-headers>=3.7,<4.0
-
-# PostgreSQL Adapter
-psycopg2>=2.9,<3.0
-
-# Social Authentication (in case other social logins are needed)
-social-auth-app-django>=5.0,<6.0
-
-# Optional: Gunicorn for production server (if deploying on a server)
-gunicorn>=20.0,<21.0
-
-# Optional: Whitenoise for serving static files in production
-whitenoise>=5.0,<6.0
+Django>=5.0.7
+djangorestframework>=3.14.0
+djangorestframework-simplejwt>=5.2.2
+django-cors-headers>=3.15.0
+django-allauth>=0.54.0
+psycopg2-binary>=2.9.6

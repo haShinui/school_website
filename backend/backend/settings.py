@@ -15,16 +15,12 @@ from pathlib import Path
 # Microsoft login
 import os
 #in production code, DONT store Cleint Secret Value in text !!
-MSAL_CLIENT_ID = '037186f9-0881-424a-beec-0aeca3952e72'
-MSAL_CLIENT_SECRET = 'OR78Q~uibKSh36GiNGEgFgMZi1.btYCB~QeFKaTm' #will expire in 6 motnh
-MSAL_AUTHORITY = 'https://login.microsoftonline.com/99f6c824-7f02-4c02-9f57-8e581af8d383'
-MSAL_REDIRECT_PATH = "http://localhost:8000/accounts/msal/callback/"
-MSAL_SCOPES = ['User.Read']
-MSAL_ENDPOINT = "https://graph.microsoft.com/v1.0/me"
-
-LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = '/api/home/'  # Redirect to the home page after login
-LOGOUT_REDIRECT_URL = '/api/home/'  # Redirect to the home page after logout
+#MSAL_CLIENT_ID = '037186f9-0881-424a-beec-0aeca3952e72'
+#MSAL_CLIENT_SECRET = 'OR78Q~uibKSh36GiNGEgFgMZi1.btYCB~QeFKaTm' #will expire in 6 motnh
+#MSAL_AUTHORITY = 'https://login.microsoftonline.com/99f6c824-7f02-4c02-9f57-8e581af8d383'
+#MSAL_REDIRECT_PATH = "http://localhost:8000/accounts/msal/callback/"
+#MSAL_SCOPES = ['User.Read']
+#MSAL_ENDPOINT = "https://graph.microsoft.com/v1.0/me"
 
 
 
@@ -45,8 +41,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+SITE_ID = 1
 # Application definition
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'azure_auth.backends.AzureBackend',
+
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -57,9 +58,37 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'app',
+    #'django_auth_adfs',
+    #'django.contrib.auth',
     'corsheaders',
-    'rest_framework_simplejwt'
+    "azure_auth",
+
 ]
+client_id = 'beab4056-b078-4cb9-ab34-1bd894faabbb'
+client_secret = 'kad8Q~zJ~LTob8WPHlKuAO2gY8vkMZtzH4w6Ba.1'
+tenant_id = '99f6c824-7f02-4c02-9f57-8e581af8d383'
+
+AZURE_AUTH = {
+    "CLIENT_ID": "beab4056-b078-4cb9-ab34-1bd894faabbb",
+    "CLIENT_SECRET": "kad8Q~zJ~LTob8WPHlKuAO2gY8vkMZtzH4w6Ba.1",
+    "REDIRECT_URI": "http://localhost:8000/azure_auth/callback",
+    "SCOPES": ["User.Read"],
+    "AUTHORITY": "https://login.microsoftonline.com/common",   # Or https://login.microsoftonline.com/common if multi-tenant
+    "LOGOUT_URI": "https://localhost:8000/logout",    # Optional
+    #"PUBLIC_URLS": ["<public:view_name>",],  # Optional, public views accessible by non-authenticated users
+    #"PUBLIC_PATHS": ['/go/',],  # Optional, public paths accessible by non-authenticated users
+    "ROLES": {
+        "95170e67-2bbf-4e3e-a4d7-e7e5829fe7a7": "GroupName1",
+        "3dc6539e-0589-4663-b782-fef100d839aa": "GroupName2"
+    },  # Optional, will add user to django group if user is in EntraID group
+    "USERNAME_ATTRIBUTE": "mail",   # The AAD attribute or ID token claim you want to use as the value for the user model `USERNAME_FIELD`
+    "EXTRA_FIELDS": [], # Optional, extra AAD user profile attributes you want to make available in the user mapping function
+    "USER_MAPPING_FN": "azure_auth.tests.misc.user_mapping_fn", # Optional, path to the function used to map the AAD to Django attributes
+}
+LOGIN_URL = "/azure_auth/login"
+LOGIN_REDIRECT_URL = '/'  # Redirect to the home page after login
+LOGOUT_REDIRECT_URL = '/'  # Redirect to the home page after logout
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -75,13 +104,17 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    #'django_auth_adfs.middleware.LoginRequiredMiddleware',
+    "azure_auth.middleware.AzureMiddleware",
 ]
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
     "http://localhost:8082",  # Add this if you use a different port for Vue.js dev server
 ]
 
 ROOT_URLCONF = 'backend.urls'
+
 
 TEMPLATES = [
     {
@@ -94,6 +127,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.request',
             ],
         },
     },
@@ -115,7 +149,31 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+import os
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'error.log'),
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'azure_auth': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    },
+}
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
