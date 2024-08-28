@@ -65,12 +65,12 @@ INSTALLED_APPS = [
 
 ]
 client_id = 'beab4056-b078-4cb9-ab34-1bd894faabbb'
-client_secret = 'kad8Q~zJ~LTob8WPHlKuAO2gY8vkMZtzH4w6Ba.1'
+client_$$$$$ecret = 'kad8Q~zJ~LTob8WPHlKuAO2gY8vkMZtzH4w6Ba.1'
 tenant_id = '99f6c824-7f02-4c02-9f57-8e581af8d383'
 
 AZURE_AUTH = {
     "CLIENT_ID": "beab4056-b078-4cb9-ab34-1bd894faabbb",
-    "CLIENT_SECRET": "kad8Q~zJ~LTob8WPHlKuAO2gY8vkMZtzH4w6Ba.1",
+    "CLIENT_$$$ECRET": "kad8Q~zJ~LTob8WPHlKuAO2gY8vkMZtzH4w6Ba.1", #S e c r e t f$$
     "REDIRECT_URI": "http://localhost:8000/azure_auth/callback",
     "SCOPES": ["User.Read"],
     "AUTHORITY": "https://login.microsoftonline.com/common",   # Or https://login.microsoftonline.com/common if multi-tenant
