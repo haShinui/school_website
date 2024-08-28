@@ -65,10 +65,16 @@ export default {
       }
     },
     logout() {
-      msalInstance.logoutPopup();
-      this.isAuthenticated = false;
-      this.username = '';
-      this.message = "You have been logged out.";
+        // Deactivate the currently active account
+        msalInstance.setActiveAccount(null);  // This effectively logs out the user locally
+
+        // Clear local session state
+        this.isAuthenticated = false;
+        this.username = '';
+        this.message = "You have been logged out.";
+
+        // Optional: Clear local storage if you're using it for cache
+        localStorage.clear();  // or sessionStorage.clear();
     },
     async fetchHomePageData() {
       try {
