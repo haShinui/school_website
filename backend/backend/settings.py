@@ -41,13 +41,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-SITE_ID = 1
-# Application definition
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'azure_auth.backends.AzureBackend',
-
-]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -57,41 +50,37 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',  # for token-based authentication
     'app',
-    #'django_auth_adfs',
-    #'django.contrib.auth',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.microsoft',
+    'django_extensions',
     'corsheaders',
-    "azure_auth",
-
 ]
+# Login of Microsoft and login for Admin and guest account
+ACCOUNT_ADAPTER = 'app.adapters.NoSignupAdapter'
+SOCIALACCOUNT_ADAPTER = 'app.adapters.MySocialAccountAdapter'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = "none"
+ACCOUNT_USERNAME_REQUIRED = True
 
-client_secret
-CLIENT_SECRET
+SOCIALACCOUNT_LOGIN_ON_GET = True
+ACCOUNT_EMAIL_REQUIRED = False
 
-client_id = 'beab4056-b078-4cb9-ab34-1bd894faabbb'
-hello_id = 'kad8Q~zJ~LTob8WPHlKuAO2gY8vkMZtzH4w6Ba.1'
-tenant_id = '99f6c824-7f02-4c02-9f57-8e581af8d383'
+LOGIN_REDIRECT_URL = 'http://localhost:8082/'  
+LOGOUT_REDIRECT_URL = 'http://localhost:8082/'  # Redirect to the home page after logout
 
-AZURE_AUTH = {
-    "CLIENT_ID": "beab4056-b078-4cb9-ab34-1bd894faabbb",
-    "Tenant_replace": "kad8Q~zJ~LTob8WPHlKuAO2gY8vkMZtzH4w6Ba.1", #S e c r e t f$$
-    "REDIRECT_URI": "http://localhost:8000/azure_auth/callback",
-    "SCOPES": ["User.Read"],
-    "AUTHORITY": "https://login.microsoftonline.com/common",   # Or https://login.microsoftonline.com/common if multi-tenant
-    "LOGOUT_URI": "https://localhost:8000/logout",    # Optional
-    #"PUBLIC_URLS": ["<public:view_name>",],  # Optional, public views accessible by non-authenticated users
-    #"PUBLIC_PATHS": ['/go/',],  # Optional, public paths accessible by non-authenticated users
-    "ROLES": {
-        "95170e67-2bbf-4e3e-a4d7-e7e5829fe7a7": "GroupName1",
-        "3dc6539e-0589-4663-b782-fef100d839aa": "GroupName2"
-    },  # Optional, will add user to django group if user is in EntraID group
-    "USERNAME_ATTRIBUTE": "mail",   # The AAD attribute or ID token claim you want to use as the value for the user model `USERNAME_FIELD`
-    "EXTRA_FIELDS": [], # Optional, extra AAD user profile attributes you want to make available in the user mapping function
-    "USER_MAPPING_FN": "azure_auth.tests.misc.user_mapping_fn", # Optional, path to the function used to map the AAD to Django attributes
-}
-LOGIN_URL = "/azure_auth/login"
-LOGIN_REDIRECT_URL = '/'  # Redirect to the home page after login
-LOGOUT_REDIRECT_URL = '/'  # Redirect to the home page after logout
+#SOCIALACCOUNT_ONLY = True
+
+# Add the site ID
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -107,16 +96,15 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    #'django_auth_adfs.middleware.LoginRequiredMiddleware',
-    "azure_auth.middleware.AzureMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8080",
+    #"http://localhost:8080",
     "http://localhost:8082",  # Add this if you use a different port for Vue.js dev server
 ]
-
+CORS_ALLOW_CREDENTIALS = True  # If you're using cookies for authentication
+SESSION_COOKIE_SAMESITE = 'Lax'  # or 'None' if using cross-site requests
 ROOT_URLCONF = 'backend.urls'
 
 
@@ -145,39 +133,12 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'Joalederafael1',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-import os
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'file': {
-            'level': 'ERROR',
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'error.log'),
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['file'],
-            'level': 'ERROR',
-            'propagate': True,
-        },
-        'azure_auth': {
-            'handlers': ['file'],
-            'level': 'ERROR',
-            'propagate': True,
-        },
-    },
-}
+
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
@@ -208,6 +169,12 @@ USE_I18N = True
 
 USE_TZ = True
 
+
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+SESSION_COOKIE_DOMAIN = 'localhost'
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8082', 'http://localhost:8000/']
+CSRF_COOKIE_NAME = 'csrftoken'
+CSRF_COOKIE_HTTPONLY = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/

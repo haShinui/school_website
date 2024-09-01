@@ -14,9 +14,13 @@
             <li class="nav-item">
               <router-link class="nav-link" to="/about">About</router-link>
             </li>
-            <li class="nav-item">
-              <a v-if="!isAuthenticated" class="nav-link" href="#" @click.prevent="login">Login</a>
-              <a v-if="isAuthenticated" class="nav-link" href="#" @click.prevent="logout">Logout</a>
+          </ul>
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item" v-if="!isAuthenticated">
+              <router-link class="nav-link" to="/login">Login</router-link>
+            </li>
+            <li class="nav-item" v-if="isAuthenticated">
+              <a class="nav-link" href="#" @click.prevent="logout">Logout</a>
             </li>
           </ul>
         </div>
@@ -27,7 +31,7 @@
 </template>
 
 <script>
-import { msalInstance, loginRequest } from "./msalConfig";
+import apiService from '@/services/apiService';
 
 export default {
   name: 'App',
@@ -40,25 +44,23 @@ export default {
     this.checkAccount();
   },
   methods: {
-    checkAccount() {
-      const account = msalInstance.getAllAccounts()[0];
-      if (account) {
-        this.isAuthenticated = true;
-      }
-    },
-    async login() {
+    async checkAccount() {
       try {
-        const loginResponse = await msalInstance.loginPopup(loginRequest);
-        this.isAuthenticated = true;
-        console.log("id_token acquired at: " + new Date().toString());
-        console.log(loginResponse);
+        const response = await apiService.getUserInfo();
+        this.isAuthenticated = response.data.isAuthenticated;
       } catch (error) {
-        console.error(error);
+        console.error('Error checking authentication status:', error);
+        this.isAuthenticated = false;
       }
     },
-    logout() {
-      msalInstance.logoutPopup();
-      this.isAuthenticated = false;
+    async logout() {
+      try {
+        await apiService.logout();
+        this.isAuthenticated = false;
+        this.$router.push('/login');
+      } catch (error) {
+        console.error('Error logging out:', error);
+      }
     }
   }
 };
@@ -67,4 +69,3 @@ export default {
 <style>
 /* Add any custom styles here */
 </style>
-  

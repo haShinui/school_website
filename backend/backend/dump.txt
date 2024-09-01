@@ -1,0 +1,24 @@
+class CustomLoginView(LoginView):
+    def get(self, *args, **kwargs):
+        # Redirect to your Vue.js frontend login route
+        return redirect('http://localhost:8082/microsoft-login')
+
+    def post(self, *args, **kwargs):
+        # Handle the post if necessary or redirect again
+        return redirect('http://localhost:8082/microsoft-login')
+
+
+        can u now make a new login page that combines the microsft login and also the normal allauth login and then when the user is logged in there is a button top right of app.vue bar that when ckicked, logs him out
+
+
+
+
+        Sure! Here's a reminder for later:
+
+Things to do after setting up your secure admin with Allauth and setting up login with POST and CSRF:
+
+    Implement Secure Cookies: Ensure that cookies are securely handled in your Django settings, especially for session and CSRF cookies.
+    Enable HTTPS: Ensure that your entire site is served over HTTPS, including setting up HSTS (HTTP Strict Transport Security).
+    Configure Secure Headers: Consider implementing additional security headers like Content Security Policy (CSP) and Subresource Integrity (SRI).
+    Verify CSRF Protection: Ensure that your CSRF protection is properly implemented and that tokens are correctly handled in both your Django backend and Vue.js frontend.
+    Test Security Measures: Thoroughly test your security measures, including CSRF protection and secure cookies, to ensure that everything is working as expected in a production-like environment.
