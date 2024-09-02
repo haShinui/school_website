@@ -1,4 +1,5 @@
 import axios from 'axios';
+import store from '@/store';  // Import Vuex store
 
 // Create an axios instance with the base configuration
 const apiService = axios.create({
@@ -27,32 +28,38 @@ apiService.interceptors.request.use(config => {
   return config;
 });
 
-// Method to fetch home page data
+// Add a response interceptor for 401 errors
+apiService.interceptors.response.use(response => {
+  return response;
+}, error => {
+  if (error.response && error.response.status === 401) {
+    store.commit('resetAuthState');  // Reset authentication state in Vuex
+  }
+  console.error('API Error:', error.response || error.message);
+  return Promise.reject(error);
+});
+
+// Define your methods using this `apiService` instance
 apiService.getHomePageData = function() {
   return this.get('home/');
 };
 
-// Method to fetch user info (for the AboutPage)
 apiService.getUserInfo = function() {
   return this.get('user-info/');
 };
 
-// Method to log out the user
 apiService.logout = function() {
   return this.post('logout/');
 };
 
-// Method to initiate the secure Microsoft login
-apiService.secureMicrosoftLogin = function() {
-  return this.post('microsoft-secure-login/');
-};
-
-// Method to initiate the secure Allauth login
 apiService.secureAllauthLogin = function(loginData) {
   return this.post('allauth-secure-login/', loginData);
 };
 
-// Method to sign up the user for the course
+apiService.secureMicrosoftLogin = function() {
+  return this.post('microsoft-secure-login/');
+};
+
 apiService.signupCourse = function() {
   return this.post('signup-course/');
 };

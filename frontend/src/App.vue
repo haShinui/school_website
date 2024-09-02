@@ -14,13 +14,19 @@
             <li class="nav-item">
               <router-link class="nav-link" to="/about">About</router-link>
             </li>
+            <li class="nav-item" v-if="isAuthenticated && userRole === 'normal'">
+              <router-link class="nav-link" to="/signup">Sign Up for Course</router-link>
+            </li>
+            <li class="nav-item" v-if="isAuthenticated && userRole === 'manager'">
+              <router-link class="nav-link" to="/manager-dashboard">Manager Dashboard</router-link>
+            </li>
           </ul>
           <ul class="navbar-nav ms-auto">
-            <li class="nav-item" v-if="!eventBus.isAuthenticated">
+            <li class="nav-item" v-if="!isAuthenticated">
               <router-link class="nav-link" to="/login">Login</router-link>
             </li>
-            <li class="nav-item" v-if="eventBus.isAuthenticated">
-              <a class="nav-link" href="#" @click.prevent="logout">Logout</a>
+            <li class="nav-item" v-if="isAuthenticated">
+              <a class="nav-link" href="#" @click.prevent="handleLogout">Logout</a>
             </li>
           </ul>
         </div>
@@ -31,37 +37,25 @@
 </template>
 
 <script>
-import apiService from '@/services/apiService';
-import { eventBus } from '@/eventBus';
+import { mapActions, mapGetters, mapState } from 'vuex';
 
 export default {
   name: 'App',
-  data() {
-    return {
-      eventBus,
-    };
+  computed: {
+    ...mapGetters(['isAuthenticated']),
+    ...mapState(['userRole'])  // Add userRole to the computed properties
   },
   created() {
-    this.checkAccount();
+    this.fetchAuthUser();  // Fetch authentication status and user role when the component is created
   },
   methods: {
-    async checkAccount() {
-      try {
-        const response = await apiService.getUserInfo();
-        this.eventBus.setIsAuthenticated(response.data.isAuthenticated);
-      } catch (error) {
-        console.error('Error checking authentication status:', error);
-        this.eventBus.setIsAuthenticated(false);
-      }
-    },
-    async logout() {
-      try {
-        await apiService.logout();
-        this.eventBus.setIsAuthenticated(false);
-        this.$router.push('/login');
-      } catch (error) {
+    ...mapActions(['fetchAuthUser', 'logoutUser']),
+    handleLogout() {
+      this.logoutUser().then(() => {
+        this.$router.push('/login');  // Redirect to login page after logout
+      }).catch(error => {
         console.error('Error logging out:', error);
-      }
+      });
     }
   }
 };

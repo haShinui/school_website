@@ -98,19 +98,18 @@ REST_FRAMEWORK = {
 }
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  # This should come immediately after SecurityMiddleware
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
+    'django.middleware.common.CommonMiddleware',  # This should come before CsrfViewMiddleware for CORS to handle properly
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     "allauth.account.middleware.AccountMiddleware",
 ]
-
+CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
-    #"http://localhost:8080",
-    "http://localhost:8082",  # Add this if you use a different port for Vue.js dev server
+    'http://localhost:8082',
 ]
 CORS_ALLOW_CREDENTIALS = True  # If you're using cookies for authentication
 SESSION_COOKIE_SAMESITE = 'Lax'  # or 'None' if using cross-site requests
@@ -184,6 +183,7 @@ SESSION_COOKIE_DOMAIN = 'localhost'
 CSRF_TRUSTED_ORIGINS = ['http://localhost:8082', 'http://localhost:8000/']
 CSRF_COOKIE_NAME = 'csrftoken'
 CSRF_COOKIE_HTTPONLY = False
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib import admin
-from app.views import get_user_info, api_logout, csrf_token_view, secure_microsoft_login, secure_allauth_login, signup_course_view #, CustomLoginView,
+from app.views import get_user_info, api_logout, csrf_token_view, secure_microsoft_login, secure_allauth_login, signup_course_view, check_auth, manager_dashboard #, CustomLoginView,
 from rest_framework import routers
 from django.contrib.auth import views as auth_views
 router = routers.DefaultRouter()
@@ -31,6 +31,8 @@ urlpatterns = [
         path('microsoft-secure-login/', secure_microsoft_login, name='secure_microsoft_login'),
         path('allauth-secure-login/', secure_allauth_login, name='secure_allauth_login'),
         path('signup-course/', signup_course_view, name='signup_course'),
+        path('check-auth/', check_auth, name='check_auth'),
+        path('manager-dashboard/', manager_dashboard, name='manager-dashboard'),
         #path('accounts/login/', CustomLoginView.as_view(), name='account_login'),  # Login API
     ])),
 ]

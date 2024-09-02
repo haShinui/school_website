@@ -1,78 +1,82 @@
 <template>
-  <div v-if="userInfo.isAuthenticated">
-    <h1>Sign Up for Introduction Course</h1>
-    <form @submit.prevent="submitSignupForm">
-      <div class="mb-3">
-        <label for="courseName" class="form-label">Course Name</label>
-        <input type="text" id="courseName" v-model="courseName" class="form-control" readonly>
-      </div>
-      <div class="mb-3">
-        <label for="userName" class="form-label">Your Name</label>
-        <input type="text" id="userName" v-model="userName" class="form-control" readonly>
-      </div>
-      <div class="mb-3">
-        <label for="email" class="form-label">Your Email</label>
-        <input type="email" id="email" v-model="email" class="form-control" readonly>
-      </div>
-      <button type="submit" class="btn btn-primary">Sign Up</button>
-    </form>
+  <div v-if="!accessDenied">
+    <h1>Introduction Course Signup</h1>
+    <button @click="handleSignupForCourse" v-if="!isSignedUp">Sign Up for Course</button>
+    <p v-if="isSignedUp">You are signed up for the course!</p>
+    <p v-if="signupError" class="text-danger">{{ signupError }}</p>
+    <p v-if="cannotSignUp" class="text-warning">Sorry, you are not allowed to sign up. Your role is: {{ userRole }}</p>
   </div>
   <div v-else>
-    <p>You need to be logged in to sign up for the introduction course.</p>
-    <router-link to="/login">Login</router-link>
+    <p>You do not have access to this page. Redirecting to homepage...</p>
   </div>
 </template>
 
 <script>
-import apiService from '@/services/apiService';
+import { mapState } from 'vuex';
 
 export default {
   data() {
     return {
-      courseName: 'Introduction to Makespace',
-      userName: '',
-      email: '',
-      userInfo: null,
+      signupError: null,
+      accessDenied: false,
+      cannotSignUp: false,
     };
   },
-  async created() {
-    await this.fetchUserInfo();
+  computed: {
+    ...mapState(['userRole']),
+    isSignedUp() {
+      return this.userRole === 'signed_up';
+    },
+    restrictedRoles() {
+      return ['signed_up', 'completed', 'manager', 'admin'];
+    }
   },
   methods: {
-    async fetchUserInfo() {
-      try {
-        const response = await apiService.getUserInfo();
-        this.userInfo = response.data;
-        if (this.userInfo.isAuthenticated) {
-          this.userName = `${this.userInfo.user.first_name} ${this.userInfo.user.last_name}`;
-          this.email = this.userInfo.user.email;
-        }
-      } catch (error) {
-        console.error('Error fetching user info:', error);
+    async handleSignupForCourse() {
+      if (this.restrictedRoles.includes(this.userRole)) {
+        this.cannotSignUp = true;
+        console.log(`User cannot sign up, role: ${this.userRole}`);
+        return;
       }
-    },
-    async submitSignupForm() {
+
       try {
-        const signupData = {
-          courseName: this.courseName,
-          userName: this.userName,
-          email: this.email,
-        };
-        const response = await apiService.signupForCourse(signupData);
-        if (response.data.success) {
-          alert('You have successfully signed up for the course!');
+        const response = await this.$store.dispatch('signupForCourse');
+        if (response && response.success) {
+          this.signupError = null;
+          await this.$store.dispatch('fetchAuthUser');
+        } else if (response && response.message) {
+          this.signupError = response.message;
         } else {
-          alert('Failed to sign up for the course.');
+          this.signupError = 'Unexpected response format.';
         }
       } catch (error) {
-        console.error('Error signing up for the course:', error);
-        alert('An error occurred while signing up. Please try again.');
+        this.signupError = 'An error occurred during signup.';
+        console.error('Error signing up for course:', error);
       }
-    },
+    }
   },
+  created() {
+    if (this.userRole !== 'normal') {
+      this.accessDenied = true;
+      console.log(`Access denied for user with role: ${this.userRole}`);
+      setTimeout(() => {
+        this.$router.push('/');  // Redirect to the homepage after showing the message
+      }, 2000);  // Delay for user to see the message
+    } else if (this.restrictedRoles.includes(this.userRole)) {
+      this.cannotSignUp = true;
+      console.log(`User cannot sign up, role: ${this.userRole}`);
+    } else {
+      this.$store.dispatch('fetchAuthUser');
+    }
+  }
 };
 </script>
 
 <style scoped>
-/* Add any custom styles here */
+.text-danger {
+  color: red;
+}
+.text-warning {
+  color: orange;
+}
 </style>
