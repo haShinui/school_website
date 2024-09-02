@@ -52,4 +52,9 @@ apiService.secureAllauthLogin = function(loginData) {
   return this.post('allauth-secure-login/', loginData);
 };
 
+// Method to sign up the user for the course
+apiService.signupCourse = function() {
+  return this.post('signup-course/');
+};
+
 export default apiService;

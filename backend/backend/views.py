@@ -18,10 +18,6 @@ from allauth.socialaccount.providers.oauth2.views import OAuth2LoginView
 from django.conf import settings
 from django.contrib.auth import login, get_user_model, logout
 from django.urls import reverse
-import msal
-import requests
-from azure_auth.handlers import AuthHandler
-from azure_auth.exceptions import TokenError
 import json
 
 

@@ -1,3 +1,9 @@
-from django.contrib import admin
+# app/admin.py
 
-# Register your models here.
+from django.contrib import admin
+from .models import UserProfile
+
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ['user', 'role']
+
+admin.site.register(UserProfile, UserProfileAdmin)

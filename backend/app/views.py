@@ -9,6 +9,7 @@ from django.contrib.auth import logout, login
 from django.views.decorators.http import require_POST
 from django.urls import reverse
 import json
+from django.contrib.auth.models import User
 UserModel = get_user_model()
 
 
@@ -40,6 +41,18 @@ def get_user_info(request):
             'message': 'You are not logged in.'
         })
 
+
+@csrf_protect
+@require_POST
+@login_required
+def signup_course_view(request):
+    user_profile = request.user.userprofile
+    if user_profile.role == 'normal':
+        user_profile.role = 'signed_up'
+        user_profile.save()
+        return JsonResponse({'success': True, 'message': 'You have successfully signed up for the course!'})
+    else:
+        return JsonResponse({'success': False, 'message': 'You are already signed up or have a different role.'}, status=400)
 
 from django.contrib.auth import logout, authenticate
 from django.http import JsonResponse

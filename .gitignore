@@ -1,5 +1,7 @@
 # Virtual environment
 venv/
+/venv/
+/venv
 <<<<<<< HEAD
 backend/venv/
 =======
@@ -31,3 +33,4 @@ node_modules/
 # IDE specific files (optional)
 .vscode/
 .idea/
+backend/error.log

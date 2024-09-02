@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.microsoft',
     'django_extensions',
     'corsheaders',
+    'sslserver',
 ]
 # Login of Microsoft and login for Admin and guest account
 ACCOUNT_ADAPTER = 'app.adapters.NoSignupAdapter'
@@ -73,6 +74,14 @@ LOGIN_REDIRECT_URL = 'http://localhost:8082/'
 LOGOUT_REDIRECT_URL = 'http://localhost:8082/'  # Redirect to the home page after logout
 
 #SOCIALACCOUNT_ONLY = True
+# Django settings.py
+
+
+# DONT FORGET, ADD HTTPS later
+
+
+
+
 
 # Add the site ID
 SITE_ID = 1

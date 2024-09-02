@@ -16,10 +16,10 @@
             </li>
           </ul>
           <ul class="navbar-nav ms-auto">
-            <li class="nav-item" v-if="!isAuthenticated">
+            <li class="nav-item" v-if="!eventBus.isAuthenticated">
               <router-link class="nav-link" to="/login">Login</router-link>
             </li>
-            <li class="nav-item" v-if="isAuthenticated">
+            <li class="nav-item" v-if="eventBus.isAuthenticated">
               <a class="nav-link" href="#" @click.prevent="logout">Logout</a>
             </li>
           </ul>
@@ -32,12 +32,13 @@
 
 <script>
 import apiService from '@/services/apiService';
+import { eventBus } from '@/eventBus';
 
 export default {
   name: 'App',
   data() {
     return {
-      isAuthenticated: false,
+      eventBus,
     };
   },
   created() {
@@ -47,16 +48,16 @@ export default {
     async checkAccount() {
       try {
         const response = await apiService.getUserInfo();
-        this.isAuthenticated = response.data.isAuthenticated;
+        this.eventBus.setIsAuthenticated(response.data.isAuthenticated);
       } catch (error) {
         console.error('Error checking authentication status:', error);
-        this.isAuthenticated = false;
+        this.eventBus.setIsAuthenticated(false);
       }
     },
     async logout() {
       try {
         await apiService.logout();
-        this.isAuthenticated = false;
+        this.eventBus.setIsAuthenticated(false);
         this.$router.push('/login');
       } catch (error) {
         console.error('Error logging out:', error);
