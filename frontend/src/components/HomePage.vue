@@ -1,39 +1,29 @@
 <template>
-  <div>
-    <h1>Home Page</h1>
-    <div v-if="userInfo && userInfo.isAuthenticated">
-      <p v-if="userInfo.user.username">Welcome, {{ userInfo.user.username }}!</p>
-      <p v-else>Welcome, {{ userInfo.user.first_name }} {{ userInfo.user.last_name }}!</p>
-    </div>
-    <div v-else>
-      <p>You are not logged in.</p>
-      <a href="http://localhost:8082/microsoft-login/">Login with Microsoft</a>
-    </div>
+  <div class="home-page">
+    <h1>Welcome to the School Website</h1>
+    <Button label="Primary Button" class="p-mr-2 p-mb-2"></Button>
+    <Button label="Secondary Button" class="p-button-secondary p-mb-2"></Button>
+
+    <Card header="Home Page" subheader="Main Information" class="p-mt-4">
+      <p>
+        You are not logged in. Use the buttons above to navigate through the website or log in to access more features.
+      </p>
+      <template #footer>
+        <Button label="Learn More" icon="pi pi-info-circle" class="p-button-help"></Button>
+      </template>
+    </Card>
   </div>
 </template>
 
 <script>
-import apiService from '../services/apiService';
-
 export default {
-  data() {
-    return {
-      userInfo: null, // Start with null to handle the loading state
-    };
-  },
-  created() {
-    this.fetchUserInfo();
-  },
-  methods: {
-    async fetchUserInfo() {
-      try {
-        const response = await apiService.getUserInfo();
-        this.userInfo = response.data;
-      } catch (error) {
-        console.error('Error fetching user info:', error);
-        this.userInfo = { isAuthenticated: false }; // Handle case where fetching fails
-      }
-    },
-  },
+  name: 'HomePage',
 };
 </script>
+
+<style scoped>
+.home-page {
+  padding: 2rem;
+  text-align: center;
+}
+</style>

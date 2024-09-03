@@ -109,7 +109,7 @@ MIDDLEWARE = [
 ]
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:8082',
+    'http://localhost:8082','http://localhost:5173'
 ]
 CORS_ALLOW_CREDENTIALS = True  # If you're using cookies for authentication
 SESSION_COOKIE_SAMESITE = 'Lax'  # or 'None' if using cross-site requests

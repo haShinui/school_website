@@ -1,28 +1,26 @@
 // frontend/src/main.js
 import { createApp } from 'vue';
+import './assets/style.css';
+import PrimeVue from "primevue/config";
 import App from './App.vue';
 import router from './router';
 import store from './store';
-// Import PrimeVue and necessary styles
-//import PrimeVue from 'primevue/config';
-//import 'primevue/resources/primevue.min.css';            // Core CSS
-//import 'primeicons/primeicons.css';   
-
-//import 'primevue/resources/themes/aura-light-blue/theme.css';
-//import 'primevue/resources/themes/aura-dark-blue/theme.css'; (not applied yet)
-import PrimeVue from 'primevue/config';
 import Aura from '@primevue/themes/aura';
+import Ripple from 'primevue/ripple';
 
-
-
+import Select from 'primevue/select'; 
 
 const app = createApp(App);
+
 app.use(router);
 app.use(store);
-app.mount('#app');
 app.use(PrimeVue, {
+    ripple: true, // Enable ripple effects globally
     theme: {
-        preset: Aura
-    }
-});
-//app.use(PrimeVue);
+      preset: Aura,
+    },
+  });  // Use PrimeVue before mounting the app
+  
+app.directive('ripple', Ripple); // Register the Ripple directive globally
+app.component('Select', Select);
+app.mount('#app');
