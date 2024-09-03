@@ -58,7 +58,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.microsoft',
     'django_extensions',
     'corsheaders',
-    'sslserver',
+    #'sslserver',
 ]
 # Login of Microsoft and login for Admin and guest account
 ACCOUNT_ADAPTER = 'app.adapters.NoSignupAdapter'
