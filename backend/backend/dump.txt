@@ -22,3 +22,29 @@ Things to do after setting up your secure admin with Allauth and setting up logi
     Configure Secure Headers: Consider implementing additional security headers like Content Security Policy (CSP) and Subresource Integrity (SRI).
     Verify CSRF Protection: Ensure that your CSRF protection is properly implemented and that tokens are correctly handled in both your Django backend and Vue.js frontend.
     Test Security Measures: Thoroughly test your security measures, including CSRF protection and secure cookies, to ensure that everything is working as expected in a production-like environment.
+
+    <template #end>
+        <div class="flex items-center mb-2  ">
+          <Button type="button" icon="pi pi-user" label="Profile" @click="toggle" />
+          <Popover ref="op">
+            <div class="flex flex-col gap-2 w-[20rem] p-2"> 
+              <ul class="profile-menu gap-1">
+                <li  class="flex items-center gap-1 px-1 py-1" @click="navigateTo('/profile')">
+                  <i class="pi pi-user mr-2"></i> Profile
+                </li>
+              <div>
+                <li @click="navigateTo('/settings')">
+                  <i class="pi pi-cog mr-2"></i> Settings
+                </li>
+              </div>
+                <Divider class="m-0" /> 
+                <div>
+                <li @click="handleLogout">
+                  <i class="pi pi-sign-out mr-2"></i> Sign Out
+                </li>
+              </div>
+              </ul>
+            </div>
+          </Popover>
+        </div>
+      </template>

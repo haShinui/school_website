@@ -8,7 +8,7 @@
     </div>
     <div v-else>
       <p>You are not logged in.</p>
-      <a href="http://localhost:8082/microsoft-login/">Login with Microsoft</a>
+      <a href="http://localhost:8082/login">Login with Microsoft</a>
     </div>
   </div>
 </template>
