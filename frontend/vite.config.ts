@@ -17,6 +17,8 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'), // Shortcut for '@' to 'src' directory
+      '@services': path.resolve(__dirname, './src/services'), // Alias for services
+      '@components': path.resolve(__dirname, './src/components'), // Alias for components
     },
   },
   // Dev server configuration
@@ -36,5 +38,15 @@ export default defineConfig({
     outDir: '../static/frontend', // Output directory for build
     emptyOutDir: true, // Clear the output directory before building
     sourcemap: true, // Enable source maps for easier debugging
+    rollupOptions: {
+      output: {
+        manualChunks: (id) => {
+          if (id.includes('node_modules')) {
+            // Separate third-party dependencies into a 'vendor' chunk
+            return 'vendor';
+          }
+        },
+      },
+    },
   },
 });

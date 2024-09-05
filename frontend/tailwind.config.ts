@@ -11,7 +11,7 @@ module.exports = {
     './pages/**/*.{ts,tsx,vue}',
     './components/**/*.{ts,tsx,vue}',
     './app/**/*.{ts,tsx,vue}',
-    './src/**/*.{ts,tsx,vue}',
+    './src/**/*.{vue,js,ts,jsx,tsx}', // Ensure all Vue and TS files are processed
 	],
   
   theme: {

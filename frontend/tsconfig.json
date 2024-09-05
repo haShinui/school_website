@@ -4,6 +4,7 @@
     "module": "esnext",
     "baseUrl": "./",
     "moduleResolution": "node",
+    "resolveJsonModule": true, 
     "paths": {
       "@/*": ["src/*"],            // Resolve @ to src directory
       "@services/*": ["src/services/*"],
@@ -20,7 +21,9 @@
     "esModuleInterop": true,       // Ensure interoperability with ES modules
     "allowSyntheticDefaultImports": true,  // Allow default imports from modules with no default export
     "forceConsistentCasingInFileNames": true, // Enforce file name casing consistency
-    "sourceMap": true              // Enable source maps for debugging
+    "sourceMap": true,              // Enable source maps for debugging
+    "jsx": "preserve",              // Ensure JSX/TSX is preserved (used in Vue and React projects)
+    "types": ["node", "vite/client"] // Ensure correct types for Node.js and Vite
   },
   "include": [
     "src/**/*.ts",

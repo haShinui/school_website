@@ -1,96 +1,212 @@
 <template>
-  <div id="app" class="min-h-screen bg-gray-100">
-    <!-- Navigation Bar -->
-    <nav class="bg-white shadow">
-      <div class="container mx-auto px-4 py-2 flex justify-between items-center">
-        <!-- Logo Section -->
-        <div class="flex items-center">
-          <svg width="35" height="40" viewBox="0 0 35 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-8">
-            <path
-              d="M25.87 18.05L23.16 17.45L25.27 20.46V29.78L32.49 23.76V13.53L29.18 14.73L25.87 18.04V18.05ZM25.27 35.49L29.18 31.58V27.67L25.27 30.98V35.49ZM20.16 17.14H20.03H20.17H20.16ZM30.1 5.19L34.89 4.81L33.08 12.33L24.1 15.67L30.08 5.2L30.1 5.19ZM5.72 14.74L2.41 13.54V23.77L9.63 29.79V20.47L11.74 17.46L9.03 18.06L5.72 14.75V14.74ZM9.63 30.98L5.72 27.67V31.58L9.63 35.49V30.98ZM4.8 5.2L10.78 15.67L1.81 12.33L0 4.81L4.79 5.19L4.8 5.2ZM24.37 21.05V34.59L22.56 37.29L20.46 39.4H14.44L12.34 37.29L10.53 34.59V21.05L12.42 18.23L17.45 26.8L22.48 18.23L24.37 21.05ZM22.85 0L22.57 0.69L17.45 13.08L12.33 0.69L12.05 0H22.85Z"
-              fill="#007ad9"
-            />
-            <path
-              d="M30.69 4.21L24.37 4.81L22.57 0.69L22.86 0H26.48L30.69 4.21ZM23.75 5.67L22.66 3.08L18.05 14.24V17.14H19.7H20.03H20.16H20.2L24.1 15.7L30.11 5.19L23.75 5.67ZM4.21002 4.21L10.53 4.81L12.33 0.69L12.05 0H8.43002L4.22002 4.21H4.21002ZM21.9 17.4L20.6 18.2H14.3L13 17.4L12.4 18.2L12.42 18.23L17.45 26.8L22.48 18.23L22.5 18.2L21.9 17.4ZM4.79002 5.19L10.8 15.7L14.7 17.14H14.74H15.2H16.85V14.24L12.24 3.09L11.15 5.68L4.79002 5.2V5.19Z"
-              fill="#333333"
-            />
-          </svg>
+  <div
+    id="app"
+    :class="{'dark': isDarkMode}"
+    class="min-h-screen transition duration-500 ease-in-out bg-gray-100 dark:bg-gray-900"
+  >
+    <!-- Full-width Navigation Bar -->
+    <nav class="bg-blue-600 dark:bg-gray-900 w-full shadow-lg z-10 relative">
+      <div class="flex justify-between items-center w-full px-6 h-16 relative">
+        <!-- Left Section (Logo/Title) -->
+        <div class="flex items-center space-x-4">
+          <img src="https://via.placeholder.com/40" alt="Logo" class="w-10 h-10 rounded-full shadow-md" />
+          <h1 class="text-lg font-bold text-white tracking-wider">School Website</h1>
         </div>
 
-        <!-- Navigation Links -->
-        <div class="flex space-x-4">
-          <router-link v-for="item in menuItems" :key="item.label" :to="item.route" class="text-gray-700 hover:text-blue-500">
-            <span class="ml-2">{{ item.label }}</span>
-          </router-link>
+        <!-- Middle Section (Centered Navigation Links with Icons) -->
+        <div class="absolute inset-x-0 flex justify-center items-center">
+          <div class="flex items-center  justify-center  ">
+            <router-link
+              to="/"
+              class="text-white hover:text-gray-200 inline-flex items-center text-sm font-medium transition-transform transform hover:scale-105"
+              active-class="text-white"
+            >
+              <i class="pi pi-home mr-2"></i>
+              <span v-if="currentLocale === 'en'">Home</span>
+              <span v-if="currentLocale === 'de'">Startseite</span>
+            </router-link>
+            
+            <router-link
+              to="/about"
+              class="text-white hover:text-gray-200 inline-flex items-center text-sm font-medium transition-transform transform hover:scale-105"
+              active-class="text-white"
+            >
+              <i class="pi pi-info-circle mr-2"></i>
+              <span v-if="currentLocale === 'en'">About</span>
+              <span v-if="currentLocale === 'de'">Über uns</span>
+            </router-link>
+          </div>
         </div>
 
-        <!-- Profile Menu -->
-        <div class="relative">
-          <button @click="toggleMenu" class="text-gray-700 hover:text-blue-500">
-            <i class="pi pi-ellipsis-v"></i>
+        <!-- Right Section (Language & Dark Mode Switchers, Login/Profile Dropdown) -->
+        <div class="flex items-center space-x-4">
+          <!-- Language Switcher -->
+          <button @click="switchLanguage" class="flex items-center focus:outline-none">
+            <span
+              v-if="currentLocale === 'en'"
+              key="en-flag"
+              class="fi fi-gb w-8 h-6"
+              title="Switch to German"
+            ></span>
+            <span
+              v-if="currentLocale === 'de'"
+              key="de-flag"
+              class="fi fi-de w-8 h-6"
+              title="Switch to English"
+            ></span>
           </button>
 
-          <!-- Dropdown Menu -->
-          <div v-if="menuVisible" class="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md z-50">
-            <ul>
-              <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer" @click="navigateTo('/profile')">
-                <i class="pi pi-user mr-2"></i> Profile
-              </li>
-              <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer" @click="navigateTo('/')">
-                <i class="pi pi-home mr-2"></i> Home
-              </li>
-              <li class="h-px bg-gray-300 my-2"></li> <!-- Separator -->
-              <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer" @click="navigateTo('/settings')">
-                <i class="pi pi-cog mr-2"></i> Settings
-              </li>
-            </ul>
+          <!-- Dark/Light Mode Switcher with Ring -->
+          <div
+            @click="toggleDarkMode"
+            class="relative w-12 h-6 bg-gray-300 dark:bg-slate-800 rounded-full flex items-center cursor-pointer ring-1 dark:ring-1 dark:ring-slate-600 ring-slate-500 dark:hover:ring-2 hover:ring-2 dark:hover:ring-green-500 hover:ring-green-500 transition-all p-0.5"
+          >
+            <!-- Toggle Knob -->
+            <div
+              :class="{
+                'translate-x-[24.5px] bg-black': isDarkMode,
+                'translate-x-[-0.5px] bg-white': !isDarkMode
+              }"
+              class="w-5 h-5 rounded-full transform transition-transform duration-300 flex items-center justify-center"
+            >
+              <i
+                :class="isDarkMode ? 'pi pi-moon text-white' : 'pi pi-sun text-slate-400'"
+                class="text-sm"
+              ></i>
+            </div>
+          </div>
+
+          <!-- Profile/Login Dropdown -->
+          <div class="relative">
+            <!-- Show Login link if not authenticated -->
+            <router-link
+              v-if="!isAuthenticated"
+              to="/login"
+              class="text-white hover:text-gray-200 inline-flex items-center text-sm font-medium transition-transform transform hover:scale-105"
+              active-class="text-white"
+            >
+              <i class="pi pi-sign-in mr-2"></i>
+              Login
+            </router-link>
+
+            <!-- Show Profile dropdown if authenticated -->
+            <div
+              v-else
+              @click="toggleDropdown"
+              class="cursor-pointer flex items-center space-x-2"
+            >
+              <img src="https://via.placeholder.com/30" alt="Profile Image" class="w-8 h-8 rounded-full" />
+              <span class="text-white text-sm font-medium">{{ username }}</span>
+              <svg
+                class="w-5 h-5 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </div>
+
+            <!-- Dropdown Menu -->
+            <div
+              v-if="isDropdownOpen"
+              class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20"
+            >
+              <router-link
+                to="/settings"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              >
+                Settings
+              </router-link>
+              <router-link
+                to="/"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                @click="logout"
+              >
+                Sign Out
+              </router-link>
+            </div>
           </div>
         </div>
       </div>
     </nav>
-    
+
     <!-- Router View -->
-    <router-view></router-view>
+      <router-view></router-view>
+
   </div>
 </template>
 
-<script lang="ts">
-import { ref, computed } from 'vue';
+
+<script setup lang="ts">
+import { ref, computed, watch } from 'vue';
+import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 
-export default {
-  name: 'App',
-  
-  setup() {
-    const router = useRouter();
-    const menuVisible = ref(false);
-    
-    const toggleMenu = () => {
-      menuVisible.value = !menuVisible.value;
-    };
+// Access Vuex store and router
+const store = useStore();
+const router = useRouter();
 
-    const navigateTo = (path: string) => {
-      router.push(path);
-      menuVisible.value = false;
-    };
+// Profile dropdown state
+const isDropdownOpen = ref(false);
 
-    // Example Menubar Items
-    const menuItems = computed(() => [
-      { label: 'Home', route: '/' },
-      { label: 'About', route: '/about' },
-      { label: 'Login', route: '/login' }
-    ]);
+// Toggle dropdown visibility
+const toggleDropdown = () => {
+  isDropdownOpen.value = !isDropdownOpen.value;
+};
 
-    return {
-      menuItems,
-      menuVisible,
-      toggleMenu,
-      navigateTo
-    };
-  }
+// Check if the user is authenticated using Vuex getter
+const isAuthenticated = computed(() => store.getters.isAuthenticated);
+
+// Get the username from Vuex store
+const username = computed(() => store.getters.username);
+
+// Logout function that triggers Vuex action and redirects to login page
+const logout = () => {
+  store
+    .dispatch('logoutUser') // Call Vuex action to log out
+    .then(() => {
+      router.push('/login'); // Redirect to login page after logout
+    })
+    .catch((error) => {
+      console.error('Error during logout:', error);
+    });
+};
+
+// Language Switching using Vue I18n
+const { locale } = useI18n();
+const currentLocale = ref(locale.value); // Use a reactive ref for currentLocale
+
+// Watch the locale changes to update the flag and locale
+watch(locale, (newLocale) => {
+  currentLocale.value = newLocale;
+});
+
+// Switch between English and German
+const switchLanguage = () => {
+  locale.value = currentLocale.value === 'en' ? 'de' : 'en';
+};
+
+// Dark mode handling
+const isDarkMode = ref(false);
+
+// Toggle dark mode
+const toggleDarkMode = () => {
+  isDarkMode.value = !isDarkMode.value;
+  document.documentElement.classList.toggle('dark', isDarkMode.value);
 };
 </script>
 
 <style scoped>
-/* TailwindCSS is handling the styling, so no additional CSS is needed here */
+html, body, #app {
+  margin: 0;
+  padding: 0;
+  background-color: #f3f4f6; /* Light mode background */
+}
+
+.dark body {
+  background-color: #1f2937; /* Dark mode background */
+}
 </style>
