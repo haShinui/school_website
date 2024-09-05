@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    "target": "esnext",  // Target modern JavaScript for Vue 3
+    "module": "esnext",
+    "baseUrl": "./",
+    "moduleResolution": "node",
+    "paths": {
+      "@/*": ["src/*"],            // Resolve @ to src directory
+      "@services/*": ["src/services/*"],
+      "@components/*": ["src/components/*"]
+    },
+    "strict": true,                // Enable strict type-checking
+    "skipLibCheck": true,          // Skip type checking of third-party libraries for faster builds
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable",
+      "scripthost"
+    ],
+    "esModuleInterop": true,       // Ensure interoperability with ES modules
+    "allowSyntheticDefaultImports": true,  // Allow default imports from modules with no default export
+    "forceConsistentCasingInFileNames": true, // Enforce file name casing consistency
+    "sourceMap": true              // Enable source maps for debugging
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue"                 // Ensure TypeScript includes .vue files
+  ],
+  "exclude": [
+    "node_modules"                 // Exclude node_modules to prevent unnecessary type checking
+  ]
+}

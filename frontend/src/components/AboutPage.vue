@@ -13,7 +13,8 @@
   </div>
 </template>
 
-<script>
+
+<script lang="ts">
 import apiService from '../services/apiService';
 
 export default {

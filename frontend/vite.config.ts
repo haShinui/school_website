@@ -1,36 +1,40 @@
 import { defineConfig } from 'vite';
+import path from 'node:path';
 import vue from '@vitejs/plugin-vue';
-import Components from 'unplugin-vue-components/vite';
-import { PrimeVueResolver } from 'unplugin-vue-components/resolvers';
-import { fileURLToPath, URL } from 'node:url';
+import tailwind from 'tailwindcss';
+import autoprefixer from 'autoprefixer';
 
 export default defineConfig({
-  plugins: [
-    vue({
-      
-    }),
-    Components({
-      resolvers: [PrimeVueResolver()],
-    }),
-  ],
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
+  // Set up CSS with Tailwind and PostCSS
+  css: {
+    postcss: {
+      plugins: [tailwind(), autoprefixer()],
     },
   },
+  // Include Vue plugin
+  plugins: [vue()],
+  // Resolve for TypeScript paths and aliasing
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'), // Shortcut for '@' to 'src' directory
+    },
+  },
+  // Dev server configuration
   server: {
-    host: 'localhost',
-    port: 8082,
+    host: 'localhost', // Define the hostname
+    port: 8082, // Change the port if needed
     proxy: {
       '/api': {
-        target: 'http://localhost:8000',
+        target: 'http://localhost:8000', // Proxy API requests to Django backend
         changeOrigin: true,
         secure: false,
       },
     },
   },
+  // Build options
   build: {
-    outDir: '../static/frontend',
-    emptyOutDir: true,
+    outDir: '../static/frontend', // Output directory for build
+    emptyOutDir: true, // Clear the output directory before building
+    sourcemap: true, // Enable source maps for easier debugging
   },
 });
