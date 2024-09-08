@@ -1,4 +1,17 @@
 {
+  "compilerOptions": {
+    "baseUrl": "./",  // Base URL for resolving non-relative module names
+    "paths": {
+      "@/*": ["src/*"],  // Alias for everything in the src folder
+      "@services/*": ["src/services/*"],  // Alias for services folder
+      "@components/*": ["src/components/*"]  // Alias for components folder
+    },
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "noImplicitThis": true
+  },
   "files": [],
   "references": [
     { "path": "./tsconfig.app.json" },

@@ -76,21 +76,30 @@ def signup_course_view(request):
         print(f"Exception occurred: {str(e)}")
         return JsonResponse({'success': False, 'message': f'Error: {str(e)}'}, status=400)
 
+from django.http import JsonResponse
+from django.views.decorators.http import require_http_methods
+
 @require_http_methods(["GET"])
 def check_auth(request):
-    is_authenticated = request.user.is_authenticated
-    if is_authenticated:
-        user_profile = request.user.userprofile  # Assuming there's a related UserProfile model
+    if request.user.is_authenticated:
+        # If the user is authenticated, return their username and role
+        user_profile = request.user.userprofile  # Assuming the user has a related UserProfile model
         return JsonResponse({
             'isAuthenticated': True,
-            'username': request.user.username,  # Send back the username
-            'role': user_profile.role  # Include the user's role
+            'user': {
+                'username': request.user.username,
+                'first_name': request.user.first_name,
+                'last_name': request.user.last_name,
+                'role': user_profile.role  # Assuming user_profile has a `role` field
+            }
         })
     else:
+        # If the user is not authenticated, return false with no user data
         return JsonResponse({
-            'isAuthenticated': False
+            'isAuthenticated': False,
+            'user': None
         })
-        
+     
         
 # Define the test to check if the user is a manager
 def is_manager(user):

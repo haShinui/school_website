@@ -11,27 +11,12 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
-
-# Microsoft login
 import os
-#in production code, DONT store Cleint Secret Value in text !!
-#MSAL_CLIENT_ID = '037186f9-0881-424a-beec-0aeca3952e72'
-#MSAL_CLIENT_SECRET = 'OR78Q~uibKSh36GiNGEgFgMZi1.btYCB~QeFKaTm' #will expire in 6 motnh
-#MSAL_AUTHORITY = 'https://login.microsoftonline.com/99f6c824-7f02-4c02-9f57-8e581af8d383'
-#MSAL_REDIRECT_PATH = "http://localhost:8000/accounts/msal/callback/"
-#MSAL_SCOPES = ['User.Read']
-#MSAL_ENDPOINT = "https://graph.microsoft.com/v1.0/me"
-
-
-
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
+# SECURITY CONFIGURATION
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-c)g%$184o8z=mi-3!##hs5z8^=*b-u%m$_*m8al@de@y12^s3w'
@@ -39,8 +24,50 @@ SECRET_KEY = 'django-insecure-c)g%$184o8z=mi-3!##hs5z8^=*b-u%m$_*m8al@de@y12^s3w
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
+# CSRF and Cookie Security Settings
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8082', 'http://localhost:8000/']
+CSRF_COOKIE_NAME = 'csrftoken'
+CSRF_COOKIE_HTTPONLY = False  # You can enable this if you don't need access to the CSRF token via JavaScript
+
+# Only allow session cookies over HTTPS (recommended in production)
+SESSION_COOKIE_SECURE = True  # Use HTTPS for secure transmission (set to True for production)
+
+# Mark session cookies as HTTP-only, preventing JavaScript from accessing them
+SESSION_COOKIE_HTTPONLY = True
+
+# Set the expiration for sessions (e.g., 1 day)
+SESSION_COOKIE_AGE = 86400  # 1 day in seconds
+
+# CSRF Protection on session-based requests
+CSRF_COOKIE_SECURE = True
+
+# Cross-site cookies
+SESSION_COOKIE_SAMESITE = 'Lax'  # or 'None' if using cross-site requests
+
+#so my website cant be imbedded in others
+X_FRAME_OPTIONS = 'DENY'
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Enable HTTPS when ready (currently commented out for development)
+# SECURE_SSL_REDIRECT = True  # Uncomment for HTTPS in production
+# CSRF_COOKIE_SECURE = True  # Uncomment for HTTPS
+# SESSION_COOKIE_SECURE = True  # Uncomment for HTTPS
+
+# CORS Settings
+CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:8082',
+    'http://localhost:5173',
+]
+CORS_ALLOW_CREDENTIALS = True  # If you're using cookies for authentication
+
+# SESSION CONFIGURATION
+
+SESSION_COOKIE_DOMAIN = 'localhost'
+
+# APPLICATION CONFIGURATION
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -58,44 +85,9 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.microsoft',
     'django_extensions',
     'corsheaders',
-    #'sslserver',
-]
-# Login of Microsoft and login for Admin and guest account
-ACCOUNT_ADAPTER = 'app.adapters.NoSignupAdapter'
-SOCIALACCOUNT_ADAPTER = 'app.adapters.MySocialAccountAdapter'
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = "none"
-ACCOUNT_USERNAME_REQUIRED = True
-
-SOCIALACCOUNT_LOGIN_ON_GET = True
-ACCOUNT_EMAIL_REQUIRED = False
-
-LOGIN_REDIRECT_URL = 'http://localhost:8082/'  
-LOGOUT_REDIRECT_URL = 'http://localhost:8082/'  # Redirect to the home page after logout
-
-#SOCIALACCOUNT_ONLY = True
-# Django settings.py
-
-
-# DONT FORGET, ADD HTTPS later
-
-
-
-
-
-# Add the site ID
-SITE_ID = 1
-
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
+    #'sslserver',  # Uncomment if needed for SSL in development
 ]
 
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
-}
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',  # This should come immediately after SecurityMiddleware
@@ -107,14 +99,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "allauth.account.middleware.AccountMiddleware",
 ]
-CORS_ALLOW_ALL_ORIGINS = False
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:8082','http://localhost:5173'
-]
-CORS_ALLOW_CREDENTIALS = True  # If you're using cookies for authentication
-SESSION_COOKIE_SAMESITE = 'Lax'  # or 'None' if using cross-site requests
-ROOT_URLCONF = 'backend.urls'
 
+ROOT_URLCONF = 'backend.urls'
 
 TEMPLATES = [
     {
@@ -135,10 +121,38 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
+# AUTHENTICATION SETTINGS
 
-# Database
-# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
 
+# LOGIN/LOGOUT Redirects
+LOGIN_REDIRECT_URL = 'http://localhost:8082/'  
+LOGOUT_REDIRECT_URL = 'http://localhost:8082/'  # Redirect to the home page after logout
+
+# SOCIAL ACCOUNT SETTINGS
+ACCOUNT_ADAPTER = 'app.adapters.NoSignupAdapter'
+SOCIALACCOUNT_ADAPTER = 'app.adapters.MySocialAccountAdapter'
+ACCOUNT_EMAIL_REQUIRED = False
+ACCOUNT_EMAIL_VERIFICATION = "none"
+ACCOUNT_USERNAME_REQUIRED = True
+SOCIALACCOUNT_LOGIN_ON_GET = True
+
+# Microsoft login
+# CLIENT_ID, CLIENT_SECRET, AUTHORITY, and other related variables can go here.
+
+SITE_ID = 1
+
+# REST FRAMEWORK SETTINGS
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+# DATABASE CONFIGURATION
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -146,10 +160,7 @@ DATABASES = {
     }
 }
 
-
-# Password validation
-# https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
-
+# PASSWORD VALIDATION
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -165,33 +176,17 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/5.0/topics/i18n/
-
+# TIMEZONE & LANGUAGE SETTINGS
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
-
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
-SESSION_COOKIE_DOMAIN = 'localhost'
-CSRF_TRUSTED_ORIGINS = ['http://localhost:8082', 'http://localhost:8000/']
-CSRF_COOKIE_NAME = 'csrftoken'
-CSRF_COOKIE_HTTPONLY = False
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.0/howto/static-files/
+# STATIC FILES
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'app', 'static'),
 ]
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
+# DEFAULT PRIMARY KEY FIELD TYPE
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
