@@ -11,9 +11,16 @@ from django.urls import reverse
 import json
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_http_methods
+from rest_framework_simplejwt.tokens import RefreshToken
 UserModel = get_user_model()
 
+def get_tokens_for_user(user):
+    refresh = RefreshToken.for_user(user)
 
+    return {
+        'refresh': str(refresh),
+        'access': str(refresh.access_token),
+    }
 
 
 @login_required

@@ -29,19 +29,19 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 # CSRF and Cookie Security Settings
 CSRF_TRUSTED_ORIGINS = ['http://localhost:8082', 'http://localhost:8000/']
 CSRF_COOKIE_NAME = 'csrftoken'
-CSRF_COOKIE_HTTPONLY = False  # You can enable this if you don't need access to the CSRF token via JavaScript
+CSRF_COOKIE_HTTPONLY = False  # Make True in Production
 
 # Only allow session cookies over HTTPS (recommended in production)
-SESSION_COOKIE_SECURE = True  # Use HTTPS for secure transmission (set to True for production)
+SESSION_COOKIE_SECURE = False  # set to true when using HTTPS
 
 # Mark session cookies as HTTP-only, preventing JavaScript from accessing them
-SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_HTTPONLY = True # True when in production
 
 # Set the expiration for sessions (e.g., 1 day)
 SESSION_COOKIE_AGE = 86400  # 1 day in seconds
 
 # CSRF Protection on session-based requests
-CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = False #true for production with HTTPs
 
 # Cross-site cookies
 SESSION_COOKIE_SAMESITE = 'Lax'  # or 'None' if using cross-site requests
@@ -151,7 +151,9 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
-
+SIMPLE_JWT = {
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
 # DATABASE CONFIGURATION
 DATABASES = {
     'default': {
