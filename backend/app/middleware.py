@@ -1,5 +1,7 @@
 from django.utils.deprecation import MiddlewareMixin
 from rest_framework.authtoken.models import Token
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.exceptions import AuthenticationFailed
 
 class TokenCookieMiddleware(MiddlewareMixin):
     def process_response(self, request, response):
@@ -27,3 +29,4 @@ class TokenRefreshMiddleware(MiddlewareMixin):
                 new_token = Token.objects.create(user=request.user)
                 response.set_cookie('auth_token', new_token.key, httponly=True, max_age=3600*24*7, samesite='Lax', secure=True)
         return response
+    

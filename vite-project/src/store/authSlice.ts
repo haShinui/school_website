@@ -1,4 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import axios from 'axios';
 
 interface UserInfo {
   username?: string;
@@ -17,6 +18,23 @@ const initialState: AuthState = {
   user: null,
 };
 
+// Async thunks for authentication actions
+export const checkAuthentication = createAsyncThunk(
+  'auth/checkAuthentication',
+  async () => {
+    const response = await axios.get('/api/check-auth');
+    return response.data; // Assumes response structure { isAuthenticated: boolean, user: UserInfo }
+  }
+);
+
+export const logout = createAsyncThunk(
+  'auth/logout',
+  async () => {
+    await axios.post('/api/logout');
+    return;
+  }
+);
+
 const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -29,6 +47,21 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.user = null;
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(checkAuthentication.fulfilled, (state, action) => {
+        state.isAuthenticated = action.payload.isAuthenticated;
+        state.user = action.payload.user;
+      })
+      .addCase(checkAuthentication.rejected, (state) => {
+        state.isAuthenticated = false;
+        state.user = null;
+      })
+      .addCase(logout.fulfilled, (state) => {
+        state.isAuthenticated = false;
+        state.user = null;
+      });
   },
 });
 

@@ -6,22 +6,41 @@ const apiService = axios.create({
   withCredentials: true, // Allow sending cookies for authentication
 });
 
-// Function to get the CSRF token from cookies
-function getCsrfToken(): string | null {
+// Fetch CSRF token and set it up in Axios interceptors
+const fetchCsrfToken = async () => {
+  try {
+    const response = await axios.get('http://localhost:8000/api/csrf-token/', { withCredentials: true });
+    const csrfToken = response.data.csrfToken; // Adjust according to the actual key in the response
+    apiService.defaults.headers.common['X-CSRFToken'] = csrfToken; // Set default CSRF token for all future requests
+    console.log('CSRF token fetched and set:', csrfToken);
+  } catch (error) {
+    console.error('Failed to fetch CSRF token:', error);
+  }
+};
+
+// Immediately fetch CSRF token when the service is imported/used
+fetchCsrfToken();
+
+// Utility function to get CSRF token from cookies
+function getCsrfToken() {
   const name = 'csrftoken';
   const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-  return match ? match[2] : null;
+  if (match) {
+    console.log('CSRF Token:', match[2]); // Log the token
+    return match[2];
+  }
+  return null;
 }
 
-// Add a request interceptor to attach the CSRF token to every request
-apiService.interceptors.request.use((config) => {
+// Set the CSRF token in the Axios headers for all requests
+apiService.interceptors.request.use(config => {
   const csrfToken = getCsrfToken();
   if (csrfToken) {
-    config.headers['X-CSRFToken'] = csrfToken; // Set the CSRF token in the headers
+    config.headers['X-CSRFToken'] = csrfToken;
   }
+  console.log('Request Headers:', config.headers); // Log the headers
   return config;
 });
-
 // Define API methods
 const apiMethods = {
   secureAllauthLogin: (loginData: { username: string; password: string }) =>
@@ -31,10 +50,9 @@ const apiMethods = {
 
   getUserInfo: () => apiService.get<{ isAuthenticated: boolean; user: UserInfo }>('/user-info/'),
 
-  logout: () => apiService.post<LogoutResponse>('/logout/'), // POST request to log out
-
+  logout: () => apiService.post('/logout/'), // POST request to log out using dj-rest-auth
   signupCourse: () => apiService.post<SignupResponse>('/signup-course/'),
-
+  getCsrfToken: () => apiService.get('/csrf-token/').then(response => console.log(response.data)),
   checkAuth: () => apiService.get<AuthResponse>('/check-auth/'), // Check authentication status
 };
 

@@ -29,7 +29,7 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 # CSRF and Cookie Security Settings
 CSRF_TRUSTED_ORIGINS = ['http://localhost:8082', 'http://localhost:8000/']
 CSRF_COOKIE_NAME = 'csrftoken'
-CSRF_COOKIE_HTTPONLY = False  # Make True in Production
+CSRF_COOKIE_HTTPONLY = False  # Make True in Production, could cause problems
 
 # Only allow session cookies over HTTPS (recommended in production)
 SESSION_COOKIE_SECURE = False  # set to true when using HTTPS
@@ -59,7 +59,7 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:8082',
-    'http://localhost:5173',
+    'http://localhost:8000',
 ]
 CORS_ALLOW_CREDENTIALS = True  # If you're using cookies for authentication
 
@@ -85,6 +85,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.microsoft',
     'django_extensions',
     'corsheaders',
+    'dj_rest_auth',
     #'sslserver',  # Uncomment if needed for SSL in development
 ]
 
@@ -93,13 +94,13 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',  # This should come immediately after SecurityMiddleware
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',  # This should come before CsrfViewMiddleware for CORS to handle properly
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "allauth.account.middleware.AccountMiddleware",
+    'django.middleware.csrf.CsrfViewMiddleware',
     'app.middleware.TokenCookieMiddleware',
-    
+    'app.middleware.TokenRefreshMiddleware',
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -150,7 +151,7 @@ SOCIALACCOUNT_LOGIN_ON_GET = True
 # REST FRAMEWORK SETTINGS
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
+        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
     ),
 }
 
