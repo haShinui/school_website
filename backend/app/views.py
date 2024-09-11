@@ -12,15 +12,26 @@ import json
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_http_methods
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.dispatch import receiver
+from allauth.account.signals import user_logged_in
+from rest_framework.authtoken.models import Token
+from django.http import HttpResponse
+from allauth.account.signals import user_logged_in
+
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.response import Response
+from django.http import JsonResponse
 UserModel = get_user_model()
 
-def get_tokens_for_user(user):
-    refresh = RefreshToken.for_user(user)
+@receiver(user_logged_in)
+def create_or_update_token(sender, request, user, **kwargs):
+    token, created = Token.objects.get_or_create(user=user)
+    response = HttpResponse()
+    response.set_cookie('auth_token', token.key, httponly=True, max_age=3600*24*14, samesite='Lax', secure=True)
+    return response
 
-    return {
-        'refresh': str(refresh),
-        'access': str(refresh.access_token),
-    }
 
 
 @login_required
@@ -55,38 +66,40 @@ import logging
 logger = logging.getLogger(__name__)
 
 @csrf_protect
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 @require_POST
-@login_required
 def signup_course_view(request):
-    try:
-        user_profile = request.user.userprofile
-        print("Received POST request for course signup.")
-        print(f"User: {request.user}")
-        print(f"User Profile Role before update: {user_profile.role}")
+    user_profile = request.user.userprofile
+    if user_profile.role in ['signed_up', 'completed', 'manager', 'admin']:
+        return JsonResponse({
+            'success': False,
+            'message': 'Sign up not allowed.'
+        }, status=400)
 
-        # Roles that cannot sign up for the course
-        restricted_roles = ['signed_up','completed', 'manager', 'admin']
+    if user_profile.role == 'normal':
+        user_profile.role = 'signed_up'
+        user_profile.save()
+        Token.objects.filter(user=request.user).delete()
+        new_token = Token.objects.create(user=request.user)
+        response = JsonResponse({
+            'success': True,
+            'message': 'You have successfully signed up for the course!',
+            'new_token': new_token.key
+        })
+        response.set_cookie('auth_token', new_token.key, httponly=True, max_age=3600*24*14, samesite='Lax', secure=True)
+        return response
+    return JsonResponse({'success': False, 'message': 'Unexpected role encountered.'}, status=400)
 
-        if user_profile.role in restricted_roles:
-            print(f"Access denied for user with role: {user_profile.role}")
-            return JsonResponse({'success': False, 'message': f'Sign up not allowed. You are already a: {user_profile.get_role_display()}'}, status=400)
-
-        if user_profile.role == 'normal':
-            user_profile.role = 'signed_up'
-            user_profile.save()
-            print(f"User Profile Role after update: {user_profile.role}")
-            return JsonResponse({'success': True, 'message': 'You have successfully signed up for the course!'})
-        else:
-            return JsonResponse({'success': False, 'message': 'Unexpected role encountered.'}, status=400)
-    except Exception as e:
-        logger.error(f'Error during course signup: {str(e)}')
-        print(f"Exception occurred: {str(e)}")
-        return JsonResponse({'success': False, 'message': f'Error: {str(e)}'}, status=400)
 
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
-@require_http_methods(["GET"])
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticatedOrReadOnly])
 def check_auth(request):
     if request.user.is_authenticated:
         # If the user is authenticated, return their username and role
@@ -106,7 +119,7 @@ def check_auth(request):
             'isAuthenticated': False,
             'user': None
         })
-     
+
         
 # Define the test to check if the user is a manager
 def is_manager(user):
@@ -140,30 +153,38 @@ def secure_microsoft_login(request):
 @require_POST
 def secure_allauth_login(request):
     try:
-        # Print the entire request object
-        print(request)
-        
-        # Print the request body (raw data)
-        print("Request body:", request.body)
-        # Try to parse the JSON data from the request body
         data = json.loads(request.body)
         username = data.get('username')
         password = data.get('password')
 
-        # Log the received username and password
-        print(f"Received username: {username}, password: {password}")
-
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return JsonResponse({'success': True, 'message': 'Logged in successfully'})
+            token, _ = Token.objects.get_or_create(user=user)
+            response = JsonResponse({
+                'success': True,
+                'message': 'Logged in successfully',
+                'token': token.key  # Optionally return the token in the response
+            })
+            response.set_cookie(
+                'auth_token', 
+                token.key, 
+                httponly=True, 
+                max_age=3600*24*14,  # 14 days
+                samesite='Lax',
+                secure=True  # Ensure you use HTTPS
+            )
+            return response
         else:
-            return JsonResponse({'success': False, 'message': 'Authentication failed. Invalid credentials.'}, status=401)
-    except json.JSONDecodeError as e:
+            return JsonResponse({'success': False, 'message': 'Authentication failed'}, status=401)
+    
+    except json.JSONDecodeError:
         return JsonResponse({'success': False, 'message': 'Invalid request format.'}, status=400)
-
-@csrf_protect
 @require_POST
 def api_logout(request):
-    logout(request)
+    # If the user is authenticated, delete their token
+    if request.user.is_authenticated:
+        Token.objects.filter(user=request.user).delete()
+        print(f"token deleted")
+    logout(request)  # This clears the session and logs the user out
     return JsonResponse({'success': True, 'message': 'You have been logged out successfully.'})

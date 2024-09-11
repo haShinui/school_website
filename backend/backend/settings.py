@@ -68,7 +68,7 @@ CORS_ALLOW_CREDENTIALS = True  # If you're using cookies for authentication
 SESSION_COOKIE_DOMAIN = 'localhost'
 
 # APPLICATION CONFIGURATION
-
+SITE_ID = 1
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -98,6 +98,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "allauth.account.middleware.AccountMiddleware",
+    'app.middleware.TokenCookieMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -143,17 +145,15 @@ SOCIALACCOUNT_LOGIN_ON_GET = True
 # Microsoft login
 # CLIENT_ID, CLIENT_SECRET, AUTHORITY, and other related variables can go here.
 
-SITE_ID = 1
+
 
 # REST FRAMEWORK SETTINGS
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     ),
 }
-SIMPLE_JWT = {
-    'AUTH_HEADER_TYPES': ('Bearer',),
-}
+
 # DATABASE CONFIGURATION
 DATABASES = {
     'default': {
