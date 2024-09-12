@@ -16,7 +16,7 @@ export default defineConfig({
   // Resolve for TypeScript paths and aliasing
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),  // Shortcut for '@' to 'src' directory
+      "@": path.resolve(__dirname, "./src"),  // Shortcut for '@' to 'src' directory
       '@services': path.resolve(__dirname, './src/services'),  // Alias for services
       '@components': path.resolve(__dirname, './src/components'),  // Alias for components
     },

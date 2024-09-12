@@ -51,6 +51,26 @@ def check_auth(request):
 def is_manager(user):
     return user.userprofile.role == 'manager'        
 
+
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_user_info(request):
+    """
+    Fetches user information if the user is authenticated via session or token.
+    """
+    if request.user.is_authenticated:
+        user_data = {
+            'username': request.user.username,
+            'first_name': request.user.first_name,
+            'last_name': request.user.last_name,
+            'is_authenticated': True
+        }
+        return JsonResponse({'success': True, 'user': user_data})
+    else:
+        return JsonResponse({'success': False, 'message': 'Unauthorized'}, status=401)
+
+
 @csrf_protect
 @require_POST
 @login_required

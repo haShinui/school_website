@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 interface UserInfo {
-  username?: string;
+  username: string;
   first_name?: string;
   last_name?: string;
   role?: string;

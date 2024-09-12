@@ -8,14 +8,13 @@ import AppRouter from './routes'; // Import the main router
 import store from './store'; // Import Redux store
 import './index.css'; // Global CSS
 
+// Remove React.StrictMode
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <Provider store={store}> {/* Redux Provider */}
-      <I18nextProvider i18n={i18n}> {/* i18next Provider for internationalization */}
-        <BrowserRouter> {/* Wrap the entire app in one BrowserRouter */}
-          <AppRouter />
-        </BrowserRouter>
-      </I18nextProvider>
-    </Provider>
-  </React.StrictMode>
+  <Provider store={store}> {/* Redux Provider */}
+    <I18nextProvider i18n={i18n}> {/* i18next Provider for internationalization */}
+      <BrowserRouter> {/* Wrap the entire app in one BrowserRouter */}
+        <AppRouter />
+      </BrowserRouter>
+    </I18nextProvider>
+  </Provider>
 );

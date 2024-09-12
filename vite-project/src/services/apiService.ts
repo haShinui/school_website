@@ -1,4 +1,27 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
+
+// Define the interfaces for types you are using
+interface UserInfo {
+  username?: string;
+  first_name?: string;
+  last_name?: string;
+  role?: string;
+}
+
+interface AuthResponse {
+  isAuthenticated: boolean;
+  user: UserInfo | null;
+}
+
+interface LogoutResponse {
+  success: boolean;
+  message?: string;
+}
+
+interface SignupResponse {
+  success: boolean;
+  message?: string;
+}
 
 // Set up the base Axios instance
 const apiService = axios.create({
@@ -41,42 +64,48 @@ apiService.interceptors.request.use(config => {
   console.log('Request Headers:', config.headers); // Log the headers
   return config;
 });
+
 // Define API methods
 const apiMethods = {
-  secureAllauthLogin: (loginData: { username: string; password: string }) =>
-    apiService.post('/allauth-secure-login/', loginData),
+  secureAllauthLogin: async (loginData: { username: string; password: string }) => {
+    const response = await apiService.post('/allauth-secure-login/', loginData);
+    if (response.data.success) {
+      // Fetch user info on successful login
+      await apiMethods.getUserInfo();
+    }
+    return response;
+  },
 
-  secureMicrosoftLogin: () => apiService.post('/microsoft-secure-login/'),
+  secureMicrosoftLogin: async () => {
+    const response = await apiService.post('/microsoft-secure-login/');
+    return response;
+  },
 
-  getUserInfo: () => apiService.get<{ isAuthenticated: boolean; user: UserInfo }>('/user-info/'),
+  getUserInfo: async () => {
+    const response = await apiService.get<{ isAuthenticated: boolean; user: UserInfo }>('/user-info/');
+    if (response.data.user) {
+      sessionStorage.setItem('username', response.data.user.username || '');
+      sessionStorage.setItem('firstName', response.data.user.first_name || '');
+      sessionStorage.setItem('lastName', response.data.user.last_name || '');
+      console.log('User info fetched and stored:', response.data.user);
+    }
+    return response;
+  },
 
-  logout: () => apiService.post('/logout/'), // POST request to log out using dj-rest-auth
+  logout: async () => {
+    const response = await apiService.post<LogoutResponse>('/logout/');
+    if (response.data.success) {
+      sessionStorage.removeItem('username');
+      sessionStorage.removeItem('firstName');
+      sessionStorage.removeItem('lastName');
+      console.log('User info cleared from session storage on logout');
+    }
+    return response;
+  },
+
   signupCourse: () => apiService.post<SignupResponse>('/signup-course/'),
-  getCsrfToken: () => apiService.get('/csrf-token/').then(response => console.log(response.data)),
+  getCsrfToken: () => apiService.get('/csrf-token/').then(response => console.log('CSRF token:', response.data)),
   checkAuth: () => apiService.get<AuthResponse>('/check-auth/'), // Check authentication status
 };
-
-// Define the expected response types
-export interface UserInfo {
-  username?: string;
-  first_name?: string;
-  last_name?: string;
-  role?: string;
-}
-
-export interface SignupResponse {
-  success: boolean;
-  message?: string;
-}
-
-export interface LogoutResponse {
-  success: boolean;
-  message?: string; // Define the message field as optional
-}
-
-export interface AuthResponse {
-  isAuthenticated: boolean;
-  user: UserInfo | null; // Allow user to be null when not authenticated
-}
 
 export default apiMethods;

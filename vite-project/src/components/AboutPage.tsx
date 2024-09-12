@@ -1,38 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import apiService, { UserInfo } from '../services/apiService';
+
+interface UserInfo {
+  username?: string | null;
+  firstName?: string | null;
+  lastName?: string | null;
+}
+
+interface UserState {
+  isAuthenticated: boolean;
+  user?: UserInfo;
+}
 
 const AboutPage: React.FC = () => {
-  const [userInfo, setUserInfo] = useState<{ isAuthenticated: boolean; user: UserInfo } | null>(null);
+  const [userInfo, setUserInfo] = useState<UserState | null>(null);
   const navigate = useNavigate();
 
-  // Fetch user info on component mount
   useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-        const response = await apiService.getUserInfo();
-        setUserInfo(response.data); // Set user info from API response
-      } catch (error) {
-        console.error('Error fetching user info:', error);
-        setUserInfo({ isAuthenticated: false, user: {} as UserInfo }); // Set as unauthenticated if an error occurs
-      }
-    };
-    fetchUserInfo();
+    const username = sessionStorage.getItem('username');
+    const firstName = sessionStorage.getItem('firstName');
+    const lastName = sessionStorage.getItem('lastName');
+
+    if (username || firstName || lastName) {
+      setUserInfo({
+        isAuthenticated: true,
+        user: {
+          username,
+          firstName,
+          lastName,
+        },
+      });
+    } else {
+      setUserInfo({ isAuthenticated: false });
+    }
   }, []);
 
-  // Handle user logout
   const handleLogout = async () => {
-    try {
-      const response = await apiService.logout();
-      if (response.data.success) {
-        setUserInfo(null); // Clear user info after logout
-        navigate('/'); // Redirect to homepage after logout
-      } else {
-        console.error('Logout failed:', response.data.message); // Use response.data.message safely now
-      }
-    } catch (error) {
-      console.error('Error logging out:', error);
-    }
+    sessionStorage.clear();
+    setUserInfo(null);
+    navigate('/');
   };
 
   return (
@@ -40,13 +46,7 @@ const AboutPage: React.FC = () => {
       <h1>About Page</h1>
       {userInfo && userInfo.isAuthenticated ? (
         <div>
-          {userInfo.user.username ? (
-            <p>Welcome, {userInfo.user.username}!</p>
-          ) : (
-            <p>
-              Welcome, {userInfo.user.first_name} {userInfo.user.last_name}!
-            </p>
-          )}
+          <p>Welcome, {userInfo.user?.username || `${userInfo.user?.firstName} ${userInfo.user?.lastName}`}!</p>
           <button onClick={handleLogout}>Sign Out</button>
         </div>
       ) : (
@@ -60,3 +60,8 @@ const AboutPage: React.FC = () => {
 };
 
 export default AboutPage;
+
+
+ /*
+ also how often is getUserinfo called, i want that its only called after user logged in only then, can u make taht?
+ */

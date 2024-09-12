@@ -1,27 +1,46 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { RootState, AppDispatch } from '../store';
-import { checkAuthentication, resetAuthState } from '../store/authSlice';
 import apiService from '../services/apiService';
 
 const AboutPage: React.FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
-  const user = useSelector((state: RootState) => state.auth.user);
+  const [userInfo, setUserInfo] = useState({
+    username: sessionStorage.getItem('username') || '',
+    firstName: sessionStorage.getItem('firstName') || '',
+    lastName: sessionStorage.getItem('lastName') || ''
+  });
 
-  // Check authentication status on component mount
+  // Check if user information exists to determine logged in state
+  const isAuthenticated = Boolean(userInfo.username);
+
   useEffect(() => {
-    dispatch(checkAuthentication());
-  }, [dispatch]);
+    // If no username is found in session storage, fetch user info
+    if (!userInfo.username) {
+      const fetchUserInfo = async () => {
+        try {
+          const response = await apiService.getUserInfo();
+          if (response.data.user) {
+            setUserInfo({
+              username: response.data.user.username || '',
+              firstName: response.data.user.first_name || '',
+              lastName: response.data.user.last_name || ''
+            });
+          }
+        } catch (error) {
+          console.error('Error fetching user info:', error);
+        }
+      };
+      fetchUserInfo();
+    }
+  }, [userInfo.username]);
 
   // Handle user logout
   const handleLogout = async () => {
     try {
-      const response = await apiService.logout(); // Call the logout endpoint
+      const response = await apiService.logout();
       if (response.data.success) {
-        dispatch(resetAuthState()); // This will clear the local auth state
+        sessionStorage.clear(); // Clear all session storage
+        setUserInfo({ username: '', firstName: '', lastName: '' }); // Reset user info state
         navigate('/login'); // Redirect to the login page
       } else {
         console.error('Logout failed:', response.data.message);
@@ -34,14 +53,13 @@ const AboutPage: React.FC = () => {
   return (
     <div>
       <h1>About Page</h1>
-      {isAuthenticated && user ? (
+      {isAuthenticated ? (
         <div>
-          <p>Welcome, {user.username || `${user.first_name} ${user.last_name}`}!</p>
-          <p>Role: {user.role}</p>
+          <p>Welcome, {userInfo.username || `${userInfo.firstName} ${userInfo.lastName}`}!</p>
           <button onClick={handleLogout}>Log Out</button>
         </div>
       ) : (
-        <p>You are not logged in.</p>
+        <p>You are not logged in. Please <a href="/login">log in</a>.</p>
       )}
     </div>
   );
