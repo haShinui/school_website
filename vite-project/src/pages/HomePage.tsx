@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { ModeToggle } from '../components/mode-toggle';
 
 const HomePage: React.FC = () => {
   return (
@@ -8,6 +9,7 @@ const HomePage: React.FC = () => {
       <p className="text-lg mb-4 text-center">
         This is the homepage. If you are not logged in, you can log in by clicking the link below.
       </p>
+      <ModeToggle />
       {/* Link to the login page */}
       <Link 
         to="/login" 

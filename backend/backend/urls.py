@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib import admin
-from app.views import get_user_info, csrf_token_view, api_logout, secure_microsoft_login, secure_allauth_login, signup_course_view, check_auth#, manager_dashboard #, CustomLoginView,
+from app.views import manager_dashboard, is_manager, get_user_info, csrf_token_view, api_logout, secure_microsoft_login, secure_allauth_login, signup_course_view, check_auth#, manager_dashboard #, CustomLoginView,
 from rest_framework import routers
 from django.contrib.auth import views as auth_views
 from django.contrib import admin
@@ -36,6 +36,8 @@ urlpatterns = [
         path('signup-course/', signup_course_view, name='signup_course'),
         path('check-auth/', check_auth, name='check_auth'),
         path('user-info/', get_user_info, name='user-info'),
+        path('is-manager/', is_manager, name='is_manager'),
+        path('manager-dashboard/', manager_dashboard, name='manager_dashboard'),
         #path('manager-dashboard/', manager_dashboard, name='manager-dashboard'),
         #path('accounts/login/', CustomLoginView.as_view(), name='account_login'),  # Login API
     ])),

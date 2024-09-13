@@ -15,6 +15,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.contrib.auth import get_user_model
 from django.middleware.csrf import get_token
+from django.contrib.auth.models import User
 import requests
 UserModel = get_user_model()
 
@@ -48,9 +49,28 @@ def check_auth(request):
     })
 
 # Define the test to check if the user is a manager
-def is_manager(user):
-    return user.userprofile.role == 'manager'        
+@csrf_protect
+@login_required
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+@api_view(['GET'])
+def is_manager(request):
+    user_profile = request.user.userprofile  # Adjust based on your user profile setup
+    is_manager = user_profile.role == 'manager'
+    return JsonResponse({'isManager': is_manager})
 
+
+@require_POST
+@csrf_protect
+@login_required
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def manager_dashboard(request):
+    if request.user.userprofile.role != 'manager':  # Adjust according to your user profile
+        return JsonResponse({'error': 'Unauthorized'}, status=403)
+
+    users = User.objects.exclude(is_superuser=True).select_related('userprofile').values('username', 'first_name', 'userprofile__role')
+    return JsonResponse(list(users), safe=False)
 
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
@@ -72,9 +92,8 @@ def get_user_info(request):
 
 
 @csrf_protect
-@require_POST
+
 @login_required
-@user_passes_test(is_manager)
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def manager_dashboard(request):
