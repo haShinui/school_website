@@ -1,6 +1,20 @@
 {
-    "welcome_message": "Welcome to the home page",
-    "login": "Login",
-    "about": "About"
-  }
-  
+  "home": "Home",
+  "login": "Login to Your Account",
+  "choose_login_method": "Choose your login method below",
+  "microsoft_login": "Microsoft Login",
+  "guest_login": "Guest Login",
+  "login_with_microsoft": "Login with Microsoft",
+  "note": "Note",
+  "microsoft_login_note": "Microsoft login is only available for students.",
+  "email": "Email",
+  "enter_email": "Enter your email",
+  "password": "Password",
+  "enter_password": "Enter your password",
+  "important_information": "Important Information",
+  "students": "Students",
+  "students_info": "Use the Microsoft login to sign up for your courses and to book time slots for the FabLab. This option is exclusively for students.",
+  "parents_guests": "Parents and Guests",
+  "parents_guests_info": "If you're interested in using the makerspace, please contact us for more information and making a guest account. You can use the Guest login option to access limited features.",
+  "about": "About"
+}

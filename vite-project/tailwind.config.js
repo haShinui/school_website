@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+	mode: 'jit',
     darkMode: ["class"],
     content: [
 		'./index.html',
@@ -7,6 +8,29 @@ export default {
 	  ],
   theme: {
   	extend: {
+		keyframes: {
+			spinSlow: {
+			  from: { transform: 'rotate(0deg)' },
+			  to: { transform: 'rotate(360deg)' },
+			},
+			bounceThrice: {
+          '0%, 10%, 30%, 40%, 60%, 70%, 90%, 100%': { transform: 'translateY(0)' },
+          '20%, 50%, 80%': { transform: 'translateY(-20%)' },
+        },
+		glow: {
+			'0%, 100%': {
+			  filter: 'drop-shadow(0 0 10px rgba(255, 255, 0, 0.8)) drop-shadow(0 0 20px rgba(255, 255, 0, 0.5))',
+			},
+			'50%': {
+			  filter: 'drop-shadow(0 0 15px rgba(255, 255, 0, 1)) drop-shadow(0 0 30px rgba(255, 255, 0, 0.7))',
+			},
+		  },
+		  },
+		  animation: {
+			'spin-slow': 'spinSlow 3s linear infinite',
+			'bounce-thrice': 'bounceThrice 3s ease-in-out 1',
+			 'glow': 'glow 1.5s ease-in-out infinite',
+		  },
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
@@ -55,6 +79,13 @@ export default {
   			}
   		}
   	}
+	
+  },
+  variants: {
+    extend: {
+      animation: ['group-hover'],
+      textColor: ['group-hover'],
+    },
   },
   plugins: [require("tailwindcss-animate")],
 }

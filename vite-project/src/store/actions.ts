@@ -1,26 +1,25 @@
-import { setAuthUser, resetAuthState } from './authSlice'; // Import from authSlice
-import apiService from '../services/apiService';
-import { AppDispatch } from './index';
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
 
-export const fetchAuthUser = () => async (dispatch: AppDispatch) => {
-  try {
-    const response = await apiService.checkAuth();
-    const userData = response.data; // Typed as { isAuthenticated: boolean; user: UserInfo | null }
+// Define the interface for the auth state (if not defined elsewhere)
+interface AuthState {
+  isAuthenticated: boolean;
+  role: string | null;
+}
 
-    if (userData.isAuthenticated && userData.user) {
-      // Check if userData.user exists before accessing username and role
-      dispatch(setAuthUser({
-        isAuthenticated: userData.isAuthenticated,
-        user: {
-          username: userData.user.username || '',  // Handle undefined username
-          role: userData.user.role || '',          // Handle undefined role
-        },
-      }));
-    } else {
-      dispatch(resetAuthState());
-    }
-  } catch (error) {
-    console.error("Authentication check failed", error);
-    dispatch(resetAuthState());
+// Async thunks
+export const checkAuthentication = createAsyncThunk<AuthState>(
+  'auth/checkAuthentication',
+  async () => {
+    const response = await axios.get('/api/check-auth');
+    return response.data; // Assumes response structure { isAuthenticated: boolean, role: string | null }
   }
-};
+);
+
+export const logout = createAsyncThunk(
+  'auth/logout',
+  async () => {
+    await axios.post('/api/logout');
+    return;
+  }
+);

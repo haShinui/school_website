@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import apiService from '../services/apiService';
-import { fetchAuthUser } from '../store/actions';
+import { checkAuthentication } from '../store/actions';  // Make sure to import the correct action
 import { AppDispatch } from '../store'; // Import the AppDispatch type from your store
 
 const LoginPage: React.FC = () => {
@@ -20,7 +20,7 @@ const LoginPage: React.FC = () => {
       const response = await apiService.secureAllauthLogin(loginData);
       
       if (response.data.success) {
-        await dispatch(fetchAuthUser()); // Fetch the authenticated user after login
+        dispatch(checkAuthentication()); // Fetch the authenticated user after login
         navigate('/'); // Redirect to the homepage after successful login
       } else {
         setLoginError(response.data.message);
@@ -35,6 +35,7 @@ const LoginPage: React.FC = () => {
   const initiateMicrosoftLogin = async () => {
     try {
       const response = await apiService.secureMicrosoftLogin();
+      
       if (response.data.login_url) {
         window.location.href = response.data.login_url; // Redirect to the Microsoft login URL
       } else {

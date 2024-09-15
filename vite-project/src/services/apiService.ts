@@ -23,6 +23,10 @@ interface SignupResponse {
   message?: string;
 }
 
+interface ManagerCheckResponse {
+  isManager: boolean;
+}
+
 // Set up the base Axios instance
 const apiService = axios.create({
   baseURL: 'http://localhost:8000/api/', // Django backend URL
@@ -76,8 +80,22 @@ const apiMethods = {
     return response;
   },
 
+  checkAuth: async () => {
+    try {
+      const response = await apiService.get('/check-auth/');
+      return response.data; // should return { isAuthenticated: boolean, role: string }
+    } catch (error) {
+      console.error('Failed to check auth:', error);
+      return { isAuthenticated: false, role: null };
+    }
+  },
+
   secureMicrosoftLogin: async () => {
     const response = await apiService.post('/microsoft-secure-login/');
+    if (response.data.success) {
+      // Fetch user info on successful login
+      await apiMethods.getUserInfo();
+    }
     return response;
   },
 
@@ -102,10 +120,11 @@ const apiMethods = {
     }
     return response;
   },
-
+  fetchManagerDashboard: () => apiService.get('/manager-dashboard/'), // Fetch the manager dashboard data
+  checkManager: () => apiService.get<ManagerCheckResponse>('/is-manager/'), // Check if the user is a manager
   signupCourse: () => apiService.post<SignupResponse>('/signup-course/'),
   getCsrfToken: () => apiService.get('/csrf-token/').then(response => console.log('CSRF token:', response.data)),
-  checkAuth: () => apiService.get<AuthResponse>('/check-auth/'), // Check authentication status
+  
 };
 
 export default apiMethods;

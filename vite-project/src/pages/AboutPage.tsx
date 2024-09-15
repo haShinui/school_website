@@ -1,66 +1,39 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import apiService from '../services/apiService';
+// src/pages/AboutPage.tsx
+
+import React from 'react';
+import TeamMemberCard from '@/components/TeamMembers/TeamMemberCard';
+
+const teamMembers = [
+    {
+      name: 'John Doe',
+      role: 'Teacher of G5G', // Role appears under the name on hover
+      image: 'https://picsum.photos/300/400',
+      quote: 'Passionate about building innovative solutions.',
+    },
+    {
+      name: 'Jane Smith',
+      role: 'Student of G5G', // Another role example
+      image: 'https://via.placeholder.com/300x400',
+      quote: 'Design is not just what it looks like and feels like.',
+    },
+    // Add more team members as needed
+  ];
 
 const AboutPage: React.FC = () => {
-  const navigate = useNavigate();
-  const [userInfo, setUserInfo] = useState({
-    username: sessionStorage.getItem('username') || '',
-    firstName: sessionStorage.getItem('firstName') || '',
-    lastName: sessionStorage.getItem('lastName') || ''
-  });
-
-  // Check if user information exists to determine logged in state
-  const isAuthenticated = Boolean(userInfo.username);
-
-  useEffect(() => {
-    // If no username is found in session storage, fetch user info
-    if (!userInfo.username) {
-      const fetchUserInfo = async () => {
-        try {
-          const response = await apiService.getUserInfo();
-          if (response.data.user) {
-            setUserInfo({
-              username: response.data.user.username || '',
-              firstName: response.data.user.first_name || '',
-              lastName: response.data.user.last_name || ''
-            });
-          }
-        } catch (error) {
-          console.error('Error fetching user info:', error);
-        }
-      };
-      fetchUserInfo();
-    }
-  }, [userInfo.username]);
-
-  // Handle user logout
-  const handleLogout = async () => {
-    try {
-      const response = await apiService.logout();
-      if (response.data.success) {
-        sessionStorage.clear(); // Clear all session storage
-        setUserInfo({ username: '', firstName: '', lastName: '' }); // Reset user info state
-        navigate('/login'); // Redirect to the login page
-      } else {
-        console.error('Logout failed:', response.data.message);
-      }
-    } catch (error) {
-      console.error('Error logging out:', error);
-    }
-  };
-
   return (
-    <div>
-      <h1>About Page</h1>
-      {isAuthenticated ? (
-        <div>
-          <p>Welcome, {userInfo.username || `${userInfo.firstName} ${userInfo.lastName}`}!</p>
-          <button onClick={handleLogout}>Log Out</button>
+    <div className="container mx-auto py-12">
+      {/* ... existing content ... */}
+
+      <section className="mb-12">
+        <h2 className="text-3xl font-semibold text-center mb-8">Meet the Team</h2>
+        <div className="flex flex-wrap justify-center">
+          {teamMembers.map((member) => (
+            <TeamMemberCard key={member.name} member={member} />
+          ))}
         </div>
-      ) : (
-        <p>You are not logged in. Please <a href="/login">log in</a>.</p>
-      )}
+      </section>
+
+      {/* ... existing content ... */}
     </div>
   );
 };

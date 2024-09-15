@@ -1,25 +1,49 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { RootState } from '../store'; // Adjust the import path as necessary
+import apiService from '../services/apiService'; // Ensure you have the correct path to your apiService
 
 interface RequireAuthProps {
   children: React.ReactNode;
   requiredRole?: string;
 }
 
+interface AuthStatus {
+  isAuthenticated: boolean;
+  role: string | null;
+}
+
 const RequireAuth: React.FC<RequireAuthProps> = ({ children, requiredRole }) => {
-    const location = useLocation();
-    const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
-    const userRole = useSelector((state: RootState) => state.auth.user?.role);
+  const location = useLocation();
+  const [authStatus, setAuthStatus] = useState<AuthStatus>({ isAuthenticated: false, role: null });
+  const [loading, setLoading] = useState(true);
 
-    // Check if user is not authenticated or does not have the required role
-    if (!isAuthenticated) {
-        return <Navigate to="/login" state={{ from: location }} replace />;
-    }
+  useEffect(() => {
+    const fetchAuthStatus = async () => {
+      try {
+        const result = await apiService.checkAuth(); // Call your API service to check the auth status
+        setAuthStatus({ isAuthenticated: result.isAuthenticated, role: result.role });
+      } catch (error) {
+        console.error('Failed to fetch auth status:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAuthStatus();
+  }, []);
 
-    // If authenticated and has the required role, render the component that RequireAuth wraps
-    return <>{children}</>;
+  if (loading) {
+    return <div>Loading...</div>; // Or any other loading indicator
+  }
+
+  if (!authStatus.isAuthenticated) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  if (requiredRole && authStatus.role !== requiredRole) {
+    return <Navigate to="/" replace />;
+  }
+
+  return <>{children}</>;
 };
 
 export default RequireAuth;

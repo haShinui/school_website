@@ -24,17 +24,17 @@ const LanguageSwitcher: React.FC = () => {
   return (
     <button
       onClick={toggleLanguage}
-      className="focus:outline-none hover:border hover:border-blue-500 dark:hover:border-white transition-all"
-      style={{ padding: 0, borderRadius: 0 }} // Ensure square border and no padding
+      className="focus:outline-none transition-all hover:ring-2 hover:ring-blue-500 dark:hover:ring-2 dark:hover:ring-white"
+      style={{ padding: 0, borderRadius: 0 }} // Ensure no padding and square border
     >
       <img
         src={currentLang === 'de' ? swissFlag : ukFlag} // Toggle between flags
         alt={currentLang === 'de' ? 'German' : 'English'} // Descriptive alt text
-        className="w-8 h-8 hover:opacity-80 transition-opacity"
+        className="w-6 h-6 object-contain transition-opacity" // Ensure consistent size (24px)
         style={{
           border: 'none',
           backgroundColor: 'transparent',
-          borderRadius: 0, // Square corners for the hover effect
+          borderRadius: '0', // Square corners for the hover effect
         }}
       />
     </button>

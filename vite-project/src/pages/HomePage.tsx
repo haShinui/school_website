@@ -1,6 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ModeToggle } from '../components/mode-toggle';
+import ModeToggle from '../components/ThemeToggle'; // Import the ModeToggle component
+import LanguageSwitcher from '@/components/LanguageSwitcher';
+
+
 
 const HomePage: React.FC = () => {
   return (
@@ -9,14 +12,8 @@ const HomePage: React.FC = () => {
       <p className="text-lg mb-4 text-center">
         This is the homepage. If you are not logged in, you can log in by clicking the link below.
       </p>
-      <ModeToggle />
-      {/* Link to the login page */}
-      <Link 
-        to="/login" 
-        className="px-4 py-2 bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-lg transition duration-300"
-      >
-        Go to Login
-      </Link>
+      
+      <ModeToggle /> {/* Include the theme toggle button */}
     </div>
   );
 };

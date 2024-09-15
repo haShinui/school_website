@@ -1,32 +1,31 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-interface UserInfo {
-  username: string;
-  first_name?: string;
-  last_name?: string;
-  role?: string;
-}
-
 interface AuthState {
   isAuthenticated: boolean;
-  user: UserInfo | null;
+  role: string | null;
+}
+
+interface AuthResponse {
+  isAuthenticated: boolean;
+  role: string;
 }
 
 const initialState: AuthState = {
   isAuthenticated: false,
-  user: null,
+  role: null,
 };
 
-// Async thunks for authentication actions
-export const checkAuthentication = createAsyncThunk(
+// Async thunk for authentication check
+export const checkAuthentication = createAsyncThunk<AuthResponse>(
   'auth/checkAuthentication',
   async () => {
     const response = await axios.get('/api/check-auth');
-    return response.data; // Assumes response structure { isAuthenticated: boolean, user: UserInfo }
+    return response.data; // Assumes response structure { isAuthenticated: boolean, role: string }
   }
 );
 
+// Async thunk for logout
 export const logout = createAsyncThunk(
   'auth/logout',
   async () => {
@@ -39,31 +38,27 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setAuthUser(state, action: PayloadAction<{ isAuthenticated: boolean; user: UserInfo | null }>) {
-      state.isAuthenticated = action.payload.isAuthenticated;
-      state.user = action.payload.user;
-    },
     resetAuthState(state) {
       state.isAuthenticated = false;
-      state.user = null;
+      state.role = null;
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(checkAuthentication.fulfilled, (state, action) => {
         state.isAuthenticated = action.payload.isAuthenticated;
-        state.user = action.payload.user;
+        state.role = action.payload.role;
       })
       .addCase(checkAuthentication.rejected, (state) => {
         state.isAuthenticated = false;
-        state.user = null;
+        state.role = null;
       })
       .addCase(logout.fulfilled, (state) => {
         state.isAuthenticated = false;
-        state.user = null;
+        state.role = null;
       });
   },
 });
 
-export const { setAuthUser, resetAuthState } = authSlice.actions;
+export const { resetAuthState } = authSlice.actions;
 export default authSlice.reducer;

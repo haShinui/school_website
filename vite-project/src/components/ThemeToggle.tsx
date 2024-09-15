@@ -1,43 +1,35 @@
-import React, { useState, useEffect } from 'react';
-import './ThemeToggle.css'; // Import the CSS file
-import cloud1 from '../assets/cloud_1.svg';
-import cloud2 from '../assets/cloud_2.svg';
-import cloud3 from '../assets/cloud_3.svg';
-import cloud4 from '../assets/cloud_4.svg';
-import stars from '../assets/stars.svg';
+import React, { useState } from 'react';
+import { Sun, MoonStars  } from 'phosphor-react';
+import { useTheme } from "@/components/theme-provider"
 
-const ThemeToggle: React.FC = () => {
-  const [isDark, setIsDark] = useState(false);
+const ThemeToggle = () => {
+  const { theme, setTheme } = useTheme(); // Get the theme and setTheme from context
+  const isDarkMode = theme === "dark";
 
-  useEffect(() => {
-    if (isDark) {
-      document.body.classList.add('dark');
-    } else {
-      document.body.classList.remove('dark');
-    }
-  }, [isDark]);
+  const toggleDarkMode = () => {
+    setTheme(isDarkMode ? "light" : "dark");
+  };
 
   return (
-    <label className="switch" htmlFor="switch">
-      <input
-        type="checkbox"
-        id="switch"
-        checked={isDark}
-        onChange={() => setIsDark(!isDark)}
-      />
-      <div className="sunmoon">
-        <div className="darkside"></div>
+    <div
+      onClick={toggleDarkMode}
+      className="relative w-12 h-6 bg-gray-300 dark:bg-slate-800 rounded-full flex items-center cursor-pointer ring-1 dark:ring-1 dark:ring-slate-600 ring-slate-500 dark:hover:ring-2 hover:ring-2 dark:hover:ring-green-500 hover:ring-green-500 transition-all p-0.5"
+    >
+      {/* Toggle Knob */}
+      <div
+        className={`w-5 h-5 rounded-full transform transition-transform duration-300 flex items-center justify-center ${
+          isDarkMode ? "translate-x-[24.5px] bg-black" : "translate-x-[-0.5px] bg-white"
+        }`}
+      >
+        {/* Toggle Icon */}
+        {isDarkMode ? (
+          <MoonStars  className="text-white w-4 h-4" />
+        ) : (
+          <Sun className="text-slate-400 w-4 h-4" />
+        )}
       </div>
-      <div className="border"></div>
-      <div className="clouds">
-        <img src={cloud1} alt="cloud" className="cloud cloud-1" />
-        <img src={cloud2} alt="cloud" className="cloud cloud-2" />
-        <img src={cloud3} alt="cloud" className="cloud cloud-3" />
-        <img src={cloud4} alt="cloud" className="cloud cloud-4" />
-        <img src={stars} alt="stars" className="stars" />
-      </div>
-    </label>
+    </div>
   );
 };
-
-export default ThemeToggle;
+  
+  export default ThemeToggle;

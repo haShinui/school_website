@@ -34,20 +34,11 @@ def get_initial_data(request):
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def check_auth(request):
-    # Assuming the user has a related UserProfile model (adjust as necessary)
-    user_profile = getattr(request.user, 'userprofile', None)  
-    user_data = {
-        'username': request.user.username,
-        'first_name': request.user.first_name,
-        'last_name': request.user.last_name,
-        'role': getattr(user_profile, 'role', 'N/A') if user_profile else 'N/A'
-    }
-
+    print(request.user.userprofile.role)
     return JsonResponse({
         'isAuthenticated': request.user.is_authenticated,
-        'user': user_data
+        'role': request.user.userprofile.role
     })
-
 # Define the test to check if the user is a manager
 @csrf_protect
 @login_required
@@ -84,7 +75,6 @@ def get_user_info(request):
             'username': request.user.username,
             'first_name': request.user.first_name,
             'last_name': request.user.last_name,
-            'is_authenticated': True
         }
         return JsonResponse({'success': True, 'user': user_data})
     else:

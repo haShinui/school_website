@@ -1,24 +1,28 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import HomePage from './pages/HomePage';
-import LoginPage from './pages/LoginPage';
-import AboutPage from './pages/AboutPage';
-import Navbar from './components/Navbar';  // Import the Navbar
+import { useLocation } from 'react-router-dom'; // Import useLocation to check current route
+import Navbar from './components/navbar';  // Import the Navbar
+import Routes from './routes'; // Import the routing logic
+import { ThemeProvider } from "@/components/theme-provider"
 
-const AppRouter: React.FC = () => {
+const App: React.FC = () => {
+  const location = useLocation(); // Get the current route
+
+  // Check if the current page is the login page
+  const isLoginPage = location.pathname === "/login";
+
   return (
-    <Router>
-      {/* The Navbar is rendered here, it will appear on every route */}
-      <Navbar />  
-      
-      {/* Define your routes */}
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/login" element={<LoginPage />} />
-      </Routes>
-    </Router>
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <div className="App">
+        {/* Conditionally render the Navbar only if it's not the login page */}
+        {!isLoginPage && <Navbar />}
+
+        {/* Render your routes inside the layout */}
+        <div className="content">
+          <Routes />
+        </div>
+      </div>
+    </ThemeProvider>
   );
 };
 
-export default AppRouter;
+export default App;

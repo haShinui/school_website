@@ -1,6 +1,20 @@
 {
-    "welcome_message": "Willkommen auf der Startseite",
-    "login": "Anmeldung",
-    "about": "Über uns"
-  }
-  
+  "home": "Startseite",
+  "login": "Anmeldung zu Ihrem Konto",
+  "choose_login_method": "Wählen Sie unten Ihre Anmeldemethode aus",
+  "microsoft_login": "Microsoft Anmeldung",
+  "guest_login": "Gast Anmeldung",
+  "login_with_microsoft": "Mit Microsoft anmelden",
+  "note": "Hinweis",
+  "microsoft_login_note": "Die Microsoft Anmeldung ist nur für Studenten verfügbar.",
+  "email": "E-Mail",
+  "enter_email": "Geben Sie Ihre E-Mail ein",
+  "password": "Passwort",
+  "enter_password": "Geben Sie Ihr Passwort ein",
+  "important_information": "Wichtige Informationen",
+  "students": "Studenten",
+  "students_info": "Verwenden Sie die Microsoft-Anmeldung, um sich für Ihre Kurse anzumelden und Zeitfenster im FabLab zu buchen. Diese Option steht ausschließlich Studenten zur Verfügung.",
+  "parents_guests": "Eltern und Gäste",
+  "parents_guests_info": "Wenn Sie Interesse an der Nutzung des Makerspace haben, kontaktieren Sie uns bitte für weitere Informationen und damit sie ein Gast Account bekommen. Sie können die Gastanmeldung verwenden, um auf eingeschränkte Funktionen zuzugreifen.",
+  "about": "Über uns"
+}
