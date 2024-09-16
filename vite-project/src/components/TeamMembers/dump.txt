@@ -18,7 +18,7 @@ const MotionCard = motion(Card);
 const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member }) => {
   return (
     <MotionCard
-      className="relative w-full aspect-[1/1.75] overflow-hidden rounded-lg shadow-lg" 
+      className="relative w-full sm:w-60 md:w-64 lg:w-72 h-96 overflow-hidden rounded-lg shadow-lg m-4"
       whileHover="hover"
       initial="rest"
       animate="rest"
@@ -50,29 +50,20 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member }) => {
       <motion.div
         className="absolute left-1/2 bottom-4 transform -translate-x-1/2"
         variants={{
-          rest: { bottom: '0.5rem', left: '0', transform: 'translateX(0)' },
-          hover: { top: '0.5rem', left: '0.5rem' },
+          rest: { bottom: '1rem', left: '1rem', transform: 'translateX(-0%)', fontSize: '1.25rem' }, // Centered at the bottom
+          hover: { top: '0.5rem', left: '1rem', fontSize: '1.75rem' }, // Moves to top-left on hover, no transform
         }}
         transition={{ duration: 0.3 }}
       >
-        {/* Name text with hover animation */}
-        <motion.h3
-          className="relative text-white font-semibold text-sm sm:text-base md:text-lg lg:text-xl px-6"
-          variants={{
-            rest: { scale: 1 }, // Normal scale at rest
-            hover: { scale: 1.4 }, // Scale up on hover
-          }}
-          transition={{ duration: 0.3 }}
-        >
-          {member.name}
-        </motion.h3>
+        {/* Name Text */}
+        <h3 className="relative text-white font-semibold">{member.name}</h3>
 
         {/* Role (appears under the name on hover) */}
         <motion.p
-          className="text-gray-300 text-xs sm:text-sm md:text-base lg:text-lg absolute left-0 w-full"
+          className="text-gray-400 text-sm absolute left-0 w-full"
           variants={{
-            rest: { opacity: 0, y: 20 },
-            hover: { opacity: 1, y: 0 },
+            rest: { opacity: 0, y: 20 }, // Hidden in rest state, positioned below the name
+            hover: { opacity: 1, y: 0 }, // Appears slightly below the name on hover
           }}
           transition={{ duration: 0.3 }}
         >
@@ -89,17 +80,7 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member }) => {
         }}
         transition={{ duration: 0.2 }}
       >
-        {/* Quote text responsive and scaling */}
-        <motion.p
-          className="text-white text-xs sm:text-sm md:text-base lg:text-lg text-center"
-          variants={{
-            rest: { fontSize: '0.875rem' }, // Smaller on rest (0.875rem)
-            hover: { fontSize: '1.125rem' }, // Slightly larger on hover (1.125rem)
-          }}
-          transition={{ duration: 0.3 }}
-        >
-          {member.quote}
-        </motion.p>
+        <p className="text-white text-lg text-center">{member.quote}</p>
       </motion.div>
     </MotionCard>
   );
