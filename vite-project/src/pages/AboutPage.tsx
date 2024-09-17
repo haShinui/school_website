@@ -6,35 +6,36 @@ const teamMembers = [
   {
     name: "John Doe",
     role: "Teacher of G5G",
-    image: "https://via.placeholder.com/300x400",
+    image: "https://picsum.photos/id/1005/600/800",
     quote: "Passionate about building innovative solutions.",
   },
   {
     name: "Jane Smith",
     role: "Student of G5G",
-    image: "https://via.placeholder.com/300x400",
+    image: "https://picsum.photos/id/1011/600/800",
     quote: "Design is not just what it looks like and feels like.",
   },
   {
     name: "Alice Johnson",
     role: "Assistant Teacher",
-    image: "https://via.placeholder.com/300x400",
+    image: "https://picsum.photos/id/1012/600/800",
     quote:
       "I love helping students realize their potential. afsdafsd fadsaf fsdafsd afdsafas afdsadf asdfasdfas fsdfasdfasdfas asdff",
   },
   {
     name: "Michael Brownsonfasf",
     role: "Workshop Instructor",
-    image: "https://via.placeholder.com/300x400",
+    image: "https://picsum.photos/id/1013/600/800",
     quote: "Teaching hands-on skills is my passion.",
   },
   {
     name: "Emily Davis",
     role: "Senior Student",
-    image: "https://via.placeholder.com/300x400",
+    image: "https://picsum.photos/id/1014/600/800",
     quote: "Makerspace has changed the way I learn.",
   },
 ];
+
 
 const AboutPage: React.FC = () => {
   return (
