@@ -29,7 +29,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
-import { ArrowUpDown, Search, Eye, EyeOff, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react"
+import { ArrowUpDown, Search, Eye, EyeOff, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, ChevronUp, ChevronDown } from "lucide-react"
 import {
   Select,
   SelectContent,
@@ -55,6 +55,8 @@ const initialUsers: User[] = [
   { id: 3, firstName: "Bob", lastName: "Johnson", email: "bob@example.com", role: "Teacher", class: "G6A" },
   { id: 4, firstName: "Alice", lastName: "Williams", email: "alice@example.com", role: "Student", class: "G6B" },
   { id: 5, firstName: "Charlie", lastName: "Brown", email: "charlie@example.com", role: "Manager", class: "G7A" },
+  { id: 6, firstName: "Alice", lastName: "sdfa", email: "alice@example.com", role: "Student", class: "G6B" },
+  { id: 7, firstName: "Rafael", lastName: "Brown", email: "charlie@example.com", role: "Manager", class: "G7A" },
 ]
 
 const roleColors: { [key: string]: string } = {
@@ -101,7 +103,6 @@ export function ManagerDashboardComponent() {
   const paginatedUsers = filteredUsers.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
 
   const handleSort = (key: keyof User) => {
-    if (key !== 'role' && key !== 'class') {
       let direction: 'asc' | 'desc' = 'asc'
       if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') {
         direction = 'desc'
@@ -113,7 +114,6 @@ export function ManagerDashboardComponent() {
         if (a[key] > b[key]) return direction === 'asc' ? 1 : -1
         return 0
       }))
-    }
   }
 
   const handleRoleFilter = (role: string | null) => {
@@ -231,30 +231,6 @@ export function ManagerDashboardComponent() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          {selectedUsers.length > 0 && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button className="bg-black text-white hover:bg-gray-800">
-                  Actions ({selectedUsers.length})
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuLabel>{selectedUsers.length} Selected</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>Delete</DropdownMenuItem>
-                <DropdownMenuItem>Disable Account</DropdownMenuItem>
-                <DropdownMenuSub>
-                  <DropdownMenuSubTrigger>Change Role</DropdownMenuSubTrigger>
-                  <DropdownMenuSubContent>
-                    <DropdownMenuItem onClick={() => handleChangeRole("Manager")}>Manager</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => handleChangeRole("Student")}>Student</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => handleChangeRole("Teacher")}>Teacher</DropdownMenuItem>
-                  </DropdownMenuSubContent>
-                </DropdownMenuSub>
-                <DropdownMenuItem>Change Class</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
         </div>
       </div>
       <div className="mb-4 flex justify-between items-center">
@@ -291,6 +267,30 @@ export function ManagerDashboardComponent() {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
+        {selectedUsers.length > 0 && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button className="bg-black dark:bg-white dark:text-black text-white dark:hover:bg-gray-200 hover:bg-gray-800">
+                  Actions ({selectedUsers.length})
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuLabel>{selectedUsers.length} Selected</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>Delete</DropdownMenuItem>
+                <DropdownMenuItem>Disable Account</DropdownMenuItem>
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger>Change Role</DropdownMenuSubTrigger>
+                  <DropdownMenuSubContent>
+                    <DropdownMenuItem onClick={() => handleChangeRole("Manager")}>Manager</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleChangeRole("Student")}>Student</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleChangeRole("Teacher")}>Teacher</DropdownMenuItem>
+                  </DropdownMenuSubContent>
+                </DropdownMenuSub>
+                <DropdownMenuItem>Change Class</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
       </div>
       <div className="rounded-md border">
         <Table>
@@ -303,28 +303,115 @@ export function ManagerDashboardComponent() {
                 />
               </TableHead>
               {visibleColumns.firstName && (
-                <TableHead>
-                  <Button variant="ghost" onClick={() => handleSort('firstName')}>
-                    First Name <ArrowUpDown className="ml-2 h-4 w-4" />
+                <TableHead className="px-0">
+                  <Button variant="ghost" onClick={() => handleSort('firstName')}
+                    className={`flex items-center justify-start ${
+                      sortConfig?.key === 'firstName'
+                        ? 'text-black dark:text-white'
+                        : 'text-gray-500'
+                    }`}
+                    >
+                    First Name
+                      {sortConfig?.key === 'firstName' ? (
+                      sortConfig.direction === 'asc' ? (
+                        <ChevronDown className="ml-2 h-4 w-4" />
+                      ) : (
+                        <ChevronUp className="ml-2 h-4 w-4" />
+                      )
+                    ) : (
+                      <ArrowUpDown className="ml-2 h-4 w-4" />
+                    )}
                   </Button>
                 </TableHead>
               )}
               {visibleColumns.lastName && (
-                <TableHead>
-                  <Button variant="ghost" onClick={() => handleSort('lastName')}>
-                    Last Name <ArrowUpDown className="ml-2 h-4 w-4" />
+                <TableHead className="px-0">
+                  <Button variant="ghost" onClick={() => handleSort('lastName')}
+                    className={`flex items-center justify-start ${
+                      sortConfig?.key === 'lastName'
+                        ? 'text-black dark:text-white'
+                        : 'text-gray-500'
+                    }`}
+                    >
+                    Last Name
+                      {sortConfig?.key === 'lastName' ? (
+                      sortConfig.direction === 'asc' ? (
+                        <ChevronDown className="ml-2 h-4 w-4" />
+                      ) : (
+                        <ChevronUp className="ml-2 h-4 w-4" />
+                      )
+                    ) : (
+                      <ArrowUpDown className="ml-2 h-4 w-4" />
+                    )}
                   </Button>
                 </TableHead>
               )}
               {visibleColumns.email && (
-                <TableHead>
-                  <Button variant="ghost" onClick={() => handleSort('email')}>
-                    Email <ArrowUpDown className="ml-2 h-4 w-4" />
+                <TableHead className="px-0">
+                  <Button variant="ghost" onClick={() => handleSort('email')}
+                    className={`flex items-center justify-start ${
+                      sortConfig?.key === 'email'
+                        ? 'text-black dark:text-white'
+                        : 'text-gray-500'
+                    }`}
+                    
+                    >
+                    Email
+                    {sortConfig?.key === 'email' ? (
+                      sortConfig.direction === 'asc' ? (
+                        <ChevronDown className="ml-2 h-4 w-4" />
+                      ) : (
+                        <ChevronUp className="ml-2 h-4 w-4" />
+                      )
+                    ) : (
+                      <ArrowUpDown className="ml-2 h-4 w-4" />
+                    )}
                   </Button>
                 </TableHead>
               )}
-              {visibleColumns.role && <TableHead>Role</TableHead>}
-              {visibleColumns.class && <TableHead>Class</TableHead>}
+               {visibleColumns.role && ( // CHANGE START
+                <TableHead className="px-0">
+                  <Button variant="ghost" onClick={() => handleSort('role')}
+                    className={`flex items-center justify-start ${
+                      sortConfig?.key === 'role'
+                        ? 'text-black dark:text-white'
+                        : 'text-gray-500'
+                    }`}
+                    >
+                    Role
+                    {sortConfig?.key === 'role' ? (
+                      sortConfig.direction === 'asc' ? (
+                        <ChevronDown className="ml-2 h-4 w-4" />
+                      ) : (
+                        <ChevronUp className="ml-2 h-4 w-4" />
+                      )
+                    ) : (
+                      <ArrowUpDown className="ml-2 h-4 w-4" />
+                    )}
+                  </Button>
+                </TableHead>
+              )}
+              {visibleColumns.class && ( // CHANGE START
+                <TableHead className="px-0">
+                  <Button variant="ghost" onClick={() => handleSort('class')}
+                    className={`flex items-center justify-start ${
+                      sortConfig?.key === 'class'
+                        ? 'text-black dark:text-white'
+                        : 'text-gray-500'
+                    }`}>
+                    Class
+                    {sortConfig?.key === 'class' ? (
+                      sortConfig.direction === 'asc' ? (
+                        <ChevronDown className="ml-2 h-4 w-4" />
+                      ) : (
+                        <ChevronUp className="ml-2 h-4 w-4" />
+                      )
+                    ) : (
+                      <ArrowUpDown className="ml-2 h-4 w-4" />
+                    )}
+                  </Button>
+                </TableHead>
+              )}
             </TableRow>
           </TableHeader>
           <TableBody>

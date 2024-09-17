@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom"; // React Router for navigation
-import { House, Info, UserCircle, Gear, SignOut, List, Table } from "phosphor-react"; // Phosphor icons
+import { House, Info, UserCircle, Gear, SignOut, List, Table, SignIn  } from "phosphor-react"; // Phosphor icons
 import { useTheme } from "@/components/theme-provider"; // Assuming you have your theme provider set up
 import { Button } from "@/components/ui/button";
 import {
@@ -130,6 +130,19 @@ function NavbarComponent() {
               >
                 <Table className="h-4 w-4 mr-2" />
                 {t("dashboard")} {/* Dashboard in English or German */}
+              </Link>
+            )}
+            {authStatus.isAuthenticated && authStatus.role === "normal" && (
+              <Link
+                to="/signup-course"
+                className={`flex items-center text-base font-medium transition-colors hover:text-primary ${
+                  location.pathname === "/signup-course"
+                    ? `${theme === "light" ? "text-black font-bold" : "text-primary font-bold"}`
+                    : "text-muted-foreground"
+                }`}
+              >
+                <SignIn className="h-4 w-4 mr-2" />
+                {t("Sign Up for Course")} {/* Sign up link */}
               </Link>
             )}
           </div>

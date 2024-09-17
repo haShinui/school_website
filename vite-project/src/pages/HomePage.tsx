@@ -15,6 +15,15 @@ const HomePage: React.FC = () => {
       
       <ModeToggle /> {/* Include the theme toggle button */}
     </div>
+{/* Hover card section */}
+<div className="flex justify-center items-center h-screen">
+<HoverCard
+  title="Something awesome"
+  description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fuga placeat odio pariatur doloribus sint?"
+  image="https://picsum.photos/600/800"  // Placeholder image with 4:3 ratio
+/>
+</div>
+    
   );
 };
 

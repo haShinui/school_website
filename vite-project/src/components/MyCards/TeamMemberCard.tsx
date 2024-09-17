@@ -62,7 +62,7 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member }) => {
         }}
         transition={{ duration: 0.35 }}
       >
-        <h3 className="text-white font-semibold text-xs sm:text-sm md:text-base lg:text-lg">
+        <h3 className="text-white font-semibold text-xs sm:text-base md:text-lg lg:text-2xl">
           {member.name}
         </h3>
       </motion.div>
@@ -76,7 +76,7 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member }) => {
         }}
         transition={{ duration: 0.35 }}
       >
-        <h3 className="text-white font-semibold text-sm sm:text-base md:text-lg lg:text-xl">
+        <h3 className="text-white font-semibold text-sm sm:text-xl md:text-2xl lg:text-3xl">
           {member.name}
         </h3>
         {/* Role (Only appears on hover) */}

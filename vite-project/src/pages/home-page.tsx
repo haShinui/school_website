@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Rocket, LightbulbFilament, UsersThree } from "phosphor-react";
 import SkewCard from '@/components/animata/card/github-card-skew';
 import RotatingGearIcon from '@/components/animata/RotatingGearIcon';
+import HoverCard from '@/components/MyCards/HoverCard(with ext)';
 
 export function HomePageComponent() {
   const { t } = useTranslation();
@@ -173,6 +174,31 @@ export function HomePageComponent() {
               </TabsContent>
             </Tabs>
           </section>
+          <section className="py-16">
+  <h2 className="text-3xl font-bold text-center mb-12">Explore Our Machines</h2>
+  <div className="flex flex-wrap justify-center gap-4">
+    {/* 3D Printer Card */}
+    <HoverCard
+      title="3D Printer"
+      description="Our 3D printers allow students to bring their designs to life with precision."
+      image="https://images.unsplash.com/photo-1715592600579-5949748d349f?q=80&w=2001&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" // Example image, replace with actual 3D printer image
+    />
+
+    {/* Sewing Machine Card */}
+    <HoverCard
+      title="Sewing Machine"
+      description="Our sewing machines are perfect for fabric projects and creative crafting."
+      image="https://plus.unsplash.com/premium_photo-1664195857591-968c2a9f2c03?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8c2V3aW5nJTIwbWFjaGluZXxlbnwwfHwwfHx8MA%3D%3D" // Example image, replace with actual sewing machine image
+    />
+
+    {/* Soldering Station Card */}
+    <HoverCard
+      title="Soldering Station"
+      description="Get hands-on experience with electronics at our soldering stations."
+      image="https://plus.unsplash.com/premium_photo-1663013225893-dac76c8f03ca?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8c29sZGVyaW5nfGVufDB8fDB8fHww" // Example image, replace with actual soldering station image
+    />
+  </div>
+</section>
         </section>
       </main>
 

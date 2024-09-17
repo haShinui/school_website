@@ -10,6 +10,14 @@
     "innovate": {
       "title": "Innovate",
       "description": "Turn your creative ideas into reality using our state-of-the-art equipment and resources."
+    },
+    "create": {
+      "title": "Create",
+      "description": "Get hands-on experience with 3D printing, laser cutting, electronics, and more."
+    },
+    "collaborate": {
+      "title": "Collaborate",
+      "description": "Connect with like-minded individuals and work together on exciting projects."
     }
   },
   "info": {
@@ -18,13 +26,19 @@
       "title": "Unleash Your Creativity",
       "description": "Discover what you can do in our Makerspace",
       "bullet1": "Learn new skills through hands-on workshops",
-      "bullet2": "Work on personal or school projects using our equipment"
+      "bullet2": "Work on personal or school projects using our equipment",
+      "bullet3": "Collaborate with peers on interdisciplinary projects",
+      "bullet4": "Participate in maker challenges and competitions",
+      "bullet5": "Get support from experienced mentors and staff"
     },
     "parents": {
       "title": "Empowering the Next Generation",
       "description": "How the Makerspace benefits your child",
       "bullet1": "Develops problem-solving and critical thinking skills",
-      "bullet2": "Encourages creativity and innovation"
+      "bullet2": "Encourages creativity and innovation",
+      "bullet3": "Provides hands-on experience with cutting-edge technology",
+      "bullet4": "Fosters teamwork and communication skills",
+      "bullet5": "Prepares students for future careers in STEM fields"
     }
   },
   "tabs": {
@@ -50,5 +64,6 @@
   "students_info": "Use the Microsoft login to sign up for your courses and to book time slots for the FabLab. This option is exclusively for students.",
   "parents_guests": "Parents and Guests",
   "parents_guests_info": "If you're interested in using the makerspace, please contact us for more information and making a guest account. You can use the Guest login option to access limited features.",
-  "about": "About"
+  "about": "About",
+  "dashboard": "Dashboard"
 }
