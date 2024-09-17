@@ -1,0 +1,297 @@
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Card } from '@/components/ui/card';
+
+interface TeamMember {
+  name: string;
+  role: string;
+  image: string;
+  quote: string;
+}
+
+interface TeamMemberCardProps {
+  member: TeamMember;
+}
+
+const MotionCard = motion(Card);
+
+const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member }) => {
+  return (
+    <MotionCard
+      className="relative w-full sm:w-60 md:w-64 lg:w-72 h-96 overflow-hidden rounded-lg shadow-lg m-4"
+      whileHover="hover"
+      initial="rest"
+      animate="rest"
+      exit="rest"
+    >
+      {/* Background Image */}
+      <motion.img
+        src={member.image}
+        alt={member.name}
+        className="absolute inset-0 w-full h-full object-cover"
+        variants={{
+          rest: { filter: 'blur(0px)' },
+          hover: { filter: 'blur(4px)' },
+        }}
+        transition={{ duration: 0.3 }}
+      />
+
+      {/* Overlay for Darkening the Image */}
+      <motion.div
+        className="absolute inset-0 bg-black bg-opacity-40"
+        variants={{
+          rest: { opacity: 0 },
+          hover: { opacity: 1 },
+        }}
+        transition={{ duration: 0.3 }}
+      />
+
+      {/* Name */}
+      <motion.div
+        className="absolute left-1/2 bottom-4 transform -translate-x-1/2"
+        variants={{
+          rest: { bottom: '1rem', left: '1rem', transform: 'translateX(-0%)', fontSize: '1.25rem' }, // Centered at the bottom
+          hover: { top: '0.5rem', left: '1rem', fontSize: '1.75rem' }, // Moves to top-left on hover, no transform
+        }}
+        transition={{ duration: 0.3 }}
+      >
+        {/* Name Text */}
+        <h3 className="relative text-white font-semibold">{member.name}</h3>
+
+        {/* Role (appears under the name on hover) */}
+        <motion.p
+          className="text-gray-400 text-sm absolute left-0 w-full"
+          variants={{
+            rest: { opacity: 0, y: 20 }, // Hidden in rest state, positioned below the name
+            hover: { opacity: 1, y: 0 }, // Appears slightly below the name on hover
+          }}
+          transition={{ duration: 0.3 }}
+        >
+          {member.role}
+        </motion.p>
+      </motion.div>
+
+      {/* Quote */}
+      <motion.div
+        className="absolute bottom-0 left-0 w-full px-4"
+        variants={{
+          rest: { top: 'auto', bottom: '2rem', left: '50%', right: 'auto', transform: 'translateX(-50%)', opacity: 0 },
+          hover: { top: '50%', bottom: 'auto', left: '50%', right: 'auto', transform: 'translate(-50%, -2rem)', opacity: 1 },
+        }}
+        transition={{ duration: 0.2 }}
+      >
+        <p className="text-white text-lg text-center">{member.quote}</p>
+      </motion.div>
+    </MotionCard>
+  );
+};
+
+
+
+
+
+
+
+
+
+
+export default TeamMemberCard;
+
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import React, { useEffect, useRef, useState } from "react";
+
+interface CardProps {
+  title: string;
+  description: string;
+  image: string;
+}
+
+const HoverCard: React.FC<CardProps> = ({ title, description, image }) => {
+  // Ref to track the title div
+  const titleRef = useRef<HTMLDivElement>(null);
+  // State to store the title width
+  const [titleWidth, setTitleWidth] = useState(0);
+
+  // Effect to calculate the width of the title div once the component mounts
+  useEffect(() => {
+    if (titleRef.current) {
+      setTitleWidth(titleRef.current.offsetWidth);
+    }
+  }, [title]);
+
+  return (
+    <motion.div
+      className="relative w-full max-w-xs aspect-[3/4] rounded-lg overflow-hidden shadow-lg"
+      whileHover={{ scale: 1.05 }}
+    >
+      {/* Background image with fixed aspect ratio */}
+      <img
+        className="absolute inset-0 w-full h-full object-cover"
+        src={image}
+        alt={title}
+      />
+
+      {/* Overlay content */}
+      <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-end p-6 text-white">
+        {/* Title with a ref */}
+        <div ref={titleRef} className="text-2xl font-bold w-fit break-words">{title}</div>
+
+        {/* Green line extending from the left edge of the card */}
+        <div
+          className="h-1 bg-green-500 mt-1 mb-2  left-0"
+          style={{ width: `${titleWidth + 24}px`, marginLeft: '-1.5rem', top: 'auto' }} // Adjusted to ensure it stays above paragraph
+        ></div>
+
+        {/* Description with proper margin to ensure no overlap with green line */}
+        <p className="text-sm text-gray-200 mb-4 break-words">{description}</p>
+
+        {/* Button aligned to the left and spanning half of the card */}
+        <Button className="bg-green-500 hover:bg-green-600 text-white px-4 py-1.5 rounded-lg w-1/2">
+          Learn More
+        </Button>
+      </div>
+    </motion.div>
+  );
+};
+
+export default HoverCard;
+
+
+
+
+
+
+import { motion } from "framer-motion";
+import React, { useRef, useEffect, useState } from "react";
+
+interface CardProps {
+  title: string;
+  description: string;
+  image: string;
+}
+
+// Animation for the green beam
+const beamVariants = {
+  initial: {
+    width: 0, // Initially hidden
+  },
+  hovered: (titleWidth: number) => ({
+    width: `${titleWidth + 40}px`, // Expand to match the title's width and extend to the left side
+    transition: {
+      duration: 0.4, // Smooth slide-in
+      ease: "easeInOut",
+    },
+  }),
+  exit: {
+    width: 0, // Shrink back to 0 on exit
+    transition: {
+      delay: 1.4, // Wait for the content to move down first
+      duration: 0.4,
+      ease: "easeInOut",
+    },
+  },
+};
+
+// Animation for moving up the title and line container
+const containerVariants = {
+  initial: {
+    y: 0, // Initially at the bottom
+  },
+  hovered: {
+    bottom: '35%', // Move up by 35%
+    transition: {
+      delay: 0.4, // Wait for the green line animation to finish
+      duration: 0.4, // Smooth upward movement
+      ease: "easeInOut",
+    },
+  },
+  exit: {
+    bottom: '0%', // Move the title and line back to the bottom
+    transition: {
+      duration: 0.4, // Smooth downward movement
+      ease: "easeInOut",
+    },
+  },
+};
+
+// Animation for the paragraph and button appearing
+const contentVariants = {
+  initial: {
+    opacity: 0,
+    y: 20, // Start below
+  },
+  hovered: {
+    opacity: 1,
+    bottom: '8%', // Fade in and slide up
+    transition: {
+      delay: 0.8, // Appear after the title and line have moved up
+      duration: 0.4,
+      ease: "easeInOut",
+    },
+  },
+  exit: {
+    opacity: 0,
+    bottom: '0%', // Slide down and disappear
+    transition: {
+      duration: 0.4, // Slide down before the green line disappears
+      ease: "easeInOut",
+    },
+  },
+};
+
+const HoverCard: React.FC<CardProps> = ({ title, description, image }) => {
+  const titleRef = useRef<HTMLDivElement>(null); // Ref to track the title's width
+  const [titleWidth, setTitleWidth] = useState(0);
+
+  // Set the title's width when the component mounts
+  useEffect(() => {
+    if (titleRef.current) {
+      setTitleWidth(titleRef.current.offsetWidth);
+    }
+  }, [title]);
+
+  return (
+    <motion.div
+      className="relative w-full max-w-xs aspect-[3/4] rounded-lg overflow-hidden shadow-lg"
+      initial="initial"
+      whileHover="hovered"
+      animate="initial"
+    >
+      {/* Background image */}
+      <img className="absolute inset-0 w-full h-full object-cover" src={image} alt={title} />
+
+      {/* Title and line container at the bottom */}
+      <motion.div
+        className="absolute bottom-0 left-0 p-4 bg-opacity-50 text-white w-fit"
+        variants={containerVariants} // Animation for moving up the title and line
+        exit = {{ opacity: 0.5, bottom: '0%', transition: {duration: 2.4, delay: 2.3, ease: "easeOut" }, }}
+      >
+        {/* Title with ref to measure width */}
+        <motion.div ref={titleRef} className="text-2xl font-bold">
+          {title}
+        </motion.div>
+
+        {/* Green line under the title, starting from the left edge */}
+        <motion.div
+          className="absolute left-0 h-1 bg-green-500 mt-1"
+          variants={beamVariants}
+          custom={titleWidth}
+        ></motion.div>
+      </motion.div>
+
+      {/* Paragraph and button container that appears after the title and line move up */}
+      <motion.div
+        className="absolute bottom-0 left-0 p-4 w-full text-white"
+        variants={contentVariants} // Animation for appearing content
+      >
+        <p className="mb-2">{description}</p>
+        <button className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg">
+          Learn More
+        </button>
+      </motion.div>
+    </motion.div>
+  );
+};
+
+export default HoverCard;

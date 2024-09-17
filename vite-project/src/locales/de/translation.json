@@ -1,20 +1,68 @@
 {
+  "hero": {
+    "title": "Makerspace",
+    "subtitle": "Wo Ideen zum Leben erwachen"
+  },
+  "welcome": {
+    "title": "Willkommen in unserem Makerspace"
+  },
+  "features": {
+    "innovate": {
+      "title": "Innovieren",
+      "description": "Verwirkliche deine kreativen Ideen mit unserer hochmodernen Ausstattung und Ressourcen."
+    },
+    "create": {
+      "title": "Erstellen",
+      "description": "Sammle praktische Erfahrungen mit 3D-Druck, Laserschneiden, Elektronik und mehr."
+    },
+    "collaborate": {
+      "title": "Zusammenarbeiten",
+      "description": "Vernetze dich mit Gleichgesinnten und arbeite gemeinsam an spannenden Projekten."
+    }
+  },
+  "info": {
+    "title": "Informationen für Schüler und Eltern",
+    "students": {
+      "title": "Entfalte deine Kreativität",
+      "description": "Entdecke, was du in unserem Makerspace tun kannst",
+      "bullet1": "Lerne neue Fähigkeiten in praktischen Workshops",
+      "bullet2": "Arbeite an persönlichen oder Schulprojekten mit unserer Ausstattung",
+      "bullet3": "Arbeite mit anderen an fächerübergreifenden Projekten zusammen",
+      "bullet4": "Nimm an Maker-Challenges und Wettbewerben teil",
+      "bullet5": "Erhalte Unterstützung von erfahrenen Mentoren und Mitarbeitern"
+    },
+    "parents": {
+      "title": "Die nächste Generation stärken",
+      "description": "Wie der Makerspace Ihrem Kind zugutekommt",
+      "bullet1": "Entwickelt Problemlösungs- und kritisches Denken",
+      "bullet2": "Fördert Kreativität und Innovation",
+      "bullet3": "Bietet praktische Erfahrungen mit modernster Technologie",
+      "bullet4": "Fördert Teamarbeit und Kommunikationsfähigkeiten",
+      "bullet5": "Bereitet Schüler auf zukünftige Karrieren in den MINT-Fächern vor"
+    }
+  },
+  "tabs": {
+    "students": "Schüler",
+    "parents": "Eltern"
+  },
+  "footer": {
+    "copy": "Schul-Makerspace. Alle Rechte vorbehalten."
+  },
   "home": "Startseite",
-  "login": "Anmeldung zu Ihrem Konto",
+  "login": "Melden Sie sich bei Ihrem Konto an",
   "choose_login_method": "Wählen Sie unten Ihre Anmeldemethode aus",
-  "microsoft_login": "Microsoft Anmeldung",
-  "guest_login": "Gast Anmeldung",
+  "microsoft_login": "Microsoft-Anmeldung",
+  "guest_login": "Gastanmeldung",
   "login_with_microsoft": "Mit Microsoft anmelden",
   "note": "Hinweis",
-  "microsoft_login_note": "Die Microsoft Anmeldung ist nur für Studenten verfügbar.",
+  "microsoft_login_note": "Die Microsoft-Anmeldung ist nur für Studierende verfügbar.",
   "email": "E-Mail",
-  "enter_email": "Geben Sie Ihre E-Mail ein",
+  "enter_email": "Geben Sie Ihre E-Mail-Adresse ein",
   "password": "Passwort",
   "enter_password": "Geben Sie Ihr Passwort ein",
   "important_information": "Wichtige Informationen",
-  "students": "Studenten",
-  "students_info": "Verwenden Sie die Microsoft-Anmeldung, um sich für Ihre Kurse anzumelden und Zeitfenster im FabLab zu buchen. Diese Option steht ausschließlich Studenten zur Verfügung.",
+  "students_info": "Verwenden Sie die Microsoft-Anmeldung, um sich für Ihre Kurse anzumelden und Zeitfenster für das FabLab zu buchen. Diese Option ist ausschließlich für Studierende.",
   "parents_guests": "Eltern und Gäste",
-  "parents_guests_info": "Wenn Sie Interesse an der Nutzung des Makerspace haben, kontaktieren Sie uns bitte für weitere Informationen und damit sie ein Gast Account bekommen. Sie können die Gastanmeldung verwenden, um auf eingeschränkte Funktionen zuzugreifen.",
+  "parents_guests_info": "Wenn Sie Interesse an der Nutzung des Makerspace haben, kontaktieren Sie uns bitte für weitere Informationen und die Erstellung eines Gastkontos. Sie können die Gastanmeldung verwenden, um auf eingeschränkte Funktionen zuzugreifen.",
   "about": "Über uns"
 }

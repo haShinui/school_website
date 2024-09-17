@@ -8,6 +8,9 @@ export default {
 	  ],
   theme: {
   	extend: {
+		fontSize: {
+			'xss': '0.6rem', // Example size for xss (slightly smaller than xs)
+		  },
 		keyframes: {
 			spinSlow: {
 			  from: { transform: 'rotate(0deg)' },

@@ -1,4 +1,39 @@
 {
+  "hero": {
+    "title": "Makerspace",
+    "subtitle": "Where Ideas Come to Life"
+  },
+  "welcome": {
+    "title": "Welcome to Our Makerspace"
+  },
+  "features": {
+    "innovate": {
+      "title": "Innovate",
+      "description": "Turn your creative ideas into reality using our state-of-the-art equipment and resources."
+    }
+  },
+  "info": {
+    "title": "Information for Students and Parents",
+    "students": {
+      "title": "Unleash Your Creativity",
+      "description": "Discover what you can do in our Makerspace",
+      "bullet1": "Learn new skills through hands-on workshops",
+      "bullet2": "Work on personal or school projects using our equipment"
+    },
+    "parents": {
+      "title": "Empowering the Next Generation",
+      "description": "How the Makerspace benefits your child",
+      "bullet1": "Develops problem-solving and critical thinking skills",
+      "bullet2": "Encourages creativity and innovation"
+    }
+  },
+  "tabs": {
+    "students": "Students",
+    "parents": "Parents"
+  },
+  "footer": {
+    "copy": "School Makerspace. All rights reserved."
+  },
   "home": "Home",
   "login": "Login to Your Account",
   "choose_login_method": "Choose your login method below",
@@ -12,7 +47,6 @@
   "password": "Password",
   "enter_password": "Enter your password",
   "important_information": "Important Information",
-  "students": "Students",
   "students_info": "Use the Microsoft login to sign up for your courses and to book time slots for the FabLab. This option is exclusively for students.",
   "parents_guests": "Parents and Guests",
   "parents_guests_info": "If you're interested in using the makerspace, please contact us for more information and making a guest account. You can use the Guest login option to access limited features.",

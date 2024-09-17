@@ -19,6 +19,8 @@ const LanguageSwitcher: React.FC = () => {
   const toggleLanguage = () => {
     const newLang = currentLang === 'en' ? 'de' : 'en';
     setCurrentLang(newLang); // Switch to the other language
+    localStorage.setItem('language', newLang); // Store the new language
+    window.location.reload(); // Reload the page to apply the new language
   };
 
   return (
