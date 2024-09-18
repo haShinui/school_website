@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+from datetime import timedelta
 from pathlib import Path
 import os
 
@@ -76,6 +76,7 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    #'django.contrib.sites',  
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
@@ -89,7 +90,8 @@ INSTALLED_APPS = [
     'django_extensions',
     'corsheaders',
     'dj_rest_auth',
-    'django_ratelimit',
+    #'django_ratelimit',
+    'axes'
 
     #'sslserver',  # Uncomment if needed for SSL in development
 ]
@@ -106,7 +108,8 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'app.middleware.TokenCookieMiddleware',
     'app.middleware.TokenRefreshMiddleware',
-    'django_ratelimit.middleware.RatelimitMiddleware',
+    #'django_ratelimit.middleware.RatelimitMiddleware',
+    'axes.middleware.AxesMiddleware',
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -133,6 +136,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # AUTHENTICATION SETTINGS
 
 AUTHENTICATION_BACKENDS = [
+    'axes.backends.AxesStandaloneBackend',
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
@@ -151,34 +155,36 @@ SOCIALACCOUNT_LOGIN_ON_GET = True
 
 # Microsoft login
 # CLIENT_ID, CLIENT_SECRET, AUTHORI#TY, and other related variables can go here.
+#AXES_LOCKOUT_CALLABLE = 'app.axes_lockout.custom_lockout_response'
 
 ACCOUNT_RATE_LIMITS = {
     'login_failed': '5/5m'  # Example value, meaning 5 attempts per 5 minutes
 }
 # settings.py
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379/1',  # Adjust if Redis is on a different host or port
-        'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-            # 'PASSWORD': 'your_redis_password',  # Uncomment if Redis requires authentication
-        }
-    },
-}
-RATELIMIT_ENABLE = True 
-RATELIMIT_METHOD = ['GET', 'POST'] 
-RATELIMIT_DEFAULT = '20/m' 
-RATELIMIT_KEY = 'ip'
-RATELIMIT_BLOCK = True
-RATELIMIT_VIEW = 'app.views.rate_limit_exceeded'
+
+AXES_ENABLED = True
+# Axes Configuration
+AXES_FAILURE_LIMIT = 5 # Number of failed login attempts before lockout
+AXES_LOCK_OUT_AT_FAILURE = True  # Lock out the user/IP after failure limit is reached
+
+AXES_CACHE = 'default'
+#AXES_USE_USER_AGENT = False  # Include user agent in failure tracking
+AXES_ENABLE_ACCESS_FAILURE_LOG = True
+#AXES_LOCKOUT_TEMPLATE = 'axes/lockout.html'  # Optional: Custom lockout page template
+#AXES_RESET_ON_SUCCESS = True  # Reset the failure counter after a successful login
+AXES_COOLOFF_TIME = 0.0833333  # 5 minutes
+AXES_STORAGE = 'axes.storage.database.AxesDatabaseStorage'
 
 # REST FRAMEWORK SETTINGS
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
     ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication'
+    )
 }
 
 # DATABASE CONFIGURATION

@@ -48,3 +48,32 @@ Things to do after setting up your secure admin with Allauth and setting up logi
           </Popover>
         </div>
       </template>
+
+
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',  # Adjust if Redis is on a different host or port
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            # 'PASSWORD': 'your_redis_password',  # Uncomment if Redis requires authentication
+        }
+    },
+}
+#RATELIMIT_ENABLE = True 
+#RATELIMIT_METHOD = ['GET', 'POST'] 
+#RATELIMIT_DEFAULT = '20/m' 
+#RATELIMIT_KEY = 'ip'
+#RATELIMIT_BLOCK = True
+#RATELIMIT_VIEW = 'app.views.rate_limit_exceeded'
+
+def rate_limit_exceeded(request, exception=None):
+    response = JsonResponse(
+        {'error': 'Too many requests. Please try again in 5 minutes.'},
+        status=429
+    )
+    response['Retry-After'] = '300'  # 5 minutes in seconds
+    return response
+
+@ratelimit(key='ip', rate='5/5m', method='POST', block=True)  

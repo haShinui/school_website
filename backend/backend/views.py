@@ -18,6 +18,17 @@ from allauth.socialaccount.providers.oauth2.views import OAuth2LoginView
 from django.conf import settings
 from django.contrib.auth import login, get_user_model, logout
 from django.urls import reverse
-import json
+from django.urls import reverse_lazy
+
+from dj_rest_auth.registration.views import SocialLoginView
+from dj_rest_auth.social_serializers import MicrosoftLoginSerializer
+
+class MicrosoftLogin(SocialLoginView):
+   """
+   Microsoft Login
+   """
+   adapter_class = MicrosoftGraphOAuth2Adapter
+   client_class = OAuth2Client
+   callback_url = reverse_lazy('account_microsoft_callback')
 
 

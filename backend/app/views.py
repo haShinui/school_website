@@ -17,7 +17,19 @@ from django.contrib.auth import get_user_model
 from django.middleware.csrf import get_token
 from django.contrib.auth.models import User
 from allauth.account.views import LoginView
-from django_ratelimit.decorators import ratelimit
+#from django_ratelimit.decorators import ratelimit
+from axes.models import AccessAttempt
+from django.http import JsonResponse
+from axes.handlers.proxy import AxesProxyHandler
+from django.conf import settings
+from django.utils import timezone
+from django.core.cache import cache
+from axes.signals import user_locked_out
+from django.dispatch import receiver
+from rest_framework.authtoken.models import Token
+
+import math
+import logging
 
 import requests
 UserModel = get_user_model()
@@ -25,13 +37,17 @@ UserModel = get_user_model()
 from django.contrib.auth import logout, authenticate
 from django.http import JsonResponse
 
-def rate_limit_exceeded(request, exception=None):
-    response = JsonResponse(
-        {'error': 'Too many requests. Please try again in 5 minutes.'},
-        status=429
-    )
-    response['Retry-After'] = '300'  # 5 minutes in seconds
-    return response
+def get_client_ip(request):
+    """
+    Retrieves the client's IP address from the request, considering possible reverse proxies.
+    """
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        # X-Forwarded-For can contain multiple IPs; take the first one
+        ip = x_forwarded_for.split(',')[0].strip()
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
 
 @ensure_csrf_cookie
 def csrf_token_view(request):
@@ -126,23 +142,65 @@ def secure_microsoft_login(request):
     login_url = request.build_absolute_uri(reverse('microsoft_login'))
     return JsonResponse({'login_url': login_url})
 
+def microsoft_callback(request):
+    """
+    Handles the callback from Microsoft after the user has authenticated.
+    If successful, it generates and returns a new token.
+    """
+    # Get the user associated with this request (from the session or authentication flow)
+    user = request.user
 
-@ratelimit(key='ip', rate='5/5m', method='POST', block=True)  # 5 requests per minute per IP
+    if user.is_authenticated:
+        # Delete old token if it exists
+        Token.objects.filter(user=user).delete()
+
+        # Generate new token
+        token, _ = Token.objects.get_or_create(user=user)
+
+        return JsonResponse({
+            'success': True,
+            'message': 'Microsoft login successful.',
+            'token': token.key
+        }, status=200)
+    else:
+        return JsonResponse({'success': False, 'message': 'Login failed.'}, status=401)
+
+# 5 requests per minute per IP
 @csrf_protect
 def secure_allauth_login(request):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Only POST method is allowed.'}, status=405)
+    
     try:
         data = json.loads(request.body)
-        username = data.get('username')
-        password = data.get('password')
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return JsonResponse({'success': True, 'message': 'Logged in successfully'})
-        else:
-            return JsonResponse({'success': False, 'message': 'Authentication failed'}, status=401)
-    
     except json.JSONDecodeError:
-        return JsonResponse({'success': False, 'message': 'Invalid request format.'}, status=400)
+        return JsonResponse({'success': False, 'message': 'Invalid JSON format.'}, status=400)
+    
+    username = data.get('username')
+    password = data.get('password')
+    
+    
+    if not username or not password:
+        return JsonResponse({'success': False, 'message': 'Username and password are required.'}, status=400)
+    
+    user = authenticate(request, username=username, password=password)
+    if user is not None:
+        # Log the user in
+        login(request, user)
+
+        # Delete old token (if it exists)
+        Token.objects.filter(user=user).delete()
+
+        # Generate new token
+        token, _ = Token.objects.get_or_create(user=user)
+
+        return JsonResponse({
+            'success': True, 
+            'message': 'Logged in successfully.',
+            'token': token.key  # Return the new token
+        }, status=200)
+    else:
+        return JsonResponse({'success': False, 'message': 'Authentication failed.'}, status=401)
     
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
@@ -151,14 +209,19 @@ from django.contrib.auth import logout
 @csrf_protect
 @require_POST
 def api_logout(request):
-    print("hello logout")
-    # If the user is authenticated, handle the logout process
     if request.user.is_authenticated:
-        # Clear the session and delete the cookie
-        logout(request)  # This clears the session and logs the user out
-        response = JsonResponse({'success': True, 'message': 'You have been logged out successfully.'})
-        response.delete_cookie('auth_token')  # Explicitly instruct the browser to delete the auth_token cookie
-        print("Token and session cleared")
+        # Get the user's token
+        try:
+            token = Token.objects.get(user=request.user)
+            token.delete()  # Delete the token
+        except Token.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Token not found.'}, status=400)
+        
+        # Log out the user
+        logout(request)
+
+        response = JsonResponse({'success': True, 'message': 'Logged out successfully.'})
+        response.delete_cookie('auth_token')  # Optionally, delete the auth cookie if applicable
         return response
     else:
         return JsonResponse({'success': False, 'message': 'No authenticated user to log out.'}, status=401)
