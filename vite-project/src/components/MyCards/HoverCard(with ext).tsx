@@ -44,7 +44,7 @@ const textVariants = {
   initial: { opacity: 0, bottom: '1%'}, // Hidden below
   animate: {
     opacity: 1,
-    bottom: '26%',
+    bottom: '19%',
     transition: { delay: 0.8, duration: 0.4, ease: "easeInOut" }, // Delay for smooth appearance
   },
   exit: {
@@ -87,7 +87,7 @@ const HoverCard: React.FC<CardProps> = ({ title, description, image }) => {
         exit="exit"
       >
         {/* Title */}
-        <motion.div ref={titleRef} className="text-2xl font-bold">
+        <motion.div ref={titleRef} className="text-3xl font-bold">
           {title}
         </motion.div>
 
@@ -118,7 +118,7 @@ const HoverCard: React.FC<CardProps> = ({ title, description, image }) => {
             animate="animate"
             exit="exit"
           >
-            <p className="text-sm">{description}</p>
+            <p className="text-lg">{description}</p>
           </motion.div>
         )}
       </AnimatePresence>

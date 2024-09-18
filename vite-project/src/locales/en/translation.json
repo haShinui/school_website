@@ -48,6 +48,20 @@
   "footer": {
     "copy": "School Makerspace. All rights reserved."
   },
+  "hoverCards": {
+    "3DPrinter": {
+      "title": "3D Printer",
+      "description": "Our 3D printers allow students to bring their designs to life with precision."
+    },
+    "sewingMachine": {
+      "title": "Sewing Machine",
+      "description": "Our sewing machines are perfect for fabric projects and creative crafting."
+    },
+    "solderingStation": {
+      "title": "Soldering Station",
+      "description": "Get hands-on experience with electronics at our soldering stations."
+    }
+  },
   "home": "Home",
   "login": "Login to Your Account",
   "choose_login_method": "Choose your login method below",
@@ -62,6 +76,7 @@
   "enter_password": "Enter your password",
   "important_information": "Important Information",
   "students_info": "Use the Microsoft login to sign up for your courses and to book time slots for the FabLab. This option is exclusively for students.",
+  "students":  "Students", 
   "parents_guests": "Parents and Guests",
   "parents_guests_info": "If you're interested in using the makerspace, please contact us for more information and making a guest account. You can use the Guest login option to access limited features.",
   "about": "About",

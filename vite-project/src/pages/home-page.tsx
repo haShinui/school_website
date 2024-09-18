@@ -20,7 +20,7 @@ export function HomePageComponent() {
         {/* Background Image */}
         <div
           className="absolute inset-0 bg-cover bg-center z-0"
-          style={{ backgroundImage: "url('https://picsum.photos/1920/1080')" }}
+          style={{ backgroundImage: "url('https://plus.unsplash.com/premium_photo-1723600901481-8908d556c66f?q=80&w=2320&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')" }}
         />
         {/* Overlay */}
         <div className="absolute inset-0 bg-black opacity-50 z-10"></div>
@@ -29,7 +29,7 @@ export function HomePageComponent() {
           <h1 className="text-5xl md:text-7xl font-bold mb-4">
             <GibberishText
               text={t('hero.title')}
-              className=""
+              className="text-emerald-400"
               initialDelay={0}
               duration={1000}
               intervalTime={100}
@@ -118,7 +118,7 @@ export function HomePageComponent() {
                     <UsersThree
                       size={40}
                       weight="duotone"
-                      className="mb-2 text-primary group-hover:animate-bounce-thrice group-hover:text-cyan-600"
+                      className="mb-2 text-primary group-hover:animate-bounce-thrice group-hover:text-emerald-400"
                     />
                     <CardTitle>{t('features.collaborate.title')}</CardTitle>
                   </CardHeader>
@@ -179,24 +179,24 @@ export function HomePageComponent() {
   <div className="flex flex-wrap justify-center gap-4">
     {/* 3D Printer Card */}
     <HoverCard
-      title="3D Printer"
-      description="Our 3D printers allow students to bring their designs to life with precision."
-      image="https://images.unsplash.com/photo-1715592600579-5949748d349f?q=80&w=2001&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" // Example image, replace with actual 3D printer image
-    />
+            title={t('hoverCards.3DPrinter.title')}
+            description={t('hoverCards.3DPrinter.description')}
+            image="https://images.unsplash.com/photo-1715592600579-5949748d349f?q=80&w=2001&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          />
 
-    {/* Sewing Machine Card */}
-    <HoverCard
-      title="Sewing Machine"
-      description="Our sewing machines are perfect for fabric projects and creative crafting."
-      image="https://plus.unsplash.com/premium_photo-1664195857591-968c2a9f2c03?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8c2V3aW5nJTIwbWFjaGluZXxlbnwwfHwwfHx8MA%3D%3D" // Example image, replace with actual sewing machine image
-    />
+          {/* Sewing Machine Card */}
+          <HoverCard
+            title={t('hoverCards.sewingMachine.title')}
+            description={t('hoverCards.sewingMachine.description')}
+            image="https://plus.unsplash.com/premium_photo-1664195857591-968c2a9f2c03?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8c2V3aW5nJTIwbWFjaGluZXxlbnwwfHwwfHx8MA%3D%3D"
+          />
 
-    {/* Soldering Station Card */}
-    <HoverCard
-      title="Soldering Station"
-      description="Get hands-on experience with electronics at our soldering stations."
-      image="https://plus.unsplash.com/premium_photo-1663013225893-dac76c8f03ca?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8c29sZGVyaW5nfGVufDB8fDB8fHww" // Example image, replace with actual soldering station image
-    />
+          {/* Soldering Station Card */}
+          <HoverCard
+            title={t('hoverCards.solderingStation.title')}
+            description={t('hoverCards.solderingStation.description')}
+            image="https://plus.unsplash.com/premium_photo-1663013225893-dac76c8f03ca?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8c29sZGVyaW5nfGVufDB8fDB8fHww"
+          />
   </div>
 </section>
         </section>

@@ -16,11 +16,22 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth import get_user_model
 from django.middleware.csrf import get_token
 from django.contrib.auth.models import User
+from allauth.account.views import LoginView
+from django_ratelimit.decorators import ratelimit
+
 import requests
 UserModel = get_user_model()
 
 from django.contrib.auth import logout, authenticate
 from django.http import JsonResponse
+
+def rate_limit_exceeded(request, exception=None):
+    response = JsonResponse(
+        {'error': 'Too many requests. Please try again in 5 minutes.'},
+        status=429
+    )
+    response['Retry-After'] = '300'  # 5 minutes in seconds
+    return response
 
 @ensure_csrf_cookie
 def csrf_token_view(request):
@@ -115,8 +126,9 @@ def secure_microsoft_login(request):
     login_url = request.build_absolute_uri(reverse('microsoft_login'))
     return JsonResponse({'login_url': login_url})
 
+
+@ratelimit(key='ip', rate='5/5m', method='POST', block=True)  # 5 requests per minute per IP
 @csrf_protect
-@require_POST
 def secure_allauth_login(request):
     try:
         data = json.loads(request.body)
@@ -131,11 +143,12 @@ def secure_allauth_login(request):
     
     except json.JSONDecodeError:
         return JsonResponse({'success': False, 'message': 'Invalid request format.'}, status=400)
-
+    
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.contrib.auth import logout
 
+@csrf_protect
 @require_POST
 def api_logout(request):
     print("hello logout")

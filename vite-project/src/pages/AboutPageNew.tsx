@@ -12,26 +12,26 @@ const teamMembers = [
   {
     name: "John Doe",
     role: "Teacher of G5G",
-    image: "https://picsum.photos/id/1005/600/800",
+    image: "https://plus.unsplash.com/premium_photo-1664300900349-afd61c20f8b8?q=80&w=2187&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     quote: "Passionate about building innovative solutions.",
   },
   {
     name: "Jane Smith",
     role: "Student of G5G",
-    image: "https://picsum.photos/id/1011/600/800",
+    image: "https://plus.unsplash.com/premium_photo-1661942126259-fb08e7cce1e2?q=80&w=2187&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     quote: "Design is not just what it looks like and feels like.",
   },
   {
     name: "Alice Johnson",
     role: "Assistant Teacher",
-    image: "https://picsum.photos/id/1012/600/800",
+    image: "https://plus.unsplash.com/premium_photo-1683121771856-3c3964975777?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cG9ydHJhaXR8ZW58MHx8MHx8fDA%3D",
     quote:
       "I love helping students realize their potential. afsdafsd fadsaf fsdafsd afdsafas afdsadf asdfasdfas fsdfasdfasdfas asdff",
   },
   {
     name: "Michael Brownsonfasf",
     role: "Workshop Instructor",
-    image: "https://picsum.photos/id/1013/600/800",
+    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cG9ydHJhaXR8ZW58MHx8MHx8fDA%3D",
     quote: "Teaching hands-on skills is my passion.",
   },
   {

@@ -62,7 +62,7 @@ const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member }) => {
         }}
         transition={{ duration: 0.35 }}
       >
-        <h3 className="text-white font-semibold text-xs sm:text-base md:text-lg lg:text-2xl">
+        <h3 className="text-white font-semibold text-xs sm:text-base md:text-lg lg:text-xl">
           {member.name}
         </h3>
       </motion.div>

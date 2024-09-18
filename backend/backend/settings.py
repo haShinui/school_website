@@ -19,9 +19,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY CONFIGURATION
 
 # SECURITY WARNING: keep the secret key used in production secret!
+#TODO:generate new key and .env
 SECRET_KEY = 'django-insecure-c)g%$184o8z=mi-3!##hs5z8^=*b-u%m$_*m8al@de@y12^s3w'
 
 # SECURITY WARNING: don't run with debug turned on in production!
+#TODO: Debug false and changed allow host production
 DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
@@ -32,6 +34,7 @@ CSRF_COOKIE_NAME = 'csrftoken'
 CSRF_COOKIE_HTTPONLY = False  # Make True in Production, could cause problems
 
 # Only allow session cookies over HTTPS (recommended in production)
+#TODO: changed all those settings
 SESSION_COOKIE_SECURE = False  # set to true when using HTTPS
 
 # Mark session cookies as HTTP-only, preventing JavaScript from accessing them
@@ -86,6 +89,8 @@ INSTALLED_APPS = [
     'django_extensions',
     'corsheaders',
     'dj_rest_auth',
+    'django_ratelimit',
+
     #'sslserver',  # Uncomment if needed for SSL in development
 ]
 
@@ -101,6 +106,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'app.middleware.TokenCookieMiddleware',
     'app.middleware.TokenRefreshMiddleware',
+    'django_ratelimit.middleware.RatelimitMiddleware',
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -144,9 +150,29 @@ ACCOUNT_USERNAME_REQUIRED = True
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
 # Microsoft login
-# CLIENT_ID, CLIENT_SECRET, AUTHORITY, and other related variables can go here.
+# CLIENT_ID, CLIENT_SECRET, AUTHORI#TY, and other related variables can go here.
 
+ACCOUNT_RATE_LIMITS = {
+    'login_failed': '5/5m'  # Example value, meaning 5 attempts per 5 minutes
+}
+# settings.py
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',  # Adjust if Redis is on a different host or port
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            # 'PASSWORD': 'your_redis_password',  # Uncomment if Redis requires authentication
+        }
+    },
+}
+RATELIMIT_ENABLE = True 
+RATELIMIT_METHOD = ['GET', 'POST'] 
+RATELIMIT_DEFAULT = '20/m' 
+RATELIMIT_KEY = 'ip'
+RATELIMIT_BLOCK = True
+RATELIMIT_VIEW = 'app.views.rate_limit_exceeded'
 
 # REST FRAMEWORK SETTINGS
 REST_FRAMEWORK = {

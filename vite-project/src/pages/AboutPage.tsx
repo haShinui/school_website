@@ -7,7 +7,7 @@ const teamMembers = [
   {
     name: "John Doe",
     role: "Teacher of G5G",
-    image: "https://picsum.photos/id/1005/600/800",
+    image: "https://plus.unsplash.com/premium_photo-1664300900349-afd61c20f8b8?q=80&w=2187&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     quote: "Passionate about building innovative solutions.",
   },
   {

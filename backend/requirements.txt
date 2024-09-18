@@ -6,3 +6,5 @@ django-allauth>=0.54.0
 psycopg2-binary>=2.9.6
 dj-rest-auth>=2.1.9
 requests>=2.31.0
+django-ratelimit>=4.1.0
+django-redis>=5.4.0

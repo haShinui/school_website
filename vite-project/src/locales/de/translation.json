@@ -48,6 +48,20 @@
   "footer": {
     "copy": "Schul-Makerspace. Alle Rechte vorbehalten."
   },
+  "hoverCards": {
+    "3DPrinter": {
+      "title": "3D-Drucker",
+      "description": "Unsere 3D-Drucker ermöglichen es den Schülern, ihre Designs präzise zum Leben zu erwecken."
+    },
+    "sewingMachine": {
+      "title": "Nähmaschine",
+      "description": "Unsere Nähmaschinen sind perfekt für Stoffprojekte und kreatives Basteln."
+    },
+    "solderingStation": {
+      "title": "Lötstation",
+      "description": "Sammle praktische Erfahrung mit Elektronik an unseren Lötstationen."
+    }
+  },
   "home": "Startseite",
   "login": "Melden Sie sich bei Ihrem Konto an",
   "choose_login_method": "Wählen Sie unten Ihre Anmeldemethode aus",
@@ -61,6 +75,7 @@
   "password": "Passwort",
   "enter_password": "Geben Sie Ihr Passwort ein",
   "important_information": "Wichtige Informationen",
+  "students": "Schüler",
   "students_info": "Verwenden Sie die Microsoft-Anmeldung, um sich für Ihre Kurse anzumelden und Zeitfenster für das FabLab zu buchen. Diese Option ist ausschließlich für Studierende.",
   "parents_guests": "Eltern und Gäste",
   "parents_guests_info": "Wenn Sie Interesse an der Nutzung des Makerspace haben, kontaktieren Sie uns bitte für weitere Informationen und die Erstellung eines Gastkontos. Sie können die Gastanmeldung verwenden, um auf eingeschränkte Funktionen zuzugreifen.",
