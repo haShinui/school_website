@@ -32,7 +32,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'school-website-1-a2f6.onrender.com']
 
 # CSRF and Cookie Security Settings
-CSRF_TRUSTED_ORIGINS = ['http://localhost:8082', 'http://localhost:8000/']
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8082', 'http://localhost:8000/', 'https://school-website-1-a2f6.onrender.com']
 CSRF_COOKIE_NAME = 'csrftoken'
 CSRF_COOKIE_HTTPONLY = False  # Make True in Production, could cause problems
 
@@ -154,7 +154,7 @@ SOCIALACCOUNT_ADAPTER = 'app.adapters.MySocialAccountAdapter'
 ACCOUNT_EMAIL_REQUIRED = False
 ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_USERNAME_REQUIRED = True
-SOCIALACCOUNT_LOGIN_ON_GET = True
+SOCIALACCOUNT_LOGIN_ON_GET = False
 
 # Microsoft login
 # CLIENT_ID, CLIENT_SECRET, AUTHORI#TY, and other related variables can go here.
