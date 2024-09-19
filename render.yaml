@@ -3,6 +3,7 @@ databases:
     plan: free
     databaseName: school_9syr  # Name of the actual database
     user: rafael          # Database user name
+    region: frankfurt
 
 services:
   - type: web
