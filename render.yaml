@@ -1,7 +1,7 @@
 databases:
-  - name: school_9syr  # The name of your Render database
+  - name: schoolwebsite  # The name of your Render database
     plan: free
-    databaseName: schoolwebsite_test  # Name of the actual database
+    databaseName: school_9syr  # Name of the actual database
     user: rafael          # Database user name
 
 services:
