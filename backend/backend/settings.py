@@ -38,7 +38,7 @@ CSRF_COOKIE_HTTPONLY = False  # Make True in Production, could cause problems
 
 # Only allow session cookies over HTTPS (recommended in production)
 #TODO: changed all those settings
-SESSION_COOKIE_SECURE = False  # set to true when using HTTPS
+SESSION_COOKIE_SECURE = True  # set to true when using HTTPS
 
 # Mark session cookies as HTTP-only, preventing JavaScript from accessing them
 SESSION_COOKIE_HTTPONLY = True # True when in production
@@ -47,7 +47,7 @@ SESSION_COOKIE_HTTPONLY = True # True when in production
 SESSION_COOKIE_AGE = 86400  # 1 day in seconds
 
 # CSRF Protection on session-based requests
-CSRF_COOKIE_SECURE = False #true for production with HTTPs
+CSRF_COOKIE_SECURE = True #true for production with HTTPs
 
 # Cross-site cookies
 SESSION_COOKIE_SAMESITE = 'Lax'  # or 'None' if using cross-site requests
@@ -57,15 +57,14 @@ X_FRAME_OPTIONS = 'DENY'
 SECURE_CONTENT_TYPE_NOSNIFF = True
 
 # Enable HTTPS when ready (currently commented out for development)
-# SECURE_SSL_REDIRECT = True  # Uncomment for HTTPS in production
-# CSRF_COOKIE_SECURE = True  # Uncomment for HTTPS
-# SESSION_COOKIE_SECURE = True  # Uncomment for HTTPS
+SECURE_SSL_REDIRECT = True  # Uncomment for HTTPS in production
 
 # CORS Settings
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:8082',
     'http://localhost:8000',
+    'https://school-website-1-a2f6.onrender.com',
 ]
 CORS_ALLOW_CREDENTIALS = True  # If you're using cookies for authentication
 
