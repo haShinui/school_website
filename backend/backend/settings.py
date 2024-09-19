@@ -195,7 +195,7 @@ REST_FRAMEWORK = {
 # Replace the SQLite DATABASES configuration with PostgreSQL:
 
 DATABASES = {
-    "default": dj_database_url.config(default=os.getenv("DATABASE_URL"))
+    "default": dj_database_url.config(default='postgresql://rafael:YM5aycwKE1FaZH0FDuhdfV3uOpHQ6ulH@dpg-crlu4b08fa8c739tso6g-a.frankfurt-postgres.render.com/school_9syr')
 }
 # PASSWORD VALIDATION
 AUTH_PASSWORD_VALIDATORS = [

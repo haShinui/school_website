@@ -7,7 +7,7 @@ databases:
 services:
   - type: web
     plan: free
-    name: school_website    # Name of your service
+    name: test2    # Name of your service
     runtime: python
     buildCommand: "./build.sh"    # Your build script for React or static assets, if applicable
     startCommand: "python -m gunicorn backend.asgi:application -k uvicorn.workers.UvicornWorker"  # Django project directory here (backend)
