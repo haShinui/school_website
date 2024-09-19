@@ -146,8 +146,8 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # LOGIN/LOGOUT Redirects
-LOGIN_REDIRECT_URL = 'http://localhost:8082/'  
-LOGOUT_REDIRECT_URL = 'http://localhost:8082/'  # Redirect to the home page after logout
+LOGIN_REDIRECT_URL = '/'  
+LOGOUT_REDIRECT_URL = '/'  # Redirect to the home page after logout
 
 # SOCIAL ACCOUNT SETTINGS
 ACCOUNT_ADAPTER = 'app.adapters.NoSignupAdapter'
