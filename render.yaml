@@ -1,16 +1,16 @@
 databases:
-  - name: schoolwebsite_test   # The name of your Render database
+  - name: school_9syr  # The name of your Render database
     plan: free
-    databaseName: school_9syr   # Name of the actual database
+    databaseName: schoolwebsite_test  # Name of the actual database
     user: rafael          # Database user name
 
 services:
   - type: web
     plan: free
-    name: test2    # Name of your service
+    name: schoolwebsite    # Name of your service
     runtime: python
     buildCommand: "./build.sh"    # Your build script for React or static assets, if applicable
-    startCommand: "python -m gunicorn backend.asgi:application -k uvicorn.workers.UvicornWorker"  # Django project directory here (backend)
+    startCommand: "cd backend && python -m uvicorn backend.asgi:application -k uvicorn.workers.UvicornWorker"  # Django project directory here (backend)
     envVars:
       - key: DATABASE_URL
         fromDatabase:
