@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-c)g%$184o8z=mi-3!##hs5z8^=*b-u%m$_*m8al@de@y12^s3w
 #TODO: Debug false and changed allow host production
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'https://school-website-1-a2f6.onrender.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'school-website-1-a2f6.onrender.com']
 
 # CSRF and Cookie Security Settings
 CSRF_TRUSTED_ORIGINS = ['http://localhost:8082', 'http://localhost:8000/']
