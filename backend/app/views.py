@@ -150,11 +150,9 @@ def signup_course_view(request):
     return JsonResponse({'success': False, 'message': 'Unexpected role encountered.'}, status=400)
 
 @require_POST
-def debug_headers_view(request):
-    """
-    A debug view that prints out the request headers and CSRF token for troubleshooting.
-    """
-    # Get the CSRF token from the request
+@csrf_protect
+def secure_microsoft_login(request):
+        # Get the CSRF token from the request
     csrf_token = get_token(request)
     
     # Get the request headers
