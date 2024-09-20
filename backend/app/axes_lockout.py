@@ -64,9 +64,4 @@ def exponential_backoff_lockout_response(request, credentials, **kwargs):
         headers={'Retry-After': str(retry_after)}
     )
 
-def custom_lockout_response(request, credentials, **kwargs):
-    """
-    Determines which lockout response to use based on the request path.
-    """
-    
-    return standard_lockout_response(request, credentials, **kwargs)
+

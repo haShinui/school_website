@@ -29,17 +29,19 @@ SECRET_KEY = 'django-insecure-c)g%$184o8z=mi-3!##hs5z8^=*b-u%m$_*m8al@de@y12^s3w
 #TODO: Debug false and changed allow host production
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'school-website-1-a2f6.onrender.com']
 
 # CSRF and Cookie Security Settings
-CSRF_TRUSTED_ORIGINS = ['http://localhost:8082', 'http://localhost:8000/']
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8082', 'http://localhost:8000/', 'https://school-website-1-a2f6.onrender.com']
 CSRF_COOKIE_NAME = 'csrftoken'
 CSRF_COOKIE_HTTPONLY = False  # Make True in Production, could cause problems
 
 # Only allow session cookies over HTTPS (recommended in production)
 #TODO: changed all those settings
-SESSION_COOKIE_SECURE = False  # set to true when using HTTPS
+SESSION_COOKIE_SECURE = True  # set to true when using HTTPS
 
+#TODO: set this in production to the main domain
+SESSION_COOKIE_DOMAIN = None  # Or set this to your actual domain
 # Mark session cookies as HTTP-only, preventing JavaScript from accessing them
 SESSION_COOKIE_HTTPONLY = True # True when in production
 
@@ -47,7 +49,7 @@ SESSION_COOKIE_HTTPONLY = True # True when in production
 SESSION_COOKIE_AGE = 86400  # 1 day in seconds
 
 # CSRF Protection on session-based requests
-CSRF_COOKIE_SECURE = False #true for production with HTTPs
+CSRF_COOKIE_SECURE = True #true for production with HTTPs
 
 # Cross-site cookies
 SESSION_COOKIE_SAMESITE = 'Lax'  # or 'None' if using cross-site requests
@@ -57,21 +59,20 @@ X_FRAME_OPTIONS = 'DENY'
 SECURE_CONTENT_TYPE_NOSNIFF = True
 
 # Enable HTTPS when ready (currently commented out for development)
-# SECURE_SSL_REDIRECT = True  # Uncomment for HTTPS in production
-# CSRF_COOKIE_SECURE = True  # Uncomment for HTTPS
-# SESSION_COOKIE_SECURE = True  # Uncomment for HTTPS
+SECURE_SSL_REDIRECT = True  # Uncomment for HTTPS in production
 
 # CORS Settings
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:8082',
     'http://localhost:8000',
+    'https://school-website-1-a2f6.onrender.com',
 ]
 CORS_ALLOW_CREDENTIALS = True  # If you're using cookies for authentication
 
 # SESSION CONFIGURATION
 
-SESSION_COOKIE_DOMAIN = 'localhost'
+#SESSION_COOKIE_DOMAIN = 'localhost'
 
 # APPLICATION CONFIGURATION
 SITE_ID = 1
@@ -146,8 +147,8 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # LOGIN/LOGOUT Redirects
-LOGIN_REDIRECT_URL = 'http://localhost:8082/'  
-LOGOUT_REDIRECT_URL = 'http://localhost:8082/'  # Redirect to the home page after logout
+LOGIN_REDIRECT_URL = '/'  
+LOGOUT_REDIRECT_URL = '/'  # Redirect to the home page after logout
 
 # SOCIAL ACCOUNT SETTINGS
 ACCOUNT_ADAPTER = 'app.adapters.NoSignupAdapter'
@@ -155,7 +156,7 @@ SOCIALACCOUNT_ADAPTER = 'app.adapters.MySocialAccountAdapter'
 ACCOUNT_EMAIL_REQUIRED = False
 ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_USERNAME_REQUIRED = True
-SOCIALACCOUNT_LOGIN_ON_GET = True
+SOCIALACCOUNT_LOGIN_ON_GET = False
 
 # Microsoft login
 # CLIENT_ID, CLIENT_SECRET, AUTHORI#TY, and other related variables can go here.
@@ -195,7 +196,7 @@ REST_FRAMEWORK = {
 # Replace the SQLite DATABASES configuration with PostgreSQL:
 
 DATABASES = {
-    "default": dj_database_url.config(default=os.getenv("DATABASE_URL"))
+    "default": dj_database_url.config(default='postgresql://rafael:YM5aycwKE1FaZH0FDuhdfV3uOpHQ6ulH@dpg-crlu4b08fa8c739tso6g-a/school_9syr')
 }
 # PASSWORD VALIDATION
 AUTH_PASSWORD_VALIDATORS = [
@@ -224,12 +225,11 @@ USE_TZ = True
 # This setting informs Django of the URI path from which your static files will be served to users
 # Here, they well be accessible at your-domain.onrender.com/static/... or yourcustomdomain.com/static/...
 STATIC_URL = '/static/'
-# This production code might break development mode, so we check whether we're in DEBUG mode
-if not DEBUG:    # Tell Django to copy static assets into a path called `staticfiles` (this is specific to Render)
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# This production code might break development mode, so we check whether we're in DEBUG mode   # Tell Django to copy static assets into a path called `staticfiles` (this is specific to Render)
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
     # Enable the WhiteNoise storage backend, which compresses static files to reduce disk use
     # and renames the files with unique names for each version to support long-term caching
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'app', 'static'),
 ]

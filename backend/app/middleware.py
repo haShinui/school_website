@@ -20,7 +20,7 @@ class TokenCookieMiddleware(MiddlewareMixin):
                 'auth_token',
                 token.key,
                 httponly=True,
-                max_age=3600 * 24 * 14,  # 14 days
+                max_age=3600 * 24 * 7,  # 7 days
                 samesite='Lax',
                 secure=True
             )

@@ -7,7 +7,11 @@ from django.contrib.auth import views as auth_views
 from django.contrib import admin
 from allauth.account.decorators import secure_admin_login
 from .views import MicrosoftLogin
+from django.http import HttpResponse
 router = routers.DefaultRouter()
+
+def empty_favicon(request):
+    return HttpResponse(status=204)  # Return empty response
 
 
 
@@ -21,6 +25,7 @@ urlpatterns = [
     path('dj-rest-auth/', include('dj_rest_auth.urls')),  # dj-rest-auth endpoints
     path('accounts/', include('allauth.urls')),  # Allauth URLs
     path('dj-rest-auth/Microsoft/', MicrosoftLogin.as_view(), name='Microsoft_login'),  # Microsoft login API
+    path('favicon.ico', empty_favicon),  # Handle favicon requests
     #path('accounts/microsoft/logins/callback/', MicrosoftLogin.as_view(), name='account_microsoft_callback'),
     #path('accounts/microsoft/logins/callback/', microsoft_callback, name='microsoft_callback'),
     # API endpoints
