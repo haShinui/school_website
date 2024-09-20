@@ -150,7 +150,6 @@ def signup_course_view(request):
     return JsonResponse({'success': False, 'message': 'Unexpected role encountered.'}, status=400)
 
 @require_POST
-@csrf_protect
 def secure_microsoft_login(request):
         # Get the CSRF token from the request
     csrf_token = get_token(request)
