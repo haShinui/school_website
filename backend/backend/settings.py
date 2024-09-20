@@ -40,7 +40,7 @@ CSRF_COOKIE_HTTPONLY = False  # Make True in Production, could cause problems
 #TODO: changed all those settings
 SESSION_COOKIE_SECURE = True  # set to true when using HTTPS
 
-
+#TODO: set this in production to the main domain
 SESSION_COOKIE_DOMAIN = None  # Or set this to your actual domain
 # Mark session cookies as HTTP-only, preventing JavaScript from accessing them
 SESSION_COOKIE_HTTPONLY = True # True when in production
