@@ -23,33 +23,35 @@ load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 #TODO:generate new key and .env
-SECRET_KEY = 'django-insecure-c)g%$184o8z=mi-3!##hs5z8^=*b-u%m$_*m8al@de@y12^s3w'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 #TODO: Debug false and changed allow host production
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'school-website-1-a2f6.onrender.com']
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',')
 
 # CSRF and Cookie Security Settings
-CSRF_TRUSTED_ORIGINS = ['http://localhost:8082', 'http://localhost:8000/', 'https://school-website-1-a2f6.onrender.com']
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS').split(',')
 CSRF_COOKIE_NAME = 'csrftoken'
 CSRF_COOKIE_HTTPONLY = False  # Make True in Production, could cause problems
 
 # Only allow session cookies over HTTPS (recommended in production)
 #TODO: changed all those settings
-SESSION_COOKIE_SECURE = True  # set to true when using HTTPS
+SESSION_COOKIE_SECURE = False  # set to true when using HTTPS
 
 #TODO: set this in production to the main domain
 SESSION_COOKIE_DOMAIN = None  # Or set this to your actual domain
 # Mark session cookies as HTTP-only, preventing JavaScript from accessing them
-SESSION_COOKIE_HTTPONLY = True # True when in production
+#TODO: change
+SESSION_COOKIE_HTTPONLY = False # True when in production
 
 # Set the expiration for sessions (e.g., 1 day)
 SESSION_COOKIE_AGE = 86400  # 1 day in seconds
 
 # CSRF Protection on session-based requests
-CSRF_COOKIE_SECURE = True #true for production with HTTPs
+#TODO: CHange
+CSRF_COOKIE_SECURE = False #true for production with HTTPs
 
 # Cross-site cookies
 SESSION_COOKIE_SAMESITE = 'Lax'  # or 'None' if using cross-site requests
@@ -59,15 +61,12 @@ X_FRAME_OPTIONS = 'DENY'
 SECURE_CONTENT_TYPE_NOSNIFF = True
 
 # Enable HTTPS when ready (currently commented out for development)
-SECURE_SSL_REDIRECT = True  # Uncomment for HTTPS in production
+#TODO: change
+SECURE_SSL_REDIRECT = False  # Uncomment for HTTPS in production
 
 # CORS Settings
 CORS_ALLOW_ALL_ORIGINS = False
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:8082',
-    'http://localhost:8000',
-    'https://school-website-1-a2f6.onrender.com',
-]
+CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS').split(',')
 CORS_ALLOW_CREDENTIALS = True  # If you're using cookies for authentication
 
 # SESSION CONFIGURATION
@@ -122,7 +121,7 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -156,7 +155,8 @@ SOCIALACCOUNT_ADAPTER = 'app.adapters.MySocialAccountAdapter'
 ACCOUNT_EMAIL_REQUIRED = False
 ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_USERNAME_REQUIRED = True
-SOCIALACCOUNT_LOGIN_ON_GET = False
+SOCIALACCOUNT_LOGIN_ON_GET = True
+
 
 # Microsoft login
 # CLIENT_ID, CLIENT_SECRET, AUTHORI#TY, and other related variables can go here.
@@ -196,7 +196,7 @@ REST_FRAMEWORK = {
 # Replace the SQLite DATABASES configuration with PostgreSQL:
 
 DATABASES = {
-    "default": dj_database_url.config(default='postgresql://rafael:YM5aycwKE1FaZH0FDuhdfV3uOpHQ6ulH@dpg-crlu4b08fa8c739tso6g-a/school_9syr')
+    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
 }
 # PASSWORD VALIDATION
 AUTH_PASSWORD_VALIDATORS = [
@@ -230,9 +230,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
     # Enable the WhiteNoise storage backend, which compresses static files to reduce disk use
     # and renames the files with unique names for each version to support long-term caching
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'app', 'static'),
-]
+#STATICFILES_DIRS = [
+    #os.path.join(BASE_DIR, 'static'),  # Include general static files (if any)
+    #os.path.join(BASE_DIR, 'static', 'frontend'),  # React build static assets
+#]
 
 # DEFAULT PRIMARY KEY FIELD TYPE
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

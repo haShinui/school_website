@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from django.shortcuts import redirect
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie
 from django.contrib.auth import logout, login, authenticate
@@ -36,6 +36,13 @@ UserModel = get_user_model()
 
 from django.contrib.auth import logout, authenticate
 from django.http import JsonResponse
+
+
+def index(request, path=None):
+    """
+    This serves the React frontend's index.html file for all routes except API routes.
+    """
+    return render(request, 'index.html')
 
 def get_client_ip(request):
     """
@@ -109,7 +116,6 @@ def get_user_info(request):
 
 
 @csrf_protect
-
 @login_required
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -167,6 +173,7 @@ def microsoft_callback(request):
 
 # 5 requests per minute per IP
 @csrf_protect
+@require_POST
 def secure_allauth_login(request):
     if request.method != 'POST':
         return JsonResponse({'error': 'Only POST method is allowed.'}, status=405)

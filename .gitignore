@@ -18,7 +18,8 @@ __pycache__/
 # Django static and media files (optional, if you don't want to track them)
 staticfiles/
 media/
-
+backend/venv
+backend/venv/
 # Node.js modules
 node_modules/
 
