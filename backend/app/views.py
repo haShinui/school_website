@@ -150,18 +150,11 @@ def signup_course_view(request):
     return JsonResponse({'success': False, 'message': 'Unexpected role encountered.'}, status=400)
 
 @require_POST
+@csrf_protect
 def secure_microsoft_login(request):
-        # Get the CSRF token from the request
-    csrf_token = get_token(request)
-    
-    # Get the request headers
-    headers = {key: value for key, value in request.META.items() if key.startswith('HTTP_')}
-
-    # Include CSRF token and all headers in the response for debugging
-    return JsonResponse({
-        'csrf_token': csrf_token,
-        'headers': headers,
-    })
+    # Redirect to the original Microsoft login URL provided by allauth
+    login_url = request.build_absolute_uri(reverse('microsoft_login'))
+    return JsonResponse({'login_url': login_url})
 
 def microsoft_callback(request):
     """

@@ -42,14 +42,14 @@ CSRF_TRUSTED_ORIGINS = [
 
 CSRF_COOKIE_NAME = 'csrftoken'
 #TODO: change
-CSRF_COOKIE_HTTPONLY = True  # Make True in Production, could cause problems
+CSRF_COOKIE_HTTPONLY = False  # Make True in Production, could cause problems
 
 # Only allow session cookies over HTTPS (recommended in production)
 #TODO: changed all those settings
 SESSION_COOKIE_SECURE = True  # set to true when using HTTPS
 
 #TODO: set this in production to the main domain
-#SESSION_COOKIE_DOMAIN = os.getenv('SESSION_COOKIE_DOMAIN')  # Or set this to your actual domain
+SESSION_COOKIE_DOMAIN = os.getenv('SESSION_COOKIE_DOMAIN')  # Or set this to your actual domain
 # Mark session cookies as HTTP-only, preventing JavaScript from accessing them
 #TODO: change
 SESSION_COOKIE_HTTPONLY = True # True when in production

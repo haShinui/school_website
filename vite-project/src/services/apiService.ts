@@ -41,21 +41,43 @@ apiService.interceptors.response.use(
   }
 );
 
-// Fetch CSRF token and set it up in Axios interceptors
-const fetchCsrfToken = async () => {
-  try {
-    const response = await apiService.get('/csrf-token/');  // Automatically includes credentials
-    const csrfToken = response.data.csrfToken;  // Assuming the response includes 'csrfToken'
-    console.log('Fetched CSRF Token:', csrfToken);
+// Utility function to get CSRF token from cookies
+const getCsrfTokenFromCookies = () => {
+  const name = 'csrftoken=';
+  const decodedCookie = decodeURIComponent(document.cookie);
+  const cookiesArray = decodedCookie.split(';');
+  for (let i = 0; i < cookiesArray.length; i++) {
+    let cookie = cookiesArray[i].trim();
+    if (cookie.indexOf(name) === 0) {
+      return cookie.substring(name.length, cookie.length);
+    }
+  }
+  return null;
+};
+
+// Fetch CSRF token from cookies and set it up in Axios interceptors
+const setCsrfTokenInHeaders = () => {
+  const csrfToken = getCsrfTokenFromCookies();
+  if (csrfToken) {
     apiService.defaults.headers.common['X-CSRFToken'] = csrfToken;  // Attach CSRF token to future requests
-  } catch (error) {
-    console.error('Failed to fetch CSRF token:', error);
+    console.log('CSRF Token set:', csrfToken);
+  } else {
+    console.warn('CSRF token not found in cookies.');
   }
 };
 
-// Immediately fetch CSRF token when the service is imported/used
-fetchCsrfToken();
+// Set CSRF token when the service is imported/used
+setCsrfTokenInHeaders();
 
+// Interceptor to ensure CSRF token is included in every request
+apiService.interceptors.request.use(config => {
+  const csrfToken = getCsrfTokenFromCookies();
+  if (csrfToken) {
+    config.headers['X-CSRFToken'] = csrfToken;
+    console.log('CSRF Token added to request:', csrfToken);
+  }
+  return config;
+}, error => Promise.reject(error));
 
 
 // Define API methods
