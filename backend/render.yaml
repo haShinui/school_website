@@ -11,7 +11,7 @@ services:
     name: schoolwebsite    # Name of your service
     runtime: python
     buildCommand: "./build.sh"    # Your build script for React or static assets, if applicable
-    startCommand: "cd backend && python -m uvicorn backend.asgi:application -k uvicorn.workers.UvicornWorker"  # Django project directory here (backend)
+    startCommand: "python -m uvicorn backend.asgi:application -k uvicorn.workers.UvicornWorker"  # Django project directory here (backend)
     envVars:
       - key: DATABASE_URL
         fromDatabase:
