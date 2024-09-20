@@ -37,7 +37,7 @@ export default defineConfig({
   
   // Build options
   build: {
-    outDir: '../static/frontend', // Output directory for build
+    outDir: './build', // Output directory for build
     emptyOutDir: true, // Clear the output directory before building
     sourcemap: true, // Enable source maps for easier debugging
     rollupOptions: {
