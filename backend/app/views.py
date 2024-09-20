@@ -55,14 +55,22 @@ def get_client_ip(request):
     else:
         ip = request.META.get('REMOTE_ADDR')
     return ip
-
 @ensure_csrf_cookie
 def csrf_token_view(request):
-    return JsonResponse({'csrfToken': get_token(request)})
+    """
+    Provides a CSRF token to be used in subsequent requests.
+    """
+    csrf_token = get_token(request)
+    return JsonResponse({'csrfToken': csrf_token})
+
 @ensure_csrf_cookie
 def get_initial_data(request):
-    # Some logic to return initial data required by the app
-    return JsonResponse({'message': 'Initial data and CSRF token set'})
+    """
+    Returns initial data along with a CSRF token.
+    """
+    csrf_token = get_token(request)
+    return JsonResponse({'message': 'Initial data and CSRF token set', 'csrfToken': csrf_token})
+
 
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])

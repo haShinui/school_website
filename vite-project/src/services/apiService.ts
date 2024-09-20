@@ -40,16 +40,14 @@ apiService.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-// Fetch CSRF token and set it up in Axios interceptors
+
 // Fetch CSRF token and set it up in Axios interceptors
 const fetchCsrfToken = async () => {
   try {
-    const response = await axios.get(`${apiService.defaults.baseURL}csrf-token/`, {
-      withCredentials: true, // Send credentials (cookies)
-    });
-    const csrfToken = response.data.csrfToken; // Adjust this if your response has a different key
+    const response = await apiService.get('/csrf-token/');  // Automatically includes credentials
+    const csrfToken = response.data.csrfToken;  // Assuming the response includes 'csrfToken'
     console.log('Fetched CSRF Token:', csrfToken);
-    apiService.defaults.headers.common['X-CSRFToken'] = csrfToken; // Set CSRF token for all subsequent requests
+    apiService.defaults.headers.common['X-CSRFToken'] = csrfToken;  // Attach CSRF token to future requests
   } catch (error) {
     console.error('Failed to fetch CSRF token:', error);
   }
