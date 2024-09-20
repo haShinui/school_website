@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 
 // Define the interfaces for types you are using
 interface UserInfo {
@@ -8,10 +8,6 @@ interface UserInfo {
   role?: string;
 }
 
-interface AuthResponse {
-  isAuthenticated: boolean;
-  user: UserInfo | null;
-}
 
 interface LogoutResponse {
   success: boolean;
@@ -36,9 +32,11 @@ const apiService = axios.create({
 // Fetch CSRF token and set it up in Axios interceptors
 const fetchCsrfToken = async () => {
   try {
-    const response = await axios.get('http://localhost:8000/api/csrf-token/', { withCredentials: true });
-    const csrfToken = response.data.csrfToken; // Adjust according to the actual key in the response
-    apiService.defaults.headers.common['X-CSRFToken'] = csrfToken; // Set default CSRF token for all future requests
+    const response = await axios.get(`${apiService.defaults.baseURL}csrf-token/`, {
+      withCredentials: true,
+    });
+    const csrfToken = response.data.csrfToken; // Adjust this if your response has a different key
+    apiService.defaults.headers.common['X-CSRFToken'] = csrfToken;
     console.log('CSRF token fetched and set:', csrfToken);
   } catch (error) {
     console.error('Failed to fetch CSRF token:', error);

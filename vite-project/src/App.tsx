@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom'; // Import useLocation to check current route
-import Navbar from './components/navbar';  // Import the Navbar
+import Navbar from '@/components/Navbar';  // Import the Navbar
 import Routes from './routes'; // Import the routing logic
 import { ThemeProvider } from "@/components/theme-provider"
 

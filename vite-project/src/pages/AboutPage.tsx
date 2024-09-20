@@ -1,6 +1,6 @@
 import React from "react";
 import TeamMemberCard from "@/components/MyCards/TeamMemberCard";
-import HoverCard from "@/components/MyCards/HoverCard"; // Adjust the path as needed
+//import HoverCard from "@/components/MyCards/HoverCard"; // Adjust the path as needed
 import SwapText from "@/components/animata/text/swap-text";
 
 const teamMembers = [

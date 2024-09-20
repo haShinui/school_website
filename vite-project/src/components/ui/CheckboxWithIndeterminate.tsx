@@ -1,8 +1,7 @@
-// src/components/ui/CheckboxWithIndeterminate.tsx
 import React, { useEffect, useRef, forwardRef } from 'react';
-import { Checkbox, CheckboxProps } from '@/components/ui/checkbox';
+//import { Checkbox } from '@/components/ui/checkbox';
 
-interface CheckboxWithIndeterminateProps extends CheckboxProps {
+interface CheckboxWithIndeterminateProps extends React.InputHTMLAttributes<HTMLInputElement> {
   indeterminate?: boolean;
 }
 
@@ -17,7 +16,7 @@ const CheckboxWithIndeterminate = forwardRef<HTMLInputElement, CheckboxWithIndet
       }
     }, [resolvedRef, indeterminate]);
 
-    return <Checkbox ref={resolvedRef} {...props} />;
+    return <input type="checkbox" ref={resolvedRef} {...props} />;
   }
 );
 

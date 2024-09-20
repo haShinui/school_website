@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { MoveRight } from "lucide-react";
+//import { MoveRight } from "lucide-react";
 import { SignIn } from "phosphor-react"; // Phosphor icon for login
 import { cn } from "@/lib/utils";
 

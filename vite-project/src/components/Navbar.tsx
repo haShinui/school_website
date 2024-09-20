@@ -1,4 +1,4 @@
-import * as React from "react";
+//import * as React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom"; // React Router for navigation
 import { House, Info, UserCircle, Gear, SignOut, List, Table, SignIn  } from "phosphor-react"; // Phosphor icons
 import { useTheme } from "@/components/theme-provider"; // Assuming you have your theme provider set up
@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux"; // Redux dispatch
+//import { useDispatch } from "react-redux"; // Redux dispatch
 import ThemeToggle from "./ThemeToggle";
 import LanguageSwitcher from "./LanguageSwitcher";
 import ArrowButton from "./animata/button/swipe-login";
@@ -32,7 +32,7 @@ function NavbarComponent() {
   }); // State for authentication status
   const location = useLocation();
   const navigate = useNavigate(); // React Router navigate
-  const dispatch = useDispatch(); // Redux dispatch
+  //const dispatch = useDispatch(); // Redux dispatch
   const { t } = useTranslation(); // Use translation function
   const { theme } = useTheme(); // Fetch current theme to handle light/dark mode
 

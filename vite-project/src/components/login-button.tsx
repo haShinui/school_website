@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button } from "@/components/ui/button"; // Assuming this is your custom button component
 import { SignIn } from "phosphor-react"; // Phosphor icon for login
 import { useNavigate } from "react-router-dom"; // React Router for navigation
