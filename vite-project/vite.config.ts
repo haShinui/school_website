@@ -28,7 +28,7 @@ export default defineConfig({
     port: 8082, // Set the frontend port to 8082
     proxy: {
       '/api': {
-        target: 'http://localhost:8000', // Proxy API requests to Django backend
+        target: 'https://school-website-1-a2f6.onrender.com', // Proxy API requests to Django backend
         changeOrigin: true,
         secure: false,
       },
