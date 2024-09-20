@@ -30,7 +30,9 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',')
-
+# CSRF Protection on session-based requests
+#TODO: CHange
+CSRF_COOKIE_SECURE = True #true for production with HTTPs
 # CSRF and Cookie Security Settings
 CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS').split(',')
 CSRF_COOKIE_NAME = 'csrftoken'
@@ -50,9 +52,7 @@ SESSION_COOKIE_HTTPONLY = True # True when in production
 # Set the expiration for sessions (e.g., 1 day)
 SESSION_COOKIE_AGE = 86400  # 1 day in seconds
 
-# CSRF Protection on session-based requests
-#TODO: CHange
-CSRF_COOKIE_SECURE = True #true for production with HTTPs
+
 
 # Cross-site cookies
 SESSION_COOKIE_SAMESITE = 'Lax'  # or 'None' if using cross-site requests
