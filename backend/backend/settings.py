@@ -34,24 +34,25 @@ ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',')
 # CSRF and Cookie Security Settings
 CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS').split(',')
 CSRF_COOKIE_NAME = 'csrftoken'
-CSRF_COOKIE_HTTPONLY = False  # Make True in Production, could cause problems
+#TODO: change
+CSRF_COOKIE_HTTPONLY = True  # Make True in Production, could cause problems
 
 # Only allow session cookies over HTTPS (recommended in production)
 #TODO: changed all those settings
-SESSION_COOKIE_SECURE = False  # set to true when using HTTPS
+SESSION_COOKIE_SECURE = True  # set to true when using HTTPS
 
 #TODO: set this in production to the main domain
-SESSION_COOKIE_DOMAIN = None  # Or set this to your actual domain
+SESSION_COOKIE_DOMAIN = os.getenv('SESSION_COOKIE_DOMAIN')  # Or set this to your actual domain
 # Mark session cookies as HTTP-only, preventing JavaScript from accessing them
 #TODO: change
-SESSION_COOKIE_HTTPONLY = False # True when in production
+SESSION_COOKIE_HTTPONLY = True # True when in production
 
 # Set the expiration for sessions (e.g., 1 day)
 SESSION_COOKIE_AGE = 86400  # 1 day in seconds
 
 # CSRF Protection on session-based requests
 #TODO: CHange
-CSRF_COOKIE_SECURE = False #true for production with HTTPs
+CSRF_COOKIE_SECURE = True #true for production with HTTPs
 
 # Cross-site cookies
 SESSION_COOKIE_SAMESITE = 'Lax'  # or 'None' if using cross-site requests
@@ -62,7 +63,7 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 
 # Enable HTTPS when ready (currently commented out for development)
 #TODO: change
-SECURE_SSL_REDIRECT = False  # Uncomment for HTTPS in production
+SECURE_SSL_REDIRECT = True  # Uncomment for HTTPS in production
 
 # CORS Settings
 CORS_ALLOW_ALL_ORIGINS = False
