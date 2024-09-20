@@ -35,7 +35,7 @@ const fetchCsrfToken = async () => {
     const response = await axios.get(`${apiService.defaults.baseURL}csrf-token/`, {
       withCredentials: true,
     });
-    const csrfToken = response.data.csrfToken; // Adjust this if your response has a different key
+    const csrfToken = response.data.csrfToken;
     apiService.defaults.headers.common['X-CSRFToken'] = csrfToken;
     console.log('CSRF token fetched and set:', csrfToken);
   } catch (error) {
@@ -46,24 +46,11 @@ const fetchCsrfToken = async () => {
 // Immediately fetch CSRF token when the service is imported/used
 fetchCsrfToken();
 
-// Utility function to get CSRF token from cookies
-function getCsrfToken() {
-  const name = 'csrftoken';
-  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-  if (match) {
-    console.log('CSRF Token:', match[2]); // Log the token
-    return match[2];
+apiService.interceptors.request.use(async (config) => {
+  if (!config.headers['X-CSRFToken']) {
+    await fetchCsrfToken();  // Ensure CSRF token is always fetched and set
   }
-  return null;
-}
-
-// Set the CSRF token in the Axios headers for all requests
-apiService.interceptors.request.use(config => {
-  const csrfToken = getCsrfToken();
-  if (csrfToken) {
-    config.headers['X-CSRFToken'] = csrfToken;
-  }
-  console.log('Request Headers:', config.headers); // Log the headers
+  console.log('Request Headers:', config.headers); // Log headers for debugging
   return config;
 });
 
