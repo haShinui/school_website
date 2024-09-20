@@ -29,15 +29,27 @@ const apiService = axios.create({
   withCredentials: true, // Allow sending cookies for authentication
 });
 
+// Utility function to log all Axios requests and responses for debugging
+apiService.interceptors.response.use(
+  response => {
+    console.log('Response:', response);
+    return response;
+  },
+  error => {
+    console.error('API Error:', error.response ? error.response.data : error);
+    return Promise.reject(error);
+  }
+);
+// Fetch CSRF token and set it up in Axios interceptors
 // Fetch CSRF token and set it up in Axios interceptors
 const fetchCsrfToken = async () => {
   try {
     const response = await axios.get(`${apiService.defaults.baseURL}csrf-token/`, {
-      withCredentials: true,
+      withCredentials: true, // Send credentials (cookies)
     });
     const csrfToken = response.data.csrfToken; // Adjust this if your response has a different key
-    apiService.defaults.headers.common['X-CSRFToken'] = csrfToken;
-    console.log('CSRF token fetched and set:', csrfToken);
+    console.log('Fetched CSRF Token:', csrfToken);
+    apiService.defaults.headers.common['X-CSRFToken'] = csrfToken; // Set CSRF token for all subsequent requests
   } catch (error) {
     console.error('Failed to fetch CSRF token:', error);
   }
@@ -46,26 +58,7 @@ const fetchCsrfToken = async () => {
 // Immediately fetch CSRF token when the service is imported/used
 fetchCsrfToken();
 
-// Utility function to get CSRF token from cookies
-function getCsrfToken() {
-  const name = 'csrftoken';
-  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-  if (match) {
-    console.log('CSRF Token:', match[2]); // Log the token
-    return match[2];
-  }
-  return null;
-}
 
-// Set the CSRF token in the Axios headers for all requests
-apiService.interceptors.request.use(config => {
-  const csrfToken = getCsrfToken();
-  if (csrfToken) {
-    config.headers['X-CSRFToken'] = csrfToken;
-  }
-  console.log('Request Headers:', config.headers); // Log the headers
-  return config;
-});
 
 // Define API methods
 const apiMethods = {
