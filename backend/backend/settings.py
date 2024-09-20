@@ -34,7 +34,12 @@ ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',')
 #TODO: CHange
 CSRF_COOKIE_SECURE = True #true for production with HTTPs
 # CSRF and Cookie Security Settings
-CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS').split(',')
+# CSRF Trusted Origins
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:8082',  # Your React app's origin in development
+    'https://school-website-88uu.onrender.com',  # Your React app's origin in production
+]
+
 CSRF_COOKIE_NAME = 'csrftoken'
 #TODO: change
 CSRF_COOKIE_HTTPONLY = True  # Make True in Production, could cause problems
@@ -55,7 +60,7 @@ SESSION_COOKIE_AGE = 86400  # 1 day in seconds
 
 
 # Cross-site cookies
-SESSION_COOKIE_SAMESITE = 'Lax'  # or 'None' if using cross-site requests
+SESSION_COOKIE_SAMESITE = 'None'  # or 'None' if using cross-site requests
 
 #so my website cant be imbedded in others
 X_FRAME_OPTIONS = 'DENY'
@@ -65,9 +70,19 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 #TODO: change
 SECURE_SSL_REDIRECT = True  # Uncomment for HTTPS in production
 
+# Trust the 'X-Forwarded-Host' header set by a proxy
+USE_X_FORWARDED_HOST = True
+
+# Ensure the proxy forwards the protocol correctly (for HTTPS)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+
 # CORS Settings
 CORS_ALLOW_ALL_ORIGINS = False
-CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS').split(',')
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:8082',  # Your React app's origin in development
+    'https://school-website-88uu.onrender.com',  # Your React app's origin in production
+]
 CORS_ALLOW_CREDENTIALS = True  # If you're using cookies for authentication
 
 # SESSION CONFIGURATION

@@ -142,7 +142,7 @@ def signup_course_view(request):
     return JsonResponse({'success': False, 'message': 'Unexpected role encountered.'}, status=400)
 
 @require_POST
-@ensure_csrf_cookie
+@csrf_protect
 def secure_microsoft_login(request):
     # Redirect to the original Microsoft login URL provided by allauth
     login_url = request.build_absolute_uri(reverse('microsoft_login'))
