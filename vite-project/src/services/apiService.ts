@@ -81,10 +81,13 @@ const apiMethods = {
   checkAuth: async (): Promise<CheckAuthResponse> => {
     try {
       const response = await apiService.get('/check-auth/');
-      return response.data; // Return data directly
+      return {
+        ...response.data,
+        role: response.data.role ?? null,  // Convert undefined to null
+      }; // Return data directly
     } catch (error) {
       console.error('Failed to check auth:', error);
-      return { isAuthenticated: false, message: 'User is not authenticated or logged in.' }; // Default response
+      return { isAuthenticated: false, role: null, message: 'User is not authenticated or logged in.' }; // Default response
     }
   },
 
