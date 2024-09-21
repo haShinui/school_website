@@ -47,18 +47,14 @@ CSRF_TRUSTED_ORIGINS = [
 
 CSRF_COOKIE_NAME = 'csrftoken'
 #TODO: change
-CSRF_COOKIE_HTTPONLY = True  # Make True in Production, could cause problems
+CSRF_COOKIE_HTTPONLY = False  # Make True in Production, could cause problems
 
 # Only allow session cookies over HTTPS (recommended in production)
 #TODO: changed all those settings
 SESSION_COOKIE_SECURE = True  # set to true when using HTTPS
 
 #TODO: set this in production to the main domain
-SESSION_COOKIE_DOMAIN = [
-    'http://localhost:8082',  # Your React app's origin in development
-    'https://school-website-88uu.onrender.com',  # Your React app's origin in production
-    'https://school-website-1-a2f6.onrender.com',
-]
+SESSION_COOKIE_DOMAIN = "school-website-1-a2f6.onrender.com"
 #os.getenv('SESSION_COOKIE_DOMAIN')  # Or set this to your actual domain
 # Mark session cookies as HTTP-only, preventing JavaScript from accessing them
 #TODO: change
