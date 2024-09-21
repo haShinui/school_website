@@ -81,10 +81,10 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_SSL_REDIRECT = True  # Uncomment for HTTPS in production
 
 # Trust the 'X-Forwarded-Host' header set by a proxy
-USE_X_FORWARDED_HOST = True
+#SE_X_FORWARDED_HOST = True
 
 # Ensure the proxy forwards the protocol correctly (for HTTPS)
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+#SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 # CORS Settings
