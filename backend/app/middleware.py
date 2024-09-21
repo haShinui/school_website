@@ -21,7 +21,7 @@ class TokenCookieMiddleware(MiddlewareMixin):
                 token.key,
                 httponly=True,
                 max_age=3600 * 24 * 7,  # 7 days
-                samesite='None',
+                samesite='Lax',
                 secure=True
             )
         return response
@@ -58,7 +58,7 @@ class TokenRefreshMiddleware(MiddlewareMixin):
                         new_token.key,
                         httponly=True,
                         max_age=3600 * 24,  # 1 days
-                        samesite='None',
+                        samesite='Lax',
                         secure=True
                     )
             except Token.DoesNotExist:
