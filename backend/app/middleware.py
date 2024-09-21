@@ -25,7 +25,7 @@ class TokenCookieMiddleware(MiddlewareMixin):
                 secure=True
             )
         return response
-
+    
 
 from django.utils.timezone import now
 from datetime import timedelta

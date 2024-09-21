@@ -7,7 +7,7 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
         return True
     def get_login_redirect_url(self, request):
         # Redirect to Vue.js frontend after login
-        return settings.LOGIN_REDIRECT_URL
+        return 'https://www.fgz-fablab.ch/'
     
 # myapp/adapters.py
 
@@ -18,3 +18,5 @@ class NoSignupAdapter(DefaultAccountAdapter):
 
     def is_open_for_signup(self, request):
         return False
+    def get_login_redirect_url(self, request):
+        return 'https://www.fgz-fablab.ch/'  # Redirect to frontend homepage
