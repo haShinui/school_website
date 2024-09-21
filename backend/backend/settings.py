@@ -33,6 +33,8 @@ ALLOWED_HOSTS = [
     'localhost',  # For local development
     'school-website-88uu.onrender.com',  # Your React app's origin in production
     'school-website-1-a2f6.onrender.com',  # Your Django backend's origin in production
+    'api.fgz-fablab.ch',  # Backend domain
+    'www.fgz-fablab.ch',  
 ]
 # CSRF Protection on session-based requests
 #TODO: CHange
@@ -43,6 +45,8 @@ CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8082',  # Your React app's origin in development
     'https://school-website-88uu.onrender.com',  # Your React app's origin in production
     'https://school-website-1-a2f6.onrender.com',
+    'https://www.fgz-fablab.ch',  # Frontend domain
+    'https://fgz-fablab.ch',      # Root domain
 ]
 
 CSRF_COOKIE_NAME = 'csrftoken'
@@ -54,7 +58,8 @@ CSRF_COOKIE_HTTPONLY = False  # Make True in Production, could cause problems
 SESSION_COOKIE_SECURE = True  # set to true when using HTTPS
 
 #TODO: set this in production to the main domain
-SESSION_COOKIE_DOMAIN = "school-website-1-a2f6.onrender.com"
+SESSION_COOKIE_DOMAIN = ".fgz-fablab.ch"  # Note the leading dot for subdomain support
+CSRF_COOKIE_DOMAIN = ".fgz-fablab.ch"
 #os.getenv('SESSION_COOKIE_DOMAIN')  # Or set this to your actual domain
 # Mark session cookies as HTTP-only, preventing JavaScript from accessing them
 #TODO: change
