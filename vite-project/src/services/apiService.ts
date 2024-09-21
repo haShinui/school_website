@@ -17,13 +17,13 @@ interface SignupResponse {
   message?: string;
 }
 
-interface ManagerCheckResponse {
-  isManager: boolean;
-}
+//interface ManagerCheckResponse {
+  //isManager: boolean;
+//}
 
 interface CheckAuthResponse {
   isAuthenticated: boolean;
-  role: result.role ?? null,  // Use null if role is undefined
+  role?: string;
   message?: string;
 }
 
