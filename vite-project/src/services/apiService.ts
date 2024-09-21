@@ -8,7 +8,6 @@ interface UserInfo {
   role?: string;
 }
 
-
 interface LogoutResponse {
   success: boolean;
   message?: string;
@@ -23,13 +22,19 @@ interface ManagerCheckResponse {
   isManager: boolean;
 }
 
+// Set the base URLs for local and production environments
+const isProduction = window.location.hostname !== 'localhost'; // Assuming localhost for local dev
+const baseURL = isProduction
+  ? 'https://school-website-1-a2f6.onrender.com/api/' // Production backend URL
+  : 'http://localhost:8000/api/'; // Local backend URL
+
 // Set up the base Axios instance
 const apiService = axios.create({
-  baseURL: 'https://school-website-1-a2f6.onrender.com/api/', // Django backend URL
+  baseURL, // Switch between local and production
   withCredentials: true, // Allow sending cookies for authentication
 });
 
-// Utility function to log all Axios requests and responses for debugging
+// Utility function to log Axios requests and responses for debugging
 apiService.interceptors.response.use(
   response => {
     console.log('Response:', response);
@@ -79,10 +84,15 @@ apiService.interceptors.request.use(config => {
   return config;
 }, error => Promise.reject(error));
 
-
 // Define API methods
 const apiMethods = {
+  
   secureAllauthLogin: async (loginData: { username: string; password: string }) => {
+    const csrfToken = getCsrfTokenFromCookies();
+    const headers = {
+      'X-CSRFToken': csrfToken, // Add CSRF token to headers if present
+    };
+    console.log('Headers to be sent:', headers); // Log the headers
     const response = await apiService.post('/allauth-secure-login/', loginData);
     if (response.data.success) {
       // Fetch user info on successful login
@@ -102,6 +112,11 @@ const apiMethods = {
   },
 
   secureMicrosoftLogin: async () => {
+    const csrfToken = getCsrfTokenFromCookies();
+    const headers = {
+      'X-CSRFToken': csrfToken, // Add CSRF token to headers if present
+    };
+    console.log('Headers to be sent:', headers); // Log the headers
     const response = await apiService.post('/microsoft-secure-login/');
     if (response.data.success) {
       // Fetch user info on successful login
@@ -131,11 +146,14 @@ const apiMethods = {
     }
     return response;
   },
+
   fetchManagerDashboard: () => apiService.get('/manager-dashboard/'), // Fetch the manager dashboard data
+
   checkManager: () => apiService.get<ManagerCheckResponse>('/is-manager/'), // Check if the user is a manager
+
   signupCourse: () => apiService.post<SignupResponse>('/signup-course/'),
+
   getCsrfToken: () => apiService.get('/csrf-token/').then(response => console.log('CSRF token:', response.data)),
-  
 };
 
 export default apiMethods;

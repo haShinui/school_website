@@ -38,6 +38,7 @@ CSRF_COOKIE_SECURE = True #true for production with HTTPs
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8082',  # Your React app's origin in development
     'https://school-website-88uu.onrender.com',  # Your React app's origin in production
+    'https://school-website-1-a2f6.onrender.com',
 ]
 
 CSRF_COOKIE_NAME = 'csrftoken'
@@ -49,7 +50,12 @@ CSRF_COOKIE_HTTPONLY = False  # Make True in Production, could cause problems
 SESSION_COOKIE_SECURE = True  # set to true when using HTTPS
 
 #TODO: set this in production to the main domain
-SESSION_COOKIE_DOMAIN = os.getenv('SESSION_COOKIE_DOMAIN')  # Or set this to your actual domain
+SESSION_COOKIE_DOMAIN = [
+    'http://localhost:8082',  # Your React app's origin in development
+    'https://school-website-88uu.onrender.com',  # Your React app's origin in production
+    'https://school-website-1-a2f6.onrender.com',
+]
+#os.getenv('SESSION_COOKIE_DOMAIN')  # Or set this to your actual domain
 # Mark session cookies as HTTP-only, preventing JavaScript from accessing them
 #TODO: change
 SESSION_COOKIE_HTTPONLY = True # True when in production
@@ -82,6 +88,7 @@ CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:8082',  # Your React app's origin in development
     'https://school-website-88uu.onrender.com',  # Your React app's origin in production
+    'https://school-website-1-a2f6.onrender.com',
 ]
 CORS_ALLOW_CREDENTIALS = True  # If you're using cookies for authentication
 
