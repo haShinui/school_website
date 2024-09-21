@@ -25,7 +25,7 @@ interface ManagerCheckResponse {
 
 // Set up the base Axios instance
 const apiService = axios.create({
-  baseURL: 'https://school-website-1-a2f6.onrender.com/api/', // Django backend URL
+  baseURL: 'https://api.fgz-fablab.ch/api/', // Django backend URL
   withCredentials: true, // Allow sending cookies for authentication
 });
 
