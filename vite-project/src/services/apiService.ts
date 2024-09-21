@@ -58,6 +58,29 @@ apiService.interceptors.request.use(config => {
   return config;
 }, error => Promise.reject(error));
 
+
+// Function to check if the auth_token is set in cookies
+const checkTokenCookie = () => {
+  return document.cookie.includes('auth_token');
+};
+
+// Add retry logic to wait for the token to appear
+const waitForToken = (retries = 10) => {
+  return new Promise<void>((resolve, reject) => {
+    const interval = setInterval(() => {
+      if (checkTokenCookie()) {
+        clearInterval(interval);  // Stop checking if token is found
+        resolve();
+      } else if (retries <= 0) {
+        clearInterval(interval);
+        reject(new Error('Token not set in cookies.'));
+      }
+      retries--;
+    }, 300);  // Check every 200 milliseconds
+  });
+};
+
+
 // Define API methods
 const apiMethods = {
   secureAllauthLogin: async (loginData: { username: string; password: string }) => {
@@ -65,8 +88,16 @@ const apiMethods = {
     if (response.data.success) {
       // Set the login flag after a successful login
       localStorage.setItem('isLoggedIn', '1');  // Use '1' to indicate logged in
-      // Fetch user info on successful login
-      await apiMethods.getUserInfo();
+      // Wait for the token to be set in cookies before checking authentication
+      try {
+        await waitForToken();
+        console.log('Token is now set in cookies.');
+        // After the token is set, fetch user info and check authentication
+        await apiMethods.getUserInfo();
+        await apiMethods.checkAuth();  // Check auth after token is set
+      } catch (error) {
+        console.error('Failed to set auth token in time:', error);
+      }
     }
     return response;
   },
@@ -74,7 +105,15 @@ const apiMethods = {
   checkAuth: async () => {
     // Check if the user has logged in by looking at the flag in localStorage
     const isLoggedIn = localStorage.getItem('isLoggedIn');
-    
+    try {
+      await waitForToken();
+      console.log('Token is now set in cookies.');
+      // After the token is set, fetch user info and check authentication
+      await apiMethods.getUserInfo();
+      await apiMethods.checkAuth();  // Check auth after token is set
+    } catch (error) {
+      console.error('Failed to set auth token in time:', error);
+    }
     if (isLoggedIn === '1') {  // Only call checkAuth if the user is logged in
       try {
         const response = await apiService.get('/check-auth/');
@@ -95,7 +134,15 @@ const apiMethods = {
       // Set the login flag after a successful Microsoft login
       localStorage.setItem('isLoggedIn', '1');  // Use '1' to indicate logged in
       // Fetch user info on successful login
-      await apiMethods.getUserInfo();
+      try {
+        await waitForToken();
+        console.log('Token is now set in cookies.');
+        // After the token is set, fetch user info and check authentication
+        await apiMethods.getUserInfo();
+        await apiMethods.checkAuth();  // Check auth after token is set
+      } catch (error) {
+        console.error('Failed to set auth token in time:', error);
+      }
     }
     return response;
   },
