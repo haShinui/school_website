@@ -21,6 +21,12 @@ interface ManagerCheckResponse {
   isManager: boolean;
 }
 
+interface CheckAuthResponse {
+  isAuthenticated: boolean;
+  role: result.role ?? null,  // Use null if role is undefined
+  message?: string;
+}
+
 // Set up the base Axios instance
 const apiService = axios.create({
   baseURL: 'https://api.fgz-fablab.ch/api/', // Updated backend domain
@@ -28,12 +34,11 @@ const apiService = axios.create({
 });
 
 // Function to fetch CSRF token from the backend
-const fetchCsrfToken = async () => {
+const fetchCsrfToken = async (): Promise<void> => {
   try {
-    const response = await apiService.get('/csrf-token/'); // Fetch CSRF token from the server
-    const csrfToken = response.data.csrfToken || response.data; // Adjust this if the key is different in your response
+    const response = await apiService.get('/csrf-token/');
+    const csrfToken = response.data.csrfToken || response.data;
     if (csrfToken) {
-      // Set the CSRF token in the Axios default headers
       apiService.defaults.headers.common['X-CSRFToken'] = csrfToken;
       console.log('CSRF token fetched and set in headers:', csrfToken);
     } else {
@@ -50,16 +55,15 @@ fetchCsrfToken();
 // Interceptor to ensure the CSRF token is included in the Axios headers for all requests
 apiService.interceptors.request.use(async config => {
   if (config.method !== 'get') {
-    // Ensure CSRF token is refreshed before every non-GET request
     await fetchCsrfToken();
   }
-  console.log('Request Headers:', config.headers);  // Log headers for debugging
+  console.log('Request Headers:', config.headers);
   return config;
 }, error => Promise.reject(error));
 
 // Define API methods
 const apiMethods = {
-  secureAllauthLogin: async (loginData: { username: string; password: string }) => {
+  secureAllauthLogin: async (loginData: { username: string; password: string }): Promise<any> => {
     try {
       const response = await apiService.post('/allauth-secure-login/', loginData);
       if (response.data.success) {
@@ -67,22 +71,24 @@ const apiMethods = {
       } else {
         console.error('Login failed:', response.data.message);
       }
+      return response.data; // Ensure data is returned
     } catch (error) {
       console.error('Error during login:', error);
+      return null; // Return null in case of an error
     }
   },
 
-  checkAuth: async () => {
+  checkAuth: async (): Promise<CheckAuthResponse> => {
     try {
       const response = await apiService.get('/check-auth/');
-      return response.data; // should return { isAuthenticated: boolean, role: string }
+      return response.data; // Return data directly
     } catch (error) {
       console.error('Failed to check auth:', error);
-      return { isAuthenticated: false, message: 'User is not authenticated or logged in.' }; // Return a default response
+      return { isAuthenticated: false, message: 'User is not authenticated or logged in.' }; // Default response
     }
   },
 
-  secureMicrosoftLogin: async () => {
+  secureMicrosoftLogin: async (): Promise<any> => {
     try {
       const response = await apiService.post('/microsoft-secure-login/');
       if (response.data.success) {
@@ -90,16 +96,17 @@ const apiMethods = {
       } else {
         console.error('Microsoft login failed:', response.data.message);
       }
+      return response.data; // Ensure data is returned
     } catch (error) {
       console.error('Error during Microsoft login:', error);
+      return null; // Return null in case of an error
     }
   },
 
-  getUserInfo: async () => {
+  getUserInfo: async (): Promise<UserInfo | null> => {
     try {
-      const response = await apiService.get<{ isAuthenticated: boolean; user: UserInfo }>('/user-info/');
+      const response = await apiService.get<{ user: UserInfo }>('/user-info/');
       const user = response.data.user;
-
       if (user) {
         // Only store username, first_name, and last_name in sessionStorage
         sessionStorage.setItem('username', user.username || '');
@@ -118,7 +125,7 @@ const apiMethods = {
     }
   },
 
-  logout: async () => {
+  logout: async (): Promise<any> => {
     try {
       await fetchCsrfToken(); // Ensure CSRF token is refreshed before logout
       const response = await apiService.post<LogoutResponse>('/logout/');
@@ -130,15 +137,17 @@ const apiMethods = {
       } else {
         console.error('Logout failed:', response.data.message);
       }
+      return response.data; // Ensure data is returned
     } catch (error) {
       console.error('Error during logout:', error);
+      return null; // Return null in case of an error
     }
   },
 
-  fetchManagerDashboard: () => apiService.get('/manager-dashboard/'), // Fetch the manager dashboard data
-  checkManager: () => apiService.get<ManagerCheckResponse>('/is-manager/'), // Check if the user is a manager
-  signupCourse: () => apiService.post<SignupResponse>('/signup-course/'),
-  getCsrfToken: () => apiService.get('/csrf-token/').then(response => console.log('CSRF token:', response.data)),
+  fetchManagerDashboard: async (): Promise<any> => apiService.get('/manager-dashboard/'), // Fetch the manager dashboard data
+  checkManager: async (): Promise<any> => apiService.get('/is-manager/'), // Check if the user is a manager
+  signupCourse: async (): Promise<any> => apiService.post<SignupResponse>('/signup-course/'),
+  getCsrfToken: async (): Promise<any> => apiService.get('/csrf-token/').then(response => console.log('CSRF token:', response.data)),
 };
 
 export default apiMethods;
