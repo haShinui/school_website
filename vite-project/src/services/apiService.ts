@@ -5,7 +5,6 @@ interface UserInfo {
   username?: string;
   first_name?: string;
   last_name?: string;
-  role?: string;
 }
 
 interface LogoutResponse {
@@ -46,121 +45,93 @@ const fetchCsrfToken = async () => {
 };
 
 // Immediately fetch the CSRF token when the service is initialized
-fetchCsrfToken(); 
+fetchCsrfToken();
 
 // Interceptor to ensure the CSRF token is included in the Axios headers for all requests
 apiService.interceptors.request.use(async config => {
   if (config.method !== 'get') {
     // Ensure CSRF token is refreshed before every non-GET request
-    await fetchCsrfToken(); 
+    await fetchCsrfToken();
   }
   console.log('Request Headers:', config.headers);  // Log headers for debugging
   return config;
 }, error => Promise.reject(error));
 
-// Function to check if the auth_token is set in cookies
-const checkTokenCookie = () => {
-  return document.cookie.includes('auth_token');
-};
-
-// Add retry logic to wait for the token to appear
-const waitForToken = (retries = 10) => {
-  return new Promise<void>((resolve, reject) => {
-    const interval = setInterval(() => {
-      if (checkTokenCookie()) {
-        clearInterval(interval);  // Stop checking if token is found
-        resolve();
-      } else if (retries <= 0) {
-        clearInterval(interval);
-        reject(new Error('Token not set in cookies.'));
-      }
-      retries--;
-    }, 300);  // Check every 300 milliseconds
-  });
-};
-
 // Define API methods
 const apiMethods = {
   secureAllauthLogin: async (loginData: { username: string; password: string }) => {
-    const response = await apiService.post('/allauth-secure-login/', loginData);
-    if (response.data.success) {
-      // Set the login flag after a successful login
-      localStorage.setItem('isLoggedIn', '1');  // Use '1' to indicate logged in
-      // Wait for the token to be set in cookies before checking authentication
-      try {
-        await waitForToken();
-        console.log('Token is now set in cookies.');
-        // After the token is set, fetch user info
-        await apiMethods.getUserInfo();
-      } catch (error) {
-        console.error('Failed to set auth token in time:', error);
+    try {
+      const response = await apiService.post('/allauth-secure-login/', loginData);
+      if (response.data.success) {
+        console.log('Login successful.');
+      } else {
+        console.error('Login failed:', response.data.message);
       }
+    } catch (error) {
+      console.error('Error during login:', error);
     }
-    return response;
   },
 
   checkAuth: async () => {
-    // Check if the user has logged in by looking at the flag in localStorage
-    const isLoggedIn = localStorage.getItem('isLoggedIn');
-    if (isLoggedIn === '1') {  // Only call checkAuth if the user is logged in
-      try {
-        const response = await apiService.get('/check-auth/');
-        return response.data; // should return { isAuthenticated: boolean, role: string }
-      } catch (error) {
-        console.error('Failed to check auth:', error);
-        return { isAuthenticated: false, role: null };
-      }
-    } else {
-      console.warn('checkAuth called before user logged in');
-      return { isAuthenticated: false, role: null };  // Return a default response
+    try {
+      const response = await apiService.get('/check-auth/');
+      return response.data; // should return { isAuthenticated: boolean, role: string }
+    } catch (error) {
+      console.error('Failed to check auth:', error);
+      return { isAuthenticated: false, message: 'User is not authenticated or logged in.' }; // Return a default response
     }
   },
 
   secureMicrosoftLogin: async () => {
-    const response = await apiService.post('/microsoft-secure-login/');
-    if (response.data.success) {
-      // Set the login flag after a successful Microsoft login
-      localStorage.setItem('isLoggedIn', '1');  // Use '1' to indicate logged in
-      // Wait for the token to be set in cookies before checking authentication
-      try {
-        await waitForToken();
-        console.log('Token is now set in cookies.');
-        // After the token is set, fetch user info
-        await apiMethods.getUserInfo();
-      } catch (error) {
-        console.error('Failed to set auth token in time:', error);
+    try {
+      const response = await apiService.post('/microsoft-secure-login/');
+      if (response.data.success) {
+        console.log('Microsoft login successful.');
+      } else {
+        console.error('Microsoft login failed:', response.data.message);
       }
+    } catch (error) {
+      console.error('Error during Microsoft login:', error);
     }
-    return response;
   },
 
   getUserInfo: async () => {
-    const response = await apiService.get<{ isAuthenticated: boolean; user: UserInfo }>('/user-info/');
-    if (response.data.user) {
-      sessionStorage.setItem('username', response.data.user.username || '');
-      sessionStorage.setItem('firstName', response.data.user.first_name || '');
-      sessionStorage.setItem('lastName', response.data.user.last_name || '');
-      console.log('User info fetched and stored:', response.data.user);
+    try {
+      const response = await apiService.get<{ isAuthenticated: boolean; user: UserInfo }>('/user-info/');
+      const user = response.data.user;
+
+      if (user) {
+        // Only store username, first_name, and last_name in sessionStorage
+        sessionStorage.setItem('username', user.username || '');
+        if (user.first_name) {
+          sessionStorage.setItem('firstName', user.first_name);
+        }
+        if (user.last_name) {
+          sessionStorage.setItem('lastName', user.last_name);
+        }
+        console.log('User info fetched and stored:', user);
+      }
+      return user;
+    } catch (error) {
+      console.error('Error fetching user info:', error);
+      return null; // Return null if there is an error
     }
-    return response;
   },
 
   logout: async () => {
     try {
-      // Ensure CSRF token is refreshed before logout
-      await fetchCsrfToken();
+      await fetchCsrfToken(); // Ensure CSRF token is refreshed before logout
       const response = await apiService.post<LogoutResponse>('/logout/');
       if (response.data.success) {
         sessionStorage.removeItem('username');
         sessionStorage.removeItem('firstName');
         sessionStorage.removeItem('lastName');
-        localStorage.removeItem('isLoggedIn');  // Remove login flag on logout
-        console.log('User info cleared from session storage on logout');
+        console.log('Logout successful. User info cleared from session storage.');
+      } else {
+        console.error('Logout failed:', response.data.message);
       }
-      return response;
     } catch (error) {
       console.error('Error during logout:', error);
-      throw error;  // Re-throw the error for handling in the UI
     }
   },
 

@@ -20,3 +20,22 @@ class NoSignupAdapter(DefaultAccountAdapter):
         return False
     def get_login_redirect_url(self, request):
         return 'https://www.fgz-fablab.ch/'  # Redirect to frontend homepage
+    
+    
+from allauth.socialaccount.providers.microsoft.views import MicrosoftOAuth2Adapter
+from rest_auth.registration.views import SocialLoginView
+
+class MicrosoftLogin(SocialLoginView):
+    adapter_class = MicrosoftOAuth2Adapter
+
+    def get_response(self):
+        response = super().get_response()
+        token = Token.objects.get(user=self.user)
+        response.set_cookie(
+            'auth_token',
+            token.key,
+            httponly=True,
+            secure=True,  # Ensure it is secure for HTTPS
+            samesite='None',  # Adjust based on cross-origin policy
+        )
+        return response

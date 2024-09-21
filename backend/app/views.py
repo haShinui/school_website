@@ -70,16 +70,22 @@ def get_initial_data(request):
     csrf_token = get_token(request)
     return JsonResponse({'message': 'Initial data and CSRF token set', 'csrfToken': csrf_token})
 
-
 @api_view(['GET'])
-@authentication_classes([SessionAuthentication, TokenAuthentication])
-@permission_classes([IsAuthenticated])
 def check_auth(request):
-    print(request.user.userprofile.role)
-    return JsonResponse({
-        'isAuthenticated': request.user.is_authenticated,
-        'role': request.user.userprofile.role
-    })
+    if request.user.is_authenticated:
+        # User is logged in, return their username and role
+        role = request.user.userprofile.role
+        return JsonResponse({
+            'isAuthenticated': True,
+            'role': role
+        })
+    else:
+        # User is not logged in, return a message indicating not authenticated
+        return JsonResponse({
+            'isAuthenticated': False,
+            'message': 'User is not authenticated or logged in.'
+        }, status=401)  # 401 Unauthorized status
+        
 # Define the test to check if the user is a manager
 @csrf_protect
 @login_required
