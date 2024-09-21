@@ -17,13 +17,13 @@ interface SignupResponse {
   message?: string;
 }
 
-//interface ManagerCheckResponse {
-  //isManager: boolean;
-//}
+interface ManagerCheckResponse {
+  isManager: boolean;
+}
 
 interface CheckAuthResponse {
   isAuthenticated: boolean;
-  role?: string;
+  role?: string | null;  // Allow role to be string or null
   message?: string;
 }
 
@@ -145,7 +145,15 @@ const apiMethods = {
   },
 
   fetchManagerDashboard: async (): Promise<any> => apiService.get('/manager-dashboard/'), // Fetch the manager dashboard data
-  checkManager: async (): Promise<any> => apiService.get('/is-manager/'), // Check if the user is a manager
+  checkManager: async (): Promise<ManagerCheckResponse> => {
+    try {
+      const response = await apiService.get('/is-manager/');
+      return response.data; // Ensure the manager status is returned
+    } catch (error) {
+      console.error('Failed to check manager status:', error);
+      return { isManager: false }; // Default response
+    }
+  },
   signupCourse: async (): Promise<any> => apiService.post<SignupResponse>('/signup-course/'),
   getCsrfToken: async (): Promise<any> => apiService.get('/csrf-token/').then(response => console.log('CSRF token:', response.data)),
 };

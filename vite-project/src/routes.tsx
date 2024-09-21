@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import {HomePageComponent} from './pages/home-page';
-import {LoginPageComponent} from './components/login-page';
+import { LoginPageComponent }  from './components/login-page';
 //import AboutPage from './pages/AboutPage';
 import { AboutPageNew } from './pages/AboutPageNew';
 import SignupCoursePage from './pages/signupCourse';
