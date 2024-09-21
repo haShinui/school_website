@@ -70,8 +70,8 @@ SESSION_COOKIE_AGE = 86400  # 1 day in seconds
 
 
 # Cross-site cookies
-SESSION_COOKIE_SAMESITE = 'Lax'  # or 'None' if using cross-site requests
-CSRF_COOKIE_SAMESITE = 'Lax' 
+SESSION_COOKIE_SAMESITE = 'None'  # or 'None' if using cross-site requests
+CSRF_COOKIE_SAMESITE = 'None' 
 #so my website cant be imbedded in others
 X_FRAME_OPTIONS = 'DENY'
 SECURE_CONTENT_TYPE_NOSNIFF = True
