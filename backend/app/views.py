@@ -72,7 +72,7 @@ def get_initial_data(request):
 
 
 @api_view(['GET'])
-@authentication_classes([SessionAuthentication, TokenAuthentication])
+@authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def check_auth(request):
     print(request.user.userprofile.role)

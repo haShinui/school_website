@@ -47,7 +47,7 @@ CSRF_TRUSTED_ORIGINS = [
 
 CSRF_COOKIE_NAME = 'csrftoken'
 #TODO: change
-CSRF_COOKIE_HTTPONLY = False  # Make True in Production, could cause problems
+CSRF_COOKIE_HTTPONLY = True  # Make True in Production, could cause problems
 
 # Only allow session cookies over HTTPS (recommended in production)
 #TODO: changed all those settings
