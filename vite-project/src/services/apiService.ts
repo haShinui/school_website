@@ -8,7 +8,6 @@ interface UserInfo {
   role?: string;
 }
 
-
 interface LogoutResponse {
   success: boolean;
   message?: string;
@@ -50,14 +49,14 @@ const fetchCsrfToken = async () => {
 fetchCsrfToken(); 
 
 // Interceptor to ensure the CSRF token is included in the Axios headers for all requests
-apiService.interceptors.request.use(config => {
-  if (apiService.defaults.headers.common['X-CSRFToken']) {
-    config.headers['X-CSRFToken'] = apiService.defaults.headers.common['X-CSRFToken'];  // Ensure the CSRF token is set in the request headers
+apiService.interceptors.request.use(async config => {
+  if (config.method !== 'get') {
+    // Ensure CSRF token is refreshed before every non-GET request
+    await fetchCsrfToken(); 
   }
   console.log('Request Headers:', config.headers);  // Log headers for debugging
   return config;
 }, error => Promise.reject(error));
-
 
 // Function to check if the auth_token is set in cookies
 const checkTokenCookie = () => {
@@ -76,10 +75,9 @@ const waitForToken = (retries = 10) => {
         reject(new Error('Token not set in cookies.'));
       }
       retries--;
-    }, 300);  // Check every 200 milliseconds
+    }, 300);  // Check every 300 milliseconds
   });
 };
-
 
 // Define API methods
 const apiMethods = {
@@ -92,9 +90,8 @@ const apiMethods = {
       try {
         await waitForToken();
         console.log('Token is now set in cookies.');
-        // After the token is set, fetch user info and check authentication
+        // After the token is set, fetch user info
         await apiMethods.getUserInfo();
-        await apiMethods.checkAuth();  // Check auth after token is set
       } catch (error) {
         console.error('Failed to set auth token in time:', error);
       }
@@ -105,15 +102,6 @@ const apiMethods = {
   checkAuth: async () => {
     // Check if the user has logged in by looking at the flag in localStorage
     const isLoggedIn = localStorage.getItem('isLoggedIn');
-    try {
-      await waitForToken();
-      console.log('Token is now set in cookies.');
-      // After the token is set, fetch user info and check authentication
-      await apiMethods.getUserInfo();
-      await apiMethods.checkAuth();  // Check auth after token is set
-    } catch (error) {
-      console.error('Failed to set auth token in time:', error);
-    }
     if (isLoggedIn === '1') {  // Only call checkAuth if the user is logged in
       try {
         const response = await apiService.get('/check-auth/');
@@ -133,13 +121,12 @@ const apiMethods = {
     if (response.data.success) {
       // Set the login flag after a successful Microsoft login
       localStorage.setItem('isLoggedIn', '1');  // Use '1' to indicate logged in
-      // Fetch user info on successful login
+      // Wait for the token to be set in cookies before checking authentication
       try {
         await waitForToken();
         console.log('Token is now set in cookies.');
-        // After the token is set, fetch user info and check authentication
+        // After the token is set, fetch user info
         await apiMethods.getUserInfo();
-        await apiMethods.checkAuth();  // Check auth after token is set
       } catch (error) {
         console.error('Failed to set auth token in time:', error);
       }
@@ -159,17 +146,24 @@ const apiMethods = {
   },
 
   logout: async () => {
-    const response = await apiService.post<LogoutResponse>('/logout/');
-    if (response.data.success) {
-      sessionStorage.removeItem('username');
-      sessionStorage.removeItem('firstName');
-      sessionStorage.removeItem('lastName');
-      localStorage.removeItem('isLoggedIn');  // Remove login flag on logout
-      console.log('User info cleared from session storage on logout');
+    try {
+      // Ensure CSRF token is refreshed before logout
+      await fetchCsrfToken();
+      const response = await apiService.post<LogoutResponse>('/logout/');
+      if (response.data.success) {
+        sessionStorage.removeItem('username');
+        sessionStorage.removeItem('firstName');
+        sessionStorage.removeItem('lastName');
+        localStorage.removeItem('isLoggedIn');  // Remove login flag on logout
+        console.log('User info cleared from session storage on logout');
+      }
+      return response;
+    } catch (error) {
+      console.error('Error during logout:', error);
+      throw error;  // Re-throw the error for handling in the UI
     }
-    return response;
   },
-  
+
   fetchManagerDashboard: () => apiService.get('/manager-dashboard/'), // Fetch the manager dashboard data
   checkManager: () => apiService.get<ManagerCheckResponse>('/is-manager/'), // Check if the user is a manager
   signupCourse: () => apiService.post<SignupResponse>('/signup-course/'),
