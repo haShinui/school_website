@@ -29,7 +29,11 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 #TODO: Debug false and changed allow host production
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',')
+ALLOWED_HOSTS =  [
+    'http://localhost:8082',  # Your React app's origin in development
+    'https://school-website-88uu.onrender.com',  # Your React app's origin in production
+    'https://school-website-1-a2f6.onrender.com',
+]
 # CSRF Protection on session-based requests
 #TODO: CHange
 CSRF_COOKIE_SECURE = True #true for production with HTTPs
