@@ -29,10 +29,10 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 #TODO: Debug false and changed allow host production
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS =  [
-    'http://localhost:8082',  # Your React app's origin in development
-    'https://school-website-88uu.onrender.com',  # Your React app's origin in production
-    'https://school-website-1-a2f6.onrender.com',
+ALLOWED_HOSTS = [
+    'localhost',  # For local development
+    'school-website-88uu.onrender.com',  # Your React app's origin in production
+    'school-website-1-a2f6.onrender.com',  # Your Django backend's origin in production
 ]
 # CSRF Protection on session-based requests
 #TODO: CHange
@@ -71,7 +71,7 @@ SESSION_COOKIE_AGE = 86400  # 1 day in seconds
 
 # Cross-site cookies
 SESSION_COOKIE_SAMESITE = 'None'  # or 'None' if using cross-site requests
-
+CSRF_COOKIE_SAMESITE = 'None'
 #so my website cant be imbedded in others
 X_FRAME_OPTIONS = 'DENY'
 SECURE_CONTENT_TYPE_NOSNIFF = True

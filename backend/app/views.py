@@ -6,7 +6,6 @@ from django.contrib.auth import logout, login, authenticate
 from django.views.decorators.http import require_POST
 from django.urls import reverse
 import json
-from django.views.decorators.csrf import ensure_csrf_cookie
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
