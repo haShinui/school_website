@@ -27,7 +27,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 #TODO: Debug false and changed allow host production
-DEBUG = os.getenv('DEBUG', 'False') == 'True'
+DEBUG = True #os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = [
     'localhost',  # For local development
@@ -89,9 +89,10 @@ SECURE_SSL_REDIRECT = True  # Uncomment for HTTPS in production
 # CORS Settings
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:8082',  # Your React app's origin in development
-    'https://school-website-88uu.onrender.com',  # Your React app's origin in production
-    'https://school-website-1-a2f6.onrender.com',
+    'http://localhost:8082',  # Development
+    'https://www.fgz-fablab.ch',  # Frontend
+    'https://fgz-fablab.ch',  # Root domain
+    'https://api.fgz-fablab.ch',  # Backend
 ]
 CORS_ALLOW_CREDENTIALS = True  # If you're using cookies for authentication
 
