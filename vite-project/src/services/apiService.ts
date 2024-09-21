@@ -57,12 +57,20 @@ const fetchCsrfToken = async () => {
 // Immediately fetch the CSRF token when the service is initialized
 fetchCsrfToken();
 
-// Interceptor to ensure the CSRF token is included in the Axios headers for all requests
+// Interceptor to include the API Key and ensure the CSRF token is included in the Axios headers for all requests
 apiService.interceptors.request.use(async config => {
+  const apiKey = process.env.REACT_APP_API_KEY; // Fetch the API key from .env
+  
+  // Ensure CSRF token is refreshed before every non-GET request
   if (config.method !== 'get') {
-    // Ensure CSRF token is refreshed before every non-GET request
     await fetchCsrfToken();
   }
+  
+  // Add API key to the headers if it exists
+  if (apiKey) {
+    config.headers['X-API-Key'] = apiKey;
+  }
+  
   console.log('Request Headers:', config.headers);  // Log headers for debugging
   return config;
 }, error => Promise.reject(error));
