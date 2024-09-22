@@ -163,6 +163,14 @@ TEMPLATES = [
     },
 ]
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # For Gmail
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'fgzfablab@gmail.com'  # Your email
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')  # Your email password or app password
+DEFAULT_FROM_EMAIL = 'From the Fablab Team'
+
 WSGI_APPLICATION = 'backend.wsgi.application'
 
 # AUTHENTICATION SETTINGS

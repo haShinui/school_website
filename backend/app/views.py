@@ -26,7 +26,8 @@ from django.core.cache import cache
 from axes.signals import user_locked_out
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
-
+from rest_framework.response import Response
+from rest_framework import status
 import math
 import logging
 
@@ -36,6 +37,30 @@ UserModel = get_user_model()
 from django.contrib.auth import logout, authenticate
 from django.http import JsonResponse
 
+from django.core.mail import send_mail
+from django.core.mail import send_mail, BadHeaderError
+from django.conf import settings
+
+
+def send_welcome_email():
+    subject = "Welcome to My Website"
+    message = "Thank you for signing up for our service!"
+    email_from = settings.DEFAULT_FROM_EMAIL
+    recipient_list = ['fgzfablab@gmail.com']  # Fixed email for testing
+    
+    try:
+        send_mail(subject, message, email_from, recipient_list)
+    except BadHeaderError:
+        return False
+    return True
+
+@api_view(['POST'])
+def send_email(request):
+    success = send_welcome_email()
+    if success:
+        return Response({"message": "Email sent!"}, status=status.HTTP_200_OK)
+    else:
+        return Response({"message": "Failed to send email."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 def index(request, path=None):
     """

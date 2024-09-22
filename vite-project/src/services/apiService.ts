@@ -32,6 +32,10 @@ interface ManagerCheckResponse {
   isManager: boolean;
 }
 
+interface EmailResponse {
+  message: string;
+}
+
 // Set up the base Axios instance
 const apiService = axios.create({
   baseURL: 'https://api.fgz-fablab.ch/api/', // Updated backend domain
@@ -134,6 +138,17 @@ const apiMethods = {
     } catch (error) {
       console.error('Error during logout:', error);
       return { success: false, message: 'Error during logout' }; // Return a failure message
+    }
+  },
+
+  // Send Email (New API call)
+  sendEmail: async (): Promise<EmailResponse> => {
+    try {
+      const response = await apiService.post('/send-email/');
+      return response.data;
+    } catch (error) {
+      console.error('Error sending email:', error);
+      return { message: 'Failed to send email' }; // Return a failure message
     }
   },
 
