@@ -275,13 +275,16 @@ export function AboutPageNew() {
           </div>
         </div>
       </section>
-      {/* Email Button Section */}
-      <section className="py-16 px-4 bg-primary/10 text-center">
-        <div className="container mx-auto max-w-4xl">
-          <h2 className="text-3xl font-bold mb-6">Want to Reach Out?</h2>
-          <p className="text-lg mb-8">Click the button below to send us an email and get in touch with us.</p>
-          <Button onClick={handleSendEmail}>Send Welcome Email</Button>
-          {emailStatus && <p className="mt-4 text-green-600">{emailStatus}</p>} {/* Display email response */}
+      {/* Email Button */}
+      <section className="py-16 px-4 bg-primary text-primary-foreground">
+        <div className="container mx-auto max-w-4xl text-center">
+          <h2 className="text-3xl font-bold mb-6">Send Us an Email</h2>
+          <button onClick={handleSendEmail} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Send Email
+          </button>
+
+          {/* Display the email status message */}
+          {emailStatus && <p className="mt-4 text-lg">{emailStatus}</p>}
         </div>
       </section>
     </div>

@@ -42,6 +42,9 @@ from django.core.mail import send_mail, BadHeaderError
 from django.conf import settings
 
 
+# Set up logging
+logger = logging.getLogger(__name__)
+
 def send_welcome_email():
     subject = "Welcome to My Website"
     message = "Thank you for signing up for our service!"
@@ -50,9 +53,13 @@ def send_welcome_email():
     
     try:
         send_mail(subject, message, email_from, recipient_list)
-    except BadHeaderError:
+        return True
+    except BadHeaderError as e:
+        logger.error(f"BadHeaderError: {e}")
         return False
-    return True
+    except Exception as e:
+        logger.error(f"Error sending email: {e}")  # Log the error
+        return False
 
 @api_view(['POST'])
 def send_email(request):
@@ -60,6 +67,7 @@ def send_email(request):
     if success:
         return Response({"message": "Email sent!"}, status=status.HTTP_200_OK)
     else:
+        logger.error("Failed to send email.")
         return Response({"message": "Failed to send email."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 def index(request, path=None):

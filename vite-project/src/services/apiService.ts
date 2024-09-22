@@ -62,7 +62,7 @@ const fetchCsrfToken = async () => {
 fetchCsrfToken();
 
 // Interceptor to ensure the CSRF token is included in the Axios headers for all requests
-apiService.interceptors.request.use(async config => {
+apiService.interceptors.request.use(async (config) => {
   if (config.method !== 'get') {
     // Ensure CSRF token is refreshed before every non-GET request
     await fetchCsrfToken();
@@ -142,16 +142,15 @@ const apiMethods = {
   },
 
   // Send Email (New API call)
-  sendEmail: async (): Promise<EmailResponse> => {
-    try {
-      const response = await apiService.post('/send-email/');
-      return response.data;
-    } catch (error) {
-      console.error('Error sending email:', error);
-      return { message: 'Failed to send email' }; // Return a failure message
-    }
-  },
-
+sendEmail: async (): Promise<EmailResponse> => {
+  try {
+    const response = await apiService.post('/send-email/');
+    return response.data;
+  } catch (error: any) { // Type error as 'any' to handle it properly
+    console.error('Error sending email:', error.response?.data || error.message);
+    return { message: 'Failed to send email' }; // Return a failure message
+  }
+},
   // Fetch Manager Dashboard
   fetchManagerDashboard: async () => apiService.get('/manager-dashboard/'),
 
