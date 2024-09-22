@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import path from 'node:path';
+import { analyzer } from 'vite-bundle-analyzer'
 import react from '@vitejs/plugin-react-swc'; // Use React plugin
 import tailwind from 'tailwindcss';
 import autoprefixer from 'autoprefixer';
@@ -12,7 +13,7 @@ export default defineConfig({
     },
   },
   // Include React plugin
-  plugins: [react()],
+  plugins: [react(), analyzer()],
   base: '/', // Make sure this is set to '/' for correct routing
   // Resolve for TypeScript paths and aliasing
   resolve: {
