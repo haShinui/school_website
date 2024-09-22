@@ -13,6 +13,7 @@ export default defineConfig({
   },
   // Include React plugin
   plugins: [react()],
+  base: '/', // Make sure this is set to '/' for correct routing
   // Resolve for TypeScript paths and aliasing
   resolve: {
     alias: {

@@ -138,9 +138,10 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'app.middleware.TokenCookieMiddleware',
     'app.middleware.TokenRefreshMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', 
     #'django_ratelimit.middleware.RatelimitMiddleware',
     'axes.middleware.AxesMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', 
+    
 ]
 
 ROOT_URLCONF = 'backend.urls'
