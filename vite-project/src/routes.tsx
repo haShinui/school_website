@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate  } from 'react-router-dom';
 import {HomePageComponent} from './pages/home-page';
 import { LoginPageComponent }  from './components/login-page';
 //import AboutPage from './pages/AboutPage';
@@ -17,6 +17,7 @@ const AppRouter: React.FC = () => {
         <Route path="/" element={<HomePageComponent />} />
         <Route path="/login" element={<LoginPageComponent />} />
         <Route path="/about" element={<AboutPageNew />} />
+        <Route path="*" element={<Navigate to="/" />} />  {/* This will redirect to the homepage */}
         {/* Protected route for manager role */}
         <Route 
           path="/manager-dashboard" 
