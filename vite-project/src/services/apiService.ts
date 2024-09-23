@@ -141,16 +141,28 @@ const apiMethods = {
     }
   },
 
-  // Send Email (New API call)
-sendEmail: async (): Promise<EmailResponse> => {
-  try {
-    const response = await apiService.post('/send-email/');
-    return response.data;
-  } catch (error: any) { // Type error as 'any' to handle it properly
-    console.error('Error sending email:', error.response?.data || error.message);
-    return { message: 'Failed to send email' }; // Return a failure message
-  }
-},
+
+  // Send Email for Course Signup (New API call)
+  sendCourseSignupEmail: async (): Promise<EmailResponse> => {
+    try {
+      const response = await apiService.post('/send-course-signup-email/');
+      return response.data;
+    } catch (error: any) { // Type error as 'any' to handle it properly
+      console.error('Error sending course signup email:', error.response?.data || error.message);
+      return { message: 'Failed to send email' }; // Return a failure message
+    }
+  },
+
+  // Send Email for Date/Time Form Submission (New API call)
+  sendDateTimeEmail: async (formData: { date: string, time: string }): Promise<EmailResponse> => {
+    try {
+      const response = await apiService.post('/send-date-time-email/', formData); // Pass form data to backend
+      return response.data;
+    } catch (error: any) {
+      console.error('Error sending date/time form email:', error.response?.data || error.message);
+      return { message: 'Failed to send email' };
+    }
+  },
   // Fetch Manager Dashboard
   fetchManagerDashboard: async () => apiService.get('/manager-dashboard/'),
 
