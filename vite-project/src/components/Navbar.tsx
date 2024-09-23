@@ -1,6 +1,5 @@
-//import * as React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom"; // React Router for navigation
-import { House, Info, UserCircle, Gear, SignOut, List, Table, SignIn  } from "phosphor-react"; // Phosphor icons
+import { House, Info, UserCircle, Gear, SignOut, List, Table, SignIn } from "phosphor-react"; // Phosphor icons
 import { useTheme } from "@/components/theme-provider"; // Assuming you have your theme provider set up
 import { Button } from "@/components/ui/button";
 import {
@@ -11,28 +10,25 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useEffect, useState } from "react";
-//import { useDispatch } from "react-redux"; // Redux dispatch
 import ThemeToggle from "./ThemeToggle";
 import LanguageSwitcher from "./LanguageSwitcher";
 import ArrowButton from "./animata/button/swipe-login";
 import apiMethods from '../services/apiService'; // Use your apiService here
 import { useTranslation } from "react-i18next";
 
-// Auth Status type
-type AuthStatus = {
-  isAuthenticated: boolean;
-  role: string | null;
-};
-
+// Navbar component
 function NavbarComponent() {
   const [isOpen, setIsOpen] = useState(false); // Initialize isOpen to control mobile menu
-  const [authStatus, setAuthStatus] = useState<AuthStatus>({
+  const [authStatus, setAuthStatus] = useState<{
+    isAuthenticated: boolean;
+    role: string | undefined;
+  }>({
     isAuthenticated: false,
-    role: null,
-  }); // State for authentication status
+    role: undefined, // Initialize role as undefined to match types
+  });
+  
   const location = useLocation();
   const navigate = useNavigate(); // React Router navigate
-  //const dispatch = useDispatch(); // Redux dispatch
   const { t } = useTranslation(); // Use translation function
   const { theme } = useTheme(); // Fetch current theme to handle light/dark mode
 
@@ -43,7 +39,7 @@ function NavbarComponent() {
         const result = await apiMethods.checkAuth(); // Check if the user is authenticated
         setAuthStatus({
           isAuthenticated: result.isAuthenticated,
-          role: result.role,
+          role: result.role ?? undefined, // Ensure role is either a string or undefined
         });
       } catch (error) {
         console.error("Failed to fetch authentication status", error);
@@ -57,7 +53,7 @@ function NavbarComponent() {
   const handleLogout = async () => {
     try {
       const response = await apiMethods.logout(); // Call your logout API
-      if (response.data.success) {
+      if (response.success) {
         // Successfully logged out
         console.log("Logged out successfully.");
 
@@ -70,18 +66,19 @@ function NavbarComponent() {
         // Update the authentication status to reflect logout
         setAuthStatus({
           isAuthenticated: false,
-          role: null,
+          role: undefined, // Reset role to undefined on logout
         });
 
         // Redirect to login page or home
         navigate("/login");
       } else {
-        console.error("Logout failed:", response.data.message);
+        console.error("Logout failed:", response.message);
       }
     } catch (error) {
       console.error("Error during logout:", error);
     }
   };
+
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">

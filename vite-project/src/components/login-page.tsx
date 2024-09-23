@@ -16,25 +16,24 @@ import { Link } from "react-router-dom";
 import { useTranslation } from 'react-i18next';  // For i18n translations
 
 export function LoginPageComponent() {
-  const { t } = useTranslation();  // Initialize translations
+  const { t } = useTranslation();  
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState<string | null>(null);
   const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();  // Set up the dispatch with proper types
+  const dispatch = useDispatch<AppDispatch>();
 
-  // Handle username and password login
   const secureAllauthLogin = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
       const loginData = { username, password };
       const response = await apiService.secureAllauthLogin(loginData);
       
-      if (response.data.success) {
-        dispatch(checkAuthentication());  // Check and update the authentication state
-        navigate('/');  // Redirect to the homepage on success
+      if (response.success) {
+        dispatch(checkAuthentication());  
+        navigate('/');  
       } else {
-        setLoginError(response.data.message);
+        setLoginError(response.message || 'Login failed.');
       }
     } catch (error) {
       setLoginError(t('login_failed'));
@@ -42,17 +41,16 @@ export function LoginPageComponent() {
     }
   };
 
-  // Handle Microsoft login
   const initiateMicrosoftLogin = async () => {
     try {
       const response = await apiService.secureMicrosoftLogin();
-      
-      if (response.data.login_url) {
-        window.location.href = response.data.login_url;  // Redirect to Microsoft login
+      if (response.login_url) {
+        window.location.href = response.login_url;  
       } else {
-        console.error('Microsoft login URL not found.');
+        setLoginError(response.message || 'Microsoft login failed.');
       }
     } catch (error) {
+      setLoginError('Error initiating Microsoft login.');
       console.error('Error initiating Microsoft login:', error);
     }
   };

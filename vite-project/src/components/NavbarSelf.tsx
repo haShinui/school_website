@@ -25,7 +25,7 @@ const Navbar: React.FC = () => {
     const fetchAuthStatus = async () => {
       try {
         const result = await apiService.checkAuth(); // Check if the user is authenticated
-        setAuthStatus({ isAuthenticated: result.isAuthenticated, role: result.role });
+        setAuthStatus({ isAuthenticated: result.isAuthenticated, role: result.role ?? null });
       } catch (error) {
         console.error("Failed to fetch authentication status", error);
       }

@@ -13,6 +13,7 @@ export default defineConfig({
   },
   // Include React plugin
   plugins: [react()],
+  base: '/', // Make sure this is set to '/' for correct routing
   // Resolve for TypeScript paths and aliasing
   resolve: {
     alias: {
@@ -28,7 +29,7 @@ export default defineConfig({
     port: 8082, // Set the frontend port to 8082
     proxy: {
       '/api': {
-        target: 'https://school-website-1-a2f6.onrender.com', // Proxy API requests to Django backend
+        target: 'https://api.fgz-fablab.ch', // Proxy API requests to Django backend
         changeOrigin: true,
         secure: false,
       },

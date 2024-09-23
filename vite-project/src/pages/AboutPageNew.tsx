@@ -1,5 +1,5 @@
 'use client'
-
+import { useState } from 'react';
 //import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -7,6 +7,7 @@ import { Facebook, Twitter, Instagram, Mail, Phone, MapPin } from 'lucide-react'
 import SwapText from "@/components/animata/text/swap-text";
 import TeamMemberCard from "@/components/MyCards/TeamMemberCard";
 import StaggeredLetter from "@/components/animata/text/staggered-letter";
+import apiMethods from '@/services/apiService'; // Import your API service for sending emails
 
 const teamMembers = [
   {
@@ -74,6 +75,12 @@ const teamMembers = [
 ];
 
 export function AboutPageNew() {
+  const [emailStatus, setEmailStatus] = useState<string | null>(null); // State to handle email sending status
+
+  const handleSendEmail = async () => {
+    const response = await apiMethods.sendEmail(); // Call the send email API method
+    setEmailStatus(response.message); // Display the response message
+  };
   const quotes = [
     "Innovation is seeing what everybody has seen and thinking what nobody has thought.",
     "The best way to predict the future is to create it.",
@@ -266,6 +273,18 @@ export function AboutPageNew() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+      {/* Email Button */}
+      <section className="py-16 px-4 bg-primary text-primary-foreground">
+        <div className="container mx-auto max-w-4xl text-center">
+          <h2 className="text-3xl font-bold mb-6">Send Us an Email</h2>
+          <button onClick={handleSendEmail} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Send Email
+          </button>
+
+          {/* Display the email status message */}
+          {emailStatus && <p className="mt-4 text-lg">{emailStatus}</p>}
         </div>
       </section>
     </div>

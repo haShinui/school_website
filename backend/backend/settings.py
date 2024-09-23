@@ -27,7 +27,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 #TODO: Debug false and changed allow host production
-DEBUG = os.getenv('DEBUG', 'False') == 'True'
+DEBUG = False #os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = [
     'localhost',  # For local development
@@ -69,10 +69,9 @@ SESSION_COOKIE_HTTPONLY = True # True when in production
 SESSION_COOKIE_AGE = 86400  # 1 day in seconds
 
 
-
 # Cross-site cookies
-SESSION_COOKIE_SAMESITE = 'Lax'  # or 'None' if using cross-site requests
-CSRF_COOKIE_SAMESITE = 'Lax' 
+SESSION_COOKIE_SAMESITE = 'None'  # or 'None' if using cross-site requests
+CSRF_COOKIE_SAMESITE = 'None' 
 #so my website cant be imbedded in others
 X_FRAME_OPTIONS = 'DENY'
 SECURE_CONTENT_TYPE_NOSNIFF = True
@@ -87,13 +86,13 @@ SECURE_SSL_REDIRECT = True  # Uncomment for HTTPS in production
 # Ensure the proxy forwards the protocol correctly (for HTTPS)
 #SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-
 # CORS Settings
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:8082',  # Your React app's origin in development
-    'https://school-website-88uu.onrender.com',  # Your React app's origin in production
-    'https://school-website-1-a2f6.onrender.com',
+    'http://localhost:8082',  # Development
+    'https://www.fgz-fablab.ch',  # Frontend
+    'https://fgz-fablab.ch',  # Root domain
+    'https://api.fgz-fablab.ch',  # Backend
 ]
 CORS_ALLOW_CREDENTIALS = True  # If you're using cookies for authentication
 
@@ -139,9 +138,10 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'app.middleware.TokenCookieMiddleware',
     'app.middleware.TokenRefreshMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', 
     #'django_ratelimit.middleware.RatelimitMiddleware',
     'axes.middleware.AxesMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', 
+    
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -162,6 +162,14 @@ TEMPLATES = [
         },
     },
 ]
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # For Gmail
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'fgzfablab@gmail.com'  # Your email
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')  # Your email password or app password
+DEFAULT_FROM_EMAIL = 'From the Fablab Team'
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
@@ -185,7 +193,6 @@ ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_USERNAME_REQUIRED = True
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
-
 # Microsoft login
 # CLIENT_ID, CLIENT_SECRET, AUTHORI#TY, and other related variables can go here.
 #AXES_LOCKOUT_CALLABLE = 'app.axes_lockout.custom_lockout_response'
@@ -194,7 +201,6 @@ ACCOUNT_RATE_LIMITS = {
     'login_failed': '5/5m'  # Example value, meaning 5 attempts per 5 minutes
 }
 # settings.py
-
 
 AXES_ENABLED = True
 # Axes Configuration
@@ -265,3 +271,5 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # DEFAULT PRIMARY KEY FIELD TYPE
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+

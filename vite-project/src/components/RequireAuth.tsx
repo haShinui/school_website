@@ -9,7 +9,7 @@ interface RequireAuthProps {
 
 interface AuthStatus {
   isAuthenticated: boolean;
-  role: string | null;
+  role: string | null;  // Ensure this matches the API response type
 }
 
 const RequireAuth: React.FC<RequireAuthProps> = ({ children, requiredRole }) => {
@@ -21,7 +21,7 @@ const RequireAuth: React.FC<RequireAuthProps> = ({ children, requiredRole }) => 
     const fetchAuthStatus = async () => {
       try {
         const result = await apiService.checkAuth(); // Call your API service to check the auth status
-        setAuthStatus({ isAuthenticated: result.isAuthenticated, role: result.role });
+        setAuthStatus({ isAuthenticated: result.isAuthenticated, role: result.role ?? null });
       } catch (error) {
         console.error('Failed to fetch auth status:', error);
       } finally {

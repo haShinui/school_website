@@ -26,7 +26,8 @@ from django.core.cache import cache
 from axes.signals import user_locked_out
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
-
+from rest_framework.response import Response
+from rest_framework import status
 import math
 import logging
 
@@ -36,6 +37,38 @@ UserModel = get_user_model()
 from django.contrib.auth import logout, authenticate
 from django.http import JsonResponse
 
+from django.core.mail import send_mail
+from django.core.mail import send_mail, BadHeaderError
+from django.conf import settings
+
+
+# Set up logging
+logger = logging.getLogger(__name__)
+
+def send_welcome_email():
+    subject = "Welcome to My Website"
+    message = "Thank you for signing up for our service!"
+    email_from = settings.DEFAULT_FROM_EMAIL
+    recipient_list = ['fgzfablab@gmail.com']  # Fixed email for testing
+    
+    try:
+        send_mail(subject, message, email_from, recipient_list)
+        return True
+    except BadHeaderError as e:
+        logger.error(f"BadHeaderError: {e}")
+        return False
+    except Exception as e:
+        logger.error(f"Error sending email: {e}")  # Log the error
+        return False
+
+@api_view(['POST'])
+def send_email(request):
+    success = send_welcome_email()
+    if success:
+        return Response({"message": "Email sent!"}, status=status.HTTP_200_OK)
+    else:
+        logger.error("Failed to send email.")
+        return Response({"message": "Failed to send email."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 def index(request, path=None):
     """
@@ -70,16 +103,22 @@ def get_initial_data(request):
     csrf_token = get_token(request)
     return JsonResponse({'message': 'Initial data and CSRF token set', 'csrfToken': csrf_token})
 
-
 @api_view(['GET'])
-@authentication_classes([SessionAuthentication, TokenAuthentication])
-@permission_classes([IsAuthenticated])
 def check_auth(request):
-    print(request.user.userprofile.role)
-    return JsonResponse({
-        'isAuthenticated': request.user.is_authenticated,
-        'role': request.user.userprofile.role
-    })
+    if request.user.is_authenticated:
+        # User is logged in, return their username and role
+        role = request.user.userprofile.role
+        return JsonResponse({
+            'isAuthenticated': True,
+            'role': role
+        })
+    else:
+        # User is not logged in, return a message indicating not authenticated
+        return JsonResponse({
+            'isAuthenticated': False,
+            'message': 'User is not authenticated or logged in.'
+        }, status=401)  # 401 Unauthorized status
+        
 # Define the test to check if the user is a manager
 @csrf_protect
 @login_required
