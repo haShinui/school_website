@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Date/Time Submission Confirmation</title>
+    <style>
+      .email-container {
+        width: 100%;
+        padding: 20px;
+        background-color: #f4f4f4;
+        font-family: Arial, sans-serif;
+      }
+      .email-box {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        text-align: center;
+      }
+      h1 {
+        color: #333333;
+      }
+      p {
+        color: #555555;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="email-container">
+      <div class="email-box">
+        <h1>Thank You, {{ first_name }}!</h1>
+        <p>You have submitted the following details:</p>
+        <p>Date: {{ date }}</p>
+        <p>Time: {{ time }}</p>
+      </div>
+    </div>
+  </body>
+</html>

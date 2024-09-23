@@ -37,25 +37,29 @@ UserModel = get_user_model()
 from django.contrib.auth import logout, authenticate
 from django.http import JsonResponse
 
-from django.core.mail import send_mail
 from django.core.mail import send_mail, BadHeaderError
 from django.conf import settings
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 
 # Set up logging
 logger = logging.getLogger(__name__)
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])  # Ensure the user is authenticated
+@permission_classes([IsAuthenticated])
 def send_course_signup_email(request):
     user = request.user
     email_from = settings.DEFAULT_FROM_EMAIL
     recipient_list = [user.email]
     subject = f"Course Signup Confirmation for {user.first_name}"
-    message = f"Dear {user.first_name}, you have successfully signed up for a course!"
+
+    # Render HTML email content
+    html_message = render_to_string('emails/course_signup_email.html', {'first_name': user.first_name})
+    plain_message = strip_tags(html_message)  # Fallback to plain text
 
     try:
-        send_mail(subject, message, email_from, recipient_list)
+        send_mail(subject, plain_message, email_from, recipient_list, html_message=html_message)
         return Response({"message": "Course signup email sent!"}, status=200)
     except Exception as e:
         return Response({"message": f"Failed to send email: {str(e)}"}, status=500)
@@ -69,10 +73,13 @@ def send_date_time_email(request):
     email_from = settings.DEFAULT_FROM_EMAIL
     recipient_list = [user.email]
     subject = f"Form Submission Confirmation for {user.first_name}"
-    message = f"Dear {user.first_name}, you have submitted the following details: Date: {date}, Time: {time}"
+
+    # Render HTML email content
+    html_message = render_to_string('emails/date_time_email.html', {'first_name': user.first_name, 'date': date, 'time': time})
+    plain_message = strip_tags(html_message)  # Fallback to plain text
 
     try:
-        send_mail(subject, message, email_from, recipient_list)
+        send_mail(subject, plain_message, email_from, recipient_list, html_message=html_message)
         return Response({"message": "Form submission email sent!"}, status=200)
     except Exception as e:
         return Response({"message": f"Failed to send email: {str(e)}"}, status=500)
