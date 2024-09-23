@@ -45,6 +45,38 @@ from django.conf import settings
 # Set up logging
 logger = logging.getLogger(__name__)
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])  # Ensure the user is authenticated
+def send_course_signup_email(request):
+    user = request.user
+    email_from = settings.DEFAULT_FROM_EMAIL
+    recipient_list = [user.email]
+    subject = f"Course Signup Confirmation for {user.first_name}"
+    message = f"Dear {user.first_name}, you have successfully signed up for a course!"
+
+    try:
+        send_mail(subject, message, email_from, recipient_list)
+        return Response({"message": "Course signup email sent!"}, status=200)
+    except Exception as e:
+        return Response({"message": f"Failed to send email: {str(e)}"}, status=500)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def send_date_time_email(request):
+    user = request.user
+    date = request.data.get('date')
+    time = request.data.get('time')
+    email_from = settings.DEFAULT_FROM_EMAIL
+    recipient_list = [user.email]
+    subject = f"Form Submission Confirmation for {user.first_name}"
+    message = f"Dear {user.first_name}, you have submitted the following details: Date: {date}, Time: {time}"
+
+    try:
+        send_mail(subject, message, email_from, recipient_list)
+        return Response({"message": "Form submission email sent!"}, status=200)
+    except Exception as e:
+        return Response({"message": f"Failed to send email: {str(e)}"}, status=500)
+
 def send_welcome_email():
     subject = "Welcome to My Website"
     message = "Thank you for signing up for our service!"

@@ -3,7 +3,8 @@ from django.urls import path, include
 from app.views import (
     index, microsoft_callback, manager_dashboard, is_manager,
     get_user_info, csrf_token_view, api_logout, secure_microsoft_login, 
-    secure_allauth_login, signup_course_view, check_auth, send_email
+    secure_allauth_login, signup_course_view, check_auth, send_email,
+    send_date_time_email, send_course_signup_email
 )
 from rest_framework import routers
 from django.http import HttpResponse
@@ -49,6 +50,8 @@ urlpatterns = [
         path('is-manager/', is_manager, name='is_manager'),  # Manager check API
         path('manager-dashboard/', manager_dashboard, name='manager_dashboard'),  # Manager dashboard API
         path('send-email/', send_email, name='send-email'),
+        path('send-course-signup-email/', send_course_signup_email, name='send_course_signup_email'),
+        path('send-date-time-email/', send_date_time_email, name='send_date_time_email'),
     ])),
 
     # Catch-all route for React frontend
