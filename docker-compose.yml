@@ -1,0 +1,70 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:14
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydb
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - webnet
+    restart: always  # Restart in case of failures
+
+  backend:
+    build:
+      context: ./backend
+    container_name: django_backend
+    command: ./wait-for-it.sh db:5432 -- python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./backend:/app
+    expose:
+      - "8000"
+    depends_on:
+      - db
+    networks:
+      - webnet
+    environment:
+      - DATABASE_URL=postgres://user:password@db:5432/mydb
+    restart: always
+
+  frontend:
+    build:
+      context: ./vite-project  # Updated to use the vite-project directory
+    container_name: react_frontend
+    volumes:
+      - ./vite-project:/app  # Updated volume path
+    expose:
+      - "3000"
+    environment:
+      - REACT_APP_API_URL=http://django_backend:8000
+    depends_on:
+      - backend
+    networks:
+      - webnet
+    restart: always
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx_proxy
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./backend/staticfiles:/app/staticfiles  # Mount the static files directory
+    ports:
+      - "80:80"  # HTTP port
+      - "443:443" # HTTPS port for SSL (optional)
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - webnet
+    restart: always
+
+networks:
+  webnet:
+
+volumes:
+  pg_data:

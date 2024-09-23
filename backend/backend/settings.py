@@ -84,7 +84,7 @@ SECURE_SSL_REDIRECT = True  # Uncomment for HTTPS in production
 #SE_X_FORWARDED_HOST = True
 
 # Ensure the proxy forwards the protocol correctly (for HTTPS)
-#SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # CORS Settings
 CORS_ALLOW_ALL_ORIGINS = False
@@ -129,19 +129,18 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',  # This should come immediately after SecurityMiddleware
+    #'csp.middleware.CSPMiddleware',  # Add CSP middleware here
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',  # This should come before CsrfViewMiddleware for CORS to handle properly
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',  # Already added
     "allauth.account.middleware.AccountMiddleware",
-    'django.middleware.csrf.CsrfViewMiddleware',
     'app.middleware.TokenCookieMiddleware',
     'app.middleware.TokenRefreshMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware', 
-    #'django_ratelimit.middleware.RatelimitMiddleware',
     'axes.middleware.AxesMiddleware',
-    
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -206,6 +205,8 @@ AXES_ENABLE_ACCESS_FAILURE_LOG = True
 #AXES_RESET_ON_SUCCESS = True  # Reset the failure counter after a successful login
 AXES_COOLOFF_TIME = 0.0833333  # 5 minutes
 AXES_STORAGE = 'axes.storage.database.AxesDatabaseStorage'
+USE_X_FORWARDED_HOST = True
+
 
 # REST FRAMEWORK SETTINGS
 REST_FRAMEWORK = {
@@ -221,9 +222,22 @@ REST_FRAMEWORK = {
 # DATABASE CONFIGURATION
 # Replace the SQLite DATABASES configuration with PostgreSQL:
 
+#DATABASES = {
+ #   'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
+#}
+
 DATABASES = {
-    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'mydb',
+        'USER': 'user',
+        'PASSWORD': 'password',
+        'HOST': 'db',  # Refers to the "db" service in Docker
+        'PORT': '5432',
+    }
 }
+
+
 # PASSWORD VALIDATION
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -247,6 +261,7 @@ USE_I18N = True
 USE_TZ = True
 
 # STATIC FILES
+
 
 # This setting informs Django of the URI path from which your static files will be served to users
 # Here, they well be accessible at your-domain.onrender.com/static/... or yourcustomdomain.com/static/...
