@@ -77,8 +77,8 @@ const teamMembers = [
 export function AboutPageNew() {
   const [emailStatus, setEmailStatus] = useState<string | null>(null); // State to handle email sending status
 
-  const handleSendEmail = async () => {
-    const response = await apiMethods.sendEmail(); // Call the send email API method
+  const sendCourseSignupEmail = async () => {
+    const response = await apiMethods.sendCourseSignupEmail(); // Call the send email API method
     setEmailStatus(response.message); // Display the response message
   };
   const quotes = [
@@ -279,7 +279,7 @@ export function AboutPageNew() {
       <section className="py-16 px-4 bg-primary text-primary-foreground">
         <div className="container mx-auto max-w-4xl text-center">
           <h2 className="text-3xl font-bold mb-6">Send Us an Email</h2>
-          <button onClick={handleSendEmail} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          <button onClick={sendCourseSignupEmail} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
             Send Email
           </button>
 
