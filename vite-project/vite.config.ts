@@ -3,6 +3,7 @@ import path from 'node:path';
 import react from '@vitejs/plugin-react-swc'; // Use React plugin
 import tailwind from 'tailwindcss';
 import autoprefixer from 'autoprefixer';
+import eslint from "vite-plugin-eslint2";
 
 export default defineConfig({
   // Set up CSS with Tailwind and PostCSS
@@ -12,7 +13,7 @@ export default defineConfig({
     },
   },
   // Include React plugin
-  plugins: [react()],
+  plugins: [react(), eslint()],
   base: '/', // Make sure this is set to '/' for correct routing
   // Resolve for TypeScript paths and aliasing
   resolve: {
@@ -25,31 +26,16 @@ export default defineConfig({
   
   // Dev server configuration
   server: {
-    host: 'localhost', // Define the hostname
-    port: 8082, // Set the frontend port to 8082
+    host: '0.0.0.0', // Allow access from other containers
+    port: 5173, // Set the frontend port to 5173
     proxy: {
-      '/api': {
-        target: 'https://api.fgz-fablab.ch', // Proxy API requests to Django backend
-        changeOrigin: true,
-        secure: false,
-      },
+      '/api': 'http://nginx_proxy:80' // Proxy API requests to Nginx
     },
   },
   
   // Build options
   build: {
-    outDir: './build', // Output directory for build
+    outDir: 'dist', // Output directory for build
     emptyOutDir: true, // Clear the output directory before building
-    sourcemap: true, // Enable source maps for easier debugging
-    rollupOptions: {
-      output: {
-        manualChunks: (id) => {
-          if (id.includes('node_modules')) {
-            // Separate third-party dependencies into a 'vendor' chunk
-            return 'vendor';
-          }
-        },
-      },
-    },
   },
 });

@@ -1,25 +1,32 @@
-# Use an official Python runtime as a parent image
+# Use official Python image as base
 FROM python:3.11-slim
 
-# Install PostgreSQL client libraries and build tools
-RUN apt-get update && apt-get install -y libpq-dev gcc
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-# Set the working directory in the container
+# Set work directory
 WORKDIR /app
 
-# Copy the wait-for-it.sh script and give it executable permissions
-COPY wait-for-it.sh /app/
-RUN chmod +x /app/wait-for-it.sh  # Ensure the script has execute permissions
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-# Copy the requirements.txt and install dependencies
-COPY requirements.txt /app/
-RUN pip install --no-cache-dir -r requirements.txt
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
 
-# Copy the project code into the container
-COPY . /app/
+# Copy project
+COPY . .
 
-# Collect static files for production (run 'collectstatic' inside the container)
+# Collect static files
 RUN python manage.py collectstatic --noinput
 
-# Wait for PostgreSQL to be ready, run system check, apply migrations, and start the Django server
-CMD ["./wait-for-it.sh", "db:5432", "--", "/bin/sh", "-c", "python manage.py check && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
+# Expose port (optional, since Nginx will handle serving)
+EXPOSE 8000
+
+# Start the server with Gunicorn
+CMD ["gunicorn", "backend.wsgi:application", "--bind", "0.0.0.0:8000"]

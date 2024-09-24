@@ -1,70 +1,66 @@
-version: '3'
+#version: '3.8'  # Remove this line as it's obsolete in Docker Compose v2
 
 services:
   db:
-    image: postgres:14
+    image: postgres:15
     container_name: postgres_db
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: mydb
+      POSTGRES_DB: postgres        # Default database name
+      POSTGRES_USER: postgres      # Default user
+      POSTGRES_PASSWORD: postgres  # Default password
     volumes:
-      - pg_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data/
     networks:
-      - webnet
-    restart: always  # Restart in case of failures
+      - app-network
 
   backend:
     build:
       context: ./backend
     container_name: django_backend
-    command: ./wait-for-it.sh db:5432 -- python manage.py runserver 0.0.0.0:8000
+    command: >
+      sh -c "python manage.py migrate &&
+             gunicorn backend.wsgi:application --bind 0.0.0.0:8000"
     volumes:
       - ./backend:/app
-    expose:
-      - "8000"
     depends_on:
       - db
     networks:
-      - webnet
-    environment:
-      - DATABASE_URL=postgres://user:password@db:5432/mydb
-    restart: always
+      - app-network
 
   frontend:
     build:
-      context: ./vite-project  # Updated to use the vite-project directory
-    container_name: react_frontend
+      context: ./vite-project
+      dockerfile: Dockerfile
+    container_name: vite_frontend
+    # No need to expose port or keep the container running
     volumes:
-      - ./vite-project:/app  # Updated volume path
-    expose:
-      - "3000"
-    environment:
-      - REACT_APP_API_URL=http://django_backend:8000
+      - ./vite-project/dist:/app/dist  # Optional: Remove if not needed
     depends_on:
       - backend
     networks:
-      - webnet
-    restart: always
+      - app-network
 
   nginx:
-    image: nginx:latest
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
     container_name: nginx_proxy
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./backend/staticfiles:/app/staticfiles  # Mount the static files directory
     ports:
-      - "80:80"  # HTTP port
-      - "443:443" # HTTPS port for SSL (optional)
+      - "80:80"  # Expose Nginx on host's port 80
+    volumes:
+      - ./vite-project/dist:/usr/share/nginx/html:ro  # Mount frontend build
+      # If serving Django static/media files via Nginx, uncomment the following:
+      # - ./backend/static:/app/static:ro
+      # - ./backend/media:/app/media:ro
     depends_on:
       - frontend
       - backend
     networks:
-      - webnet
-    restart: always
+      - app-network
 
 networks:
-  webnet:
+  app-network:
+    driver: bridge
 
 volumes:
-  pg_data:
+  postgres_data:

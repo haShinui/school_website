@@ -1,26 +1,20 @@
-# Use an official Node.js image
-FROM node:18
+# Use official Node.js image as base
+FROM node:18-alpine
 
-# Set the working directory in the container
+# Set working directory
 WORKDIR /app
 
-# Copy only package.json and package-lock.json to cache layer if dependencies don't change
-COPY package.json package-lock.json /app/
+# Copy package.json and package-lock.json
+COPY package.json package-lock.json ./
 
-# Install dependencies and check funding
-RUN npm install && npm fund
+# Install dependencies
+RUN npm install
 
-# Copy the rest of the app code
-COPY . /app/
+# Copy the rest of the application code
+COPY . .
 
-# Run npm fund again after copying all files
-RUN npm fund
-
-# Build the React app
+# Run the build script to generate the 'dist' folder
 RUN npm run build
 
-# Expose the port that React uses
-EXPOSE 3000
-
-# Serve the build with a simple HTTP server
-CMD ["npx", "serve", "-s", "build", "-l", "3000"]
+# Command to keep the container running (optional)
+CMD ["echo", "Frontend build complete."]

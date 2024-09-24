@@ -226,13 +226,14 @@ REST_FRAMEWORK = {
  #   'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
 #}
 
+# Database Configuration
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'mydb',
-        'USER': 'user',
-        'PASSWORD': 'password',
-        'HOST': 'db',  # Refers to the "db" service in Docker
+        'NAME': 'postgres',        # Default PostgreSQL database name
+        'USER': 'postgres',        # Default PostgreSQL user
+        'PASSWORD': 'postgres',    # Default PostgreSQL password
+        'HOST': 'db',              # Service name defined in docker-compose.yml
         'PORT': '5432',
     }
 }
